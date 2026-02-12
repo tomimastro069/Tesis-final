@@ -1,0 +1,77 @@
+{
+    "commandline": "ffuf -u http://target.com/FUZZ -w wordlist.txt -o output.json -of json",
+    "time": "2026-02-12T13:00:00-03:00",
+    "results": [
+        {
+            "input": {
+                "FUZZ": "admin"
+            },
+            "position": 1,
+            "status": 200,
+            "length": 1523,
+            "words": 120,
+            "lines": 45,
+            "content-type": "text/html; charset=UTF-8",
+            "redirectlocation": "",
+            "resultfile": "",
+            "url": "http://target.com/admin",
+            "duration": 125000000,
+            "host": "target.com"
+        },
+        {
+            "input": {
+                "FUZZ": "login"
+            },
+            "position": 5,
+            "status": 200,
+            "length": 2048,
+            "words": 200,
+            "lines": 60,
+            "content-type": "text/html; charset=UTF-8",
+            "redirectlocation": "",
+            "resultfile": "",
+            "url": "http://target.com/login",
+            "duration": 98000000,
+            "host": "target.com"
+        },
+        {
+            "input": {
+                "FUZZ": "api"
+            },
+            "position": 12,
+            "status": 301,
+            "length": 0,
+            "words": 0,
+            "lines": 0,
+            "content-type": "",
+            "redirectlocation": "http://target.com/api/",
+            "resultfile": "",
+            "url": "http://target.com/api",
+            "duration": 110000000,
+            "host": "target.com"
+        }
+    ],
+    "config": {
+        "url": "http://target.com/FUZZ",
+        "method": "GET",
+        "wordlists": [
+            {
+                "keyword": "FUZZ",
+                "path": "wordlist.txt"
+            }
+        ],
+        "headers": {},
+        "follow_redirects": false,
+        "timeout": 10,
+        "delay": {
+            "value": "0.00"
+        },
+        "filters": {},
+        "matchers": {
+            "status": "200,204,301,302,307,401,403,405,500"
+        },
+        "threads": 40,
+        "maxtime": 0,
+        "cmdline": "ffuf -u http://target.com/FUZZ -w wordlist.txt -o output.json -of json"
+    }
+}
