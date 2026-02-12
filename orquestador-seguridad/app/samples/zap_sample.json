@@ -1,0 +1,230 @@
+{
+    "@version": "2.16.0",
+    "@generated": "Thu, 12 Feb 2026 16:00:00",
+    "site": [
+        {
+            "@name": "http://target.com",
+            "@host": "target.com",
+            "@port": "80",
+            "@ssl": "false",
+            "alerts": [
+                {
+                    "pluginid": "40012",
+                    "alertRef": "40012",
+                    "alert": "Cross Site Scripting (Reflected)",
+                    "name": "Cross Site Scripting (Reflected)",
+                    "riskcode": "3",
+                    "confidence": "2",
+                    "riskdesc": "High (Medium)",
+                    "desc": "<p>Cross-site Scripting (XSS) is an attack technique that involves echoing attacker-supplied code into a user's browser instance. A browser instance can be a standard web browser client, or a browser object embedded in a software product.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com/search",
+                            "method": "GET",
+                            "param": "q",
+                            "attack": "<script>alert(1)</script>",
+                            "evidence": "<script>alert(1)</script>",
+                            "otherinfo": ""
+                        },
+                        {
+                            "uri": "http://target.com/feedback",
+                            "method": "POST",
+                            "param": "comment",
+                            "attack": "<img src=x onerror=alert(1)>",
+                            "evidence": "<img src=x onerror=alert(1)>",
+                            "otherinfo": ""
+                        }
+                    ],
+                    "count": "2",
+                    "solution": "<p>Phase: Architecture and Design. Use a vetted library or framework that does not allow this weakness to occur. Validate all input. Use Content-Security-Policy header.</p>",
+                    "otherinfo": "",
+                    "reference": "<p>https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html</p><p>https://cwe.mitre.org/data/definitions/79.html</p>",
+                    "cweid": "79",
+                    "wascid": "8",
+                    "sourceid": "1",
+                    "tags": {
+                        "OWASP_2021_A03": "https://owasp.org/Top10/A03_2021-Injection/",
+                        "CWE-79": "https://cwe.mitre.org/data/definitions/79.html",
+                        "WSTG-v42-INPV-01": "https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/01-Testing_for_Reflected_Cross_Site_Scripting"
+                    }
+                },
+                {
+                    "pluginid": "40014",
+                    "alertRef": "40014",
+                    "alert": "SQL Injection",
+                    "name": "SQL Injection",
+                    "riskcode": "3",
+                    "confidence": "3",
+                    "riskdesc": "High (High)",
+                    "desc": "<p>SQL injection may be possible. The application appears to be vulnerable to SQL injection attacks.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com/login",
+                            "method": "POST",
+                            "param": "username",
+                            "attack": "admin' OR '1'='1' --",
+                            "evidence": "SQL syntax error",
+                            "otherinfo": "The page results indicate the parameter is vulnerable."
+                        }
+                    ],
+                    "count": "1",
+                    "solution": "<p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>",
+                    "otherinfo": "",
+                    "reference": "<p>https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html</p><p>https://cwe.mitre.org/data/definitions/89.html</p>",
+                    "cweid": "89",
+                    "wascid": "19",
+                    "sourceid": "1",
+                    "tags": {
+                        "OWASP_2021_A03": "https://owasp.org/Top10/A03_2021-Injection/",
+                        "CWE-89": "https://cwe.mitre.org/data/definitions/89.html"
+                    }
+                },
+                {
+                    "pluginid": "10020",
+                    "alertRef": "10020-1",
+                    "alert": "Missing Anti-clickjacking Header",
+                    "name": "Missing Anti-clickjacking Header",
+                    "riskcode": "2",
+                    "confidence": "2",
+                    "riskdesc": "Medium (Medium)",
+                    "desc": "<p>The response does not include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options to protect against 'ClickJacking' attacks.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com",
+                            "method": "GET",
+                            "param": "x-frame-options",
+                            "attack": "",
+                            "evidence": "",
+                            "otherinfo": ""
+                        },
+                        {
+                            "uri": "http://target.com/login",
+                            "method": "GET",
+                            "param": "x-frame-options",
+                            "attack": "",
+                            "evidence": "",
+                            "otherinfo": ""
+                        },
+                        {
+                            "uri": "http://target.com/admin",
+                            "method": "GET",
+                            "param": "x-frame-options",
+                            "attack": "",
+                            "evidence": "",
+                            "otherinfo": ""
+                        }
+                    ],
+                    "count": "3",
+                    "solution": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Set one of these on all web pages returned by your site/app.</p>",
+                    "otherinfo": "",
+                    "reference": "<p>https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</p>",
+                    "cweid": "1021",
+                    "wascid": "15",
+                    "sourceid": "3",
+                    "tags": {
+                        "OWASP_2021_A05": "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/",
+                        "CWE-1021": "https://cwe.mitre.org/data/definitions/1021.html"
+                    }
+                },
+                {
+                    "pluginid": "10021",
+                    "alertRef": "10021",
+                    "alert": "X-Content-Type-Options Header Missing",
+                    "name": "X-Content-Type-Options Header Missing",
+                    "riskcode": "1",
+                    "confidence": "2",
+                    "riskdesc": "Low (Medium)",
+                    "desc": "<p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com",
+                            "method": "GET",
+                            "param": "x-content-type-options",
+                            "attack": "",
+                            "evidence": "",
+                            "otherinfo": "This issue still applies to error type pages."
+                        },
+                        {
+                            "uri": "http://target.com/login",
+                            "method": "GET",
+                            "param": "x-content-type-options",
+                            "attack": "",
+                            "evidence": "",
+                            "otherinfo": ""
+                        }
+                    ],
+                    "count": "2",
+                    "solution": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p>",
+                    "otherinfo": "",
+                    "reference": "<p>https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)</p><p>https://owasp.org/www-community/Security_Headers</p>",
+                    "cweid": "693",
+                    "wascid": "15",
+                    "sourceid": "3",
+                    "tags": {
+                        "OWASP_2021_A05": "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/",
+                        "CWE-693": "https://cwe.mitre.org/data/definitions/693.html"
+                    }
+                },
+                {
+                    "pluginid": "10036",
+                    "alertRef": "10036",
+                    "alert": "Server Leaks Version Information via 'Server' HTTP Response Header Field",
+                    "name": "Server Leaks Version Information via 'Server' HTTP Response Header Field",
+                    "riskcode": "1",
+                    "confidence": "3",
+                    "riskdesc": "Low (High)",
+                    "desc": "<p>The web/application server is leaking version information via the 'Server' HTTP response header.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com",
+                            "method": "GET",
+                            "param": "",
+                            "attack": "",
+                            "evidence": "Apache/2.4.41 (Ubuntu)",
+                            "otherinfo": ""
+                        }
+                    ],
+                    "count": "1",
+                    "solution": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the 'Server' header or provide generic details.</p>",
+                    "otherinfo": "",
+                    "reference": "<p>https://httpd.apache.org/docs/current/mod/core.html#servertokens</p>",
+                    "cweid": "200",
+                    "wascid": "13",
+                    "sourceid": "3",
+                    "tags": {
+                        "OWASP_2021_A05": "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/",
+                        "CWE-200": "https://cwe.mitre.org/data/definitions/200.html"
+                    }
+                },
+                {
+                    "pluginid": "10109",
+                    "alertRef": "10109",
+                    "alert": "Modern Web Application",
+                    "name": "Modern Web Application",
+                    "riskcode": "0",
+                    "confidence": "2",
+                    "riskdesc": "Informational (Medium)",
+                    "desc": "<p>The application appears to be a modern web application. This is not a vulnerability but indicates the type of application being tested.</p>",
+                    "instances": [
+                        {
+                            "uri": "http://target.com",
+                            "method": "GET",
+                            "param": "",
+                            "attack": "",
+                            "evidence": "<script type=\"module\" src=\"/assets/main.js\"></script>",
+                            "otherinfo": "A link or form tag with a dynamically computed action/href was found."
+                        }
+                    ],
+                    "count": "1",
+                    "solution": "<p>This is an informational alert and so no changes are required.</p>",
+                    "otherinfo": "",
+                    "reference": "",
+                    "cweid": "-1",
+                    "wascid": "-1",
+                    "sourceid": "3",
+                    "tags": {}
+                }
+            ]
+        }
+    ]
+}
