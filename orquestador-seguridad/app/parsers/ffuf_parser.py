@@ -12,7 +12,7 @@ def ffuf_parser(ruta_archivo):
         #Limpiar lista segun los resultados que tienen status = 200
         lista_limpia = [
             {
-                "Herramienta":"ffuf",
+                "herramienta":"ffuf",
                 "input":item["input"],
                 "url":item["url"],
                 "host":item["host"],

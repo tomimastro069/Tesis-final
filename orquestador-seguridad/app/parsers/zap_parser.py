@@ -21,12 +21,12 @@ def zap_parser(ruta_archivo):
     #Limpiar la informacion irrelevante del diccionario "data"
     alertas_parseado = [
         {
-            "vulnerabilidad": item["alert"],
-            "url": [i["uri"] for i in item["instances"]],
-            "severidad": item["riskdesc"],
-            "solucion": item["solution"]
+            "vulnerabilidad": alerta["alert"],
+            "url": [instancia["uri"] for instancia in alerta["instances"]],
+            "severidad": alerta["riskdesc"],
+            "solucion": alerta["solution"]
         }
-        for item in alertas_sin_parsear
+        for alerta in alertas_sin_parsear
     ]
 
     #Agregar la lista de datos parseados a los datos del site
