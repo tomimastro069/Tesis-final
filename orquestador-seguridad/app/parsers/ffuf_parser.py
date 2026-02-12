@@ -28,4 +28,3 @@ def ffuf_parser(ruta_archivo):
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         print(f"Error al parsear el archivo ffuf: {e}")
         return []
-
