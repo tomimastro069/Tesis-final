@@ -1,5 +1,5 @@
 from app.parsers.ffuf_parser import ffuf_parser as f_parser
-from app.parsers.zap_parser import zap_parser as z_parser
+from app.parsers.zap_parser import zap_parser as z_parser, spider_parser as s_parser
 #from app.scanners.ffuf import 
 #from app.scanners.zap import 
 
