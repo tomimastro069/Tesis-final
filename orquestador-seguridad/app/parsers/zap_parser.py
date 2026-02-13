@@ -41,3 +41,26 @@ def zap_parser(ruta_archivo):
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         print(f"Error al parsear el archivo zap: {e}")
         return []
+
+
+#Funcion que parsea el resultado que trae ZAP SPIDER - URLS de la pagina
+def spider_parser(ruta_archivo):
+    try:
+        #Abro el archivo JSON de ZAP SPIDER
+        with open(ruta_archivo, "r") as f:
+            #Cargo los datos del diccionario en data
+            data = json.load(f)
+        
+        #Igualo data a url sin parsear para mejor entendimiento
+        urls_sin_parsear = data
+
+        #Creo una lista con las urls encontradas
+        urls = [entrada["url"] for entrada in urls_sin_parsear["urlsInScope"]]
+
+        #Retorno todas las urls que encontro SPIDER
+        return urls
+
+        #Si no encontramos el archivo o JSON nos da un error, retornamos una lista vacia
+    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+        print(f"Error al parsear el archivo zap: {e}")
+        return []
