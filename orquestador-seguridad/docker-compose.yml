@@ -27,3 +27,5 @@ services:
     depends_on:
       - zap
       - dvwa
+    volumes:
+      - .:/app   # monta la carpeta del proyecto dentro del contenedor

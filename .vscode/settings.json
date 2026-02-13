@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./orquestador-seguridad/app"
+        "./orquestador-seguridad/app",
+        "./orquestador-seguridad"
     ]
 }

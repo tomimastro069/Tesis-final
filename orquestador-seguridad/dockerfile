@@ -5,17 +5,30 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Instalamos dependencias del sistema necesarias
+RUN apt update && apt install -y \
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalamos ffuf (binario oficial)
+RUN wget https://github.com/ffuf/ffuf/releases/latest/download/ffuf_2.1.0_linux_amd64.tar.gz \
+    && tar -xzf ffuf_2.1.0_linux_amd64.tar.gz \
+    && mv ffuf /usr/local/bin/ffuf \
+    && chmod +x /usr/local/bin/ffuf \
+    && rm ffuf_2.1.0_linux_amd64.tar.gz
+
 # Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
 # Copiamos requirements primero (optimiza cache)
 COPY requirements.txt .
 
-# Instalamos dependencias
+# Instalamos dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiamos el resto del proyecto
 COPY . .
 
 # Comando por defecto
-CMD ["python", "main.py"]
+CMD ["tail", "-f", "/dev/null"]
