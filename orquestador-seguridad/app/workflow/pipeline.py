@@ -45,11 +45,11 @@ def run_security_pipeline(target_url):
             f.write("admin\nlogin\nbackup\nconfig\n.env\n")
     
     # Ejecutar FFUF
-    # Nota: Esto creará un 'resultado.json' con datos crudos de FFUF en OUTPUT_DIR
+    # Nota: Esto creará un archivo JSON con datos crudos de FFUF en OUTPUT_DIR
     ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR)
     
     # Leer los datos crudos de FFUF para incluirlos en el reporte final
-    # (Ya que run_ffuf guarda el archivo pero aquí queremos consolidarlo)
+    # (run_ffuf guarda el archivo y aquí lo leemos para consolidarlo)
     ffuf_data = {}
     if os.path.exists(ffuf_raw["output_file"]):
         with open(ffuf_raw["output_file"], "r") as f:
@@ -68,7 +68,6 @@ def run_security_pipeline(target_url):
     }
     
     # Guardar el reporte final en resultado.json
-    # (Esto sobrescribe el archivo crudo de FFUF con el reporte final completo)
     ruta_final = os.path.join(OUTPUT_DIR, FINAL_REPORT_FILE)
     with open(ruta_final, "w") as f:
         json.dump(hallazgos_finales, f, indent=4)

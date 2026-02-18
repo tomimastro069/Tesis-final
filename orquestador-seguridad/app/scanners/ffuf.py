@@ -23,12 +23,15 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str) -> dict:
     # Asegurarse de que la carpeta de salida exista
     os.makedirs(output_dir, exist_ok=True)
     
-    output_file = os.path.join(output_dir, "resultado.json")
+    output_file = os.path.join(output_dir, "ffuf_raw.json")
+    
+    # Asegurar que no haya doble slash al concatenar (ej: http://sitio.com/ + /FUZZ)
+    base_url = target_url.rstrip("/")
     
     # Comando ffuf
     cmd = [
     "ffuf",
-    "-u", f"{target_url}/FUZZ",
+    "-u", f"{base_url}/FUZZ",
     "-w", wordlist_path,
     "-e", ".php",
     "-mc", "200,302",

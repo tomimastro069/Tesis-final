@@ -9,7 +9,7 @@ def ffuf_parser(ruta_archivo):
             #Cargo el archivo JSON en la variable data
             data = json.load(f)
 
-        #Limpiar lista segun los resultados que tienen status = 200
+        #Limpiar lista segun los resultados (200 y 302)
         lista_limpia = [
             {
                 "herramienta":"ffuf",
@@ -19,7 +19,7 @@ def ffuf_parser(ruta_archivo):
                 "status":item["status"]
             }
             for item in data["results"] 
-            if item["status"] == 200
+            if item["status"] in [200, 302]
         ]
 
         #Retornar la lista limpia

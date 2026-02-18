@@ -70,9 +70,6 @@ def iniciar_escaneo_activo(target_url: str) -> str:
     Inicia el escaneo activo (Active Scan) en ZAP.
     Devuelve el scan_id.
     """
-    # --- OPTIMIZACIÓN ---
-    # Configuramos la intensidad a LOW (Baja). Reduce drásticamente el tiempo y CPU.
-    # Realiza menos pruebas por parámetro, pero mantiene las categorías principales.
     base_opt = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/ascan/action"
     requests.get(f"{base_opt}/setOptionAttackStrength/", params={"apikey": API_KEY, "strength": "LOW"})
     requests.get(f"{base_opt}/setOptionAlertThreshold/", params={"apikey": API_KEY, "threshold": "MEDIUM"})
