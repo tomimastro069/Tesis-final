@@ -1,0 +1,30 @@
+{
+    "resumen": {
+        "total_urls_unicas": 15,
+        "urls_spider": 47,
+        "alertas_zap": 8,
+        "rutas_ffuf": 12
+    },
+    "spider": {
+        "herramienta": "ZAP Spider",
+        "total_urls": 47,
+        "urls": [{"url": "http://dvwa/login.php"}]
+    },
+    "zap": {
+        "herramienta": "ZAP",
+        "fecha": "Thu, 12 Feb 2026...",
+        "host": "dvwa",
+        "puerto": "80",
+        "ssl": "false",
+        "total_alertas": 8,
+        "alertas": 
+        [{"url": "...", "vulnerabilidad": "XSS", "severidad": "High", "solucion": "..."}]
+    },
+    "ffuf": {
+        "herramienta": "ffuf",
+        "comando": "ffuf -u ...",
+        "fecha": "2026-02-19...",
+        "total_rutas": 12,
+        "rutas": [{"url": "http://dvwa/admin", "status": 200, "input": {"FUZZ": "admin"}}]
+    }
+}
