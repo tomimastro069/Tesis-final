@@ -4,12 +4,14 @@ from app.scanners.ffuf import run_ffuf
 from app.scanners.zap import (
     iniciar_spider, 
     esperar_spider, 
+    obtener_urls,
     iniciar_escaneo_activo, 
     esperar_escaneo_activo, 
     obtener_reporte_json
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
+from app.utils.results import consolidar_resultados 
 
 # Configuración
 WORDLIST_PATH = "./wordlist.txt"
@@ -29,7 +31,8 @@ def run_security_pipeline(target_url):
     print("\n[1/3] Ejecutando ZAP Spider...")
     spider_id = iniciar_spider(target_url)
     esperar_spider(spider_id)
-    
+    spider_urls = obtener_urls(spider_id)
+
     # --- 2. ZAP ACTIVE SCAN ---
     print("\n[2/3] Ejecutando ZAP Active Scan...")
     ascan_id = iniciar_escaneo_activo(target_url)
@@ -65,6 +68,7 @@ def run_security_pipeline(target_url):
     
     hallazgos_finales = {
         "target": target_url,
+        "spider_raw": spider_urls,
         "zap_raw": reporte_zap_crudo,  # Datos crudos de ZAP
         "ffuf_raw": ffuf_data          # Datos crudos de FFUF
     }
@@ -78,5 +82,23 @@ def run_security_pipeline(target_url):
     return hallazgos_finales
 
 
-    def run_parser_pipeline(hallazgos_zap_ffuf):
-        pass
+def run_parser_pipeline(resultado_escaneo):
+
+    #Dividimos los datos crudos del escaneo
+    spider_crudo = resultado_escaneo["spider_raw"]
+    zap_crudo = resultado_escaneo["zap_raw"]
+    ffuf_crudo = resultado_escaneo["ffuf_raw"]
+
+    #Parsear el spider
+    spider_parseado = parsear_spider(spider_crudo)
+
+    #Parsear el zap
+    zap_parseado = parsear_zap(zap_crudo)
+
+    #Parsear el ffuf
+    ffuf_parseado = parsear_ffuf(ffuf_crudo)
+
+    #Consolidar los 3 resultados en una sola lista sin duplicados
+    resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado)
+
+    return resultados_unificados
