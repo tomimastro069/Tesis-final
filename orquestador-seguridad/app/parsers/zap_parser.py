@@ -1,12 +1,8 @@
-import json
-
-def zap_parser(ruta_archivo):
+def parsear_zap(dato_dict_crudo):
     #Intentamos ejecutar el parseo
     try:
-        #Abrir el archivo JSON con los datos que trae OWASP ZAP
-        with open(ruta_archivo,"r") as zap:
-            #Cargas la info del zap en la variable data
-            data = json.load(zap)
+        #Acceder directamente al diccionario con los datos crudos de OWASP ZAP
+        data = dato_dict_crudo
 
         #Alertas que trae OWASP ZAP
         alertas_sin_parsear = data["site"][0]["alerts"]
@@ -37,30 +33,25 @@ def zap_parser(ruta_archivo):
         #Retornar los datos limpios
         return datos_site
 
-        #Si no encontramos el archivo o JSON nos da un error, retornamos una lista vacia
-    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
-        print(f"Error al parsear el archivo zap: {e}")
+        #Si hay un error de clave o tipo en el diccionario, retornamos una lista vacia
+    except (KeyError, TypeError) as e:
+        print(f"Error al parsear los datos de ZAP: {e}")
         return []
 
 
 #Funcion que parsea el resultado que trae ZAP SPIDER - URLS de la pagina
-def spider_parser(ruta_archivo):
+def parsear_spider(dato_dict_crudo):
     try:
-        #Abro el archivo JSON de ZAP SPIDER
-        with open(ruta_archivo, "r") as f:
-            #Cargo los datos del diccionario en data
-            data = json.load(f)
-        
-        #Igualo data a url sin parsear para mejor entendimiento
-        urls_sin_parsear = data
+        #Acceder directamente al diccionario con los datos crudos de ZAP SPIDER
+        data = dato_dict_crudo
 
         #Creo una lista con las urls encontradas
-        urls = [entrada["url"] for entrada in urls_sin_parsear["urlsInScope"]]
+        urls = [entrada["url"] for entrada in data["urlsInScope"]]
 
         #Retorno todas las urls que encontro SPIDER
         return urls
 
-        #Si no encontramos el archivo o JSON nos da un error, retornamos una lista vacia
-    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
-        print(f"Error al parsear el archivo zap: {e}")
+        #Si hay un error de clave o tipo en el diccionario, retornamos una lista vacia
+    except (KeyError, TypeError) as e:
+        print(f"Error al parsear los datos de ZAP Spider: {e}")
         return []

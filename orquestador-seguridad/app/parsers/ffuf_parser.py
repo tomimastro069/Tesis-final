@@ -2,12 +2,10 @@ import json
 
 ruta_archivo_ejemplo = "orquestador-seguridad/app/samples/ffuf_sample.json"
 
-def ffuf_parser(ruta_archivo):
+def parsear_ffuf(dato_dict_crudo):
     try:
         #Abro el archivo JSON 
-        with open(ruta_archivo,"r") as f:
-            #Cargo el archivo JSON en la variable data
-            data = json.load(f)
+        data = dato_dict_crudo
 
         #Limpiar lista segun los resultados (200 y 302)
         lista_limpia = [
@@ -25,6 +23,6 @@ def ffuf_parser(ruta_archivo):
         #Retornar la lista limpia
         return lista_limpia
 
-    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+    except (KeyError, TypeError) as e:
         print(f"Error al parsear el archivo ffuf: {e}")
         return []

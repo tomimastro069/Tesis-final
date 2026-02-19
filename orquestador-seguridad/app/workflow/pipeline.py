@@ -8,6 +8,8 @@ from app.scanners.zap import (
     esperar_escaneo_activo, 
     obtener_reporte_json
 )
+from app.parsers.ffuf_parser import parsear_ffuf
+from app.parsers.zap_parser import parsear_spider, parsear_zap
 
 # Configuración
 WORDLIST_PATH = "./wordlist.txt"
@@ -74,3 +76,7 @@ def run_security_pipeline(target_url):
     
     print(f"--- Ejecución finalizada. Datos crudos guardados en: {ruta_final} ---")
     return hallazgos_finales
+
+
+    def run_parser_pipeline(hallazgos_zap_ffuf):
+        pass
