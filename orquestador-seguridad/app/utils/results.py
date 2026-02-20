@@ -1,3 +1,4 @@
+import json
 #Funcion que junta todos los resultados parseados en una sola estructura
 def consolidar_resultados(dict_spider, dict_zap, dict_ffuf):
     #Extraer las listas internas de cada herramienta
@@ -29,3 +30,17 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf):
         "zap": dict_zap,
         "ffuf": dict_ffuf
     }
+
+#Crea un archivo en output para mostrar el arhcivo final unificado json.
+def resultados_prueba_json(resultados):
+    import os
+    output_dir = "./output/raw"
+    os.makedirs(output_dir, exist_ok=True)
+
+    ruta_archivo = os.path.join(output_dir, "resultado_unificado.json")
+
+    with open(ruta_archivo, "w", encoding="utf-8") as f:
+        json.dump(resultados, f, indent=4, ensure_ascii=False)
+
+    print(f"\n--- Resultado unificado guardado en: {ruta_archivo} ---")
+    print(json.dumps(resultados.get("resumen", {}), indent=4, ensure_ascii=False))
