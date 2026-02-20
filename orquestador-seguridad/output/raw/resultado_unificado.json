@@ -1,0 +1,111 @@
+{
+    "resumen": {
+        "total_urls_unicas": 24,
+        "urls_spider": 24,
+        "alertas_zap": 0,
+        "rutas_ffuf": 1
+    },
+    "spider": {
+        "herramienta": "ZAP Spider",
+        "total_urls": 24,
+        "urls": [
+            {
+                "url": "http://dvwa/favicon.ico"
+            },
+            {
+                "url": "http://dvwa/dvwa/js/add_event_listeners.js"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/spanner.png"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=readme"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=PHPIDS-license"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=PDF"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=changelog"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/RandomStorm.png"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/logo.png"
+            },
+            {
+                "url": "http://dvwa/docs/DVWA_v1.3.pdf"
+            },
+            {
+                "url": "http://dvwa/instructions.php"
+            },
+            {
+                "url": "http://dvwa/dvwa/js/dvwaPage.js"
+            },
+            {
+                "url": "http://dvwa/login.php"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=copying"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/login_logo.png"
+            },
+            {
+                "url": "http://dvwa"
+            },
+            {
+                "url": "http://dvwa/about.php"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/main.css"
+            },
+            {
+                "url": "http://dvwa/sitemap.xml"
+            },
+            {
+                "url": "http://dvwa/"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/login.css"
+            },
+            {
+                "url": "http://dvwa/robots.txt"
+            },
+            {
+                "url": "http://dvwa/setup.php"
+            },
+            {
+                "url": "http://dvwa/var/www/html/config/config.inc.php"
+            }
+        ]
+    },
+    "zap": {
+        "herramienta": "ZAP",
+        "fecha": "Fri, 20 Feb 2026 00:15:56",
+        "host": "dvwa",
+        "puerto": "443",
+        "ssl": "true",
+        "total_alertas": 0,
+        "alertas": []
+    },
+    "ffuf": {
+        "herramienta": "ffuf",
+        "comando": "ffuf -u http://dvwa/FUZZ -w ./wordlist.txt -e .php -mc 200,302 -of json -o ./output/raw/ffuf_raw.json",
+        "fecha": "2026-02-20T00:15:59Z",
+        "total_rutas": 1,
+        "rutas": [
+            {
+                "url": "http://dvwa/login.php",
+                "input": {
+                    "FFUFHASH": "fd3384",
+                    "FUZZ": "login.php"
+                },
+                "status": 200
+            }
+        ]
+    }
+}
