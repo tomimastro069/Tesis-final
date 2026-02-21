@@ -1,6 +1,7 @@
 import os
 import json
 from app.scanners.ffuf import run_ffuf
+from app.scanners.sqlmap import run_sqlmap_batch
 from app.scanners.zap import (
     iniciar_spider, 
     esperar_spider, 
@@ -11,6 +12,7 @@ from app.scanners.zap import (
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
+from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
 
 # Configuración
@@ -28,21 +30,28 @@ def run_security_pipeline(target_url):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
     # --- 1. ZAP SPIDER ---
-    print("\n[1/3] Ejecutando ZAP Spider...")
+    print("\n[1/4] Ejecutando ZAP Spider...")
     spider_id = iniciar_spider(target_url)
     esperar_spider(spider_id)
     spider_urls = obtener_urls(spider_id)
 
     # --- 2. ZAP ACTIVE SCAN ---
-    print("\n[2/3] Ejecutando ZAP Active Scan...")
+    print("\n[2/4] Ejecutando ZAP Active Scan...")
     ascan_id = iniciar_escaneo_activo(target_url)
     esperar_escaneo_activo(ascan_id)
     
     # Obtener reporte crudo de ZAP (se mantiene en memoria para el reporte final)
     reporte_zap_crudo = obtener_reporte_json()
-        
+
+    # --- 3. SQLMAP ---
+    print("\n[3/4] Ejecutando SQLMAP...")
+    # Sacamos la lista de URLs del resultado del spider
+    # spider_urls es un dict tipo {"results": ["http://...", ...]}
+    lista_urls = spider_urls.get("results", [])
+    sqlmap_raw = run_sqlmap_batch(lista_urls)
+
     # --- 3. FFUF ---
-    print("\n[3/3] Ejecutando FFUF...")
+    print("\n[4/4] Ejecutando FFUF...")
     
     # Crear wordlist dummy si no existe (para evitar errores)
     if not os.path.exists(WORDLIST_PATH):
@@ -70,6 +79,7 @@ def run_security_pipeline(target_url):
         "target": target_url,
         "spider_raw": spider_urls,
         "zap_raw": reporte_zap_crudo,  # Datos crudos de ZAP
+        "sqlmap_raw": sqlmap_raw,      # Datos crudos de SQLMap
         "ffuf_raw": ffuf_data          # Datos crudos de FFUF
     }
     
@@ -88,6 +98,7 @@ def run_parser_pipeline(resultado_escaneo):
     spider_crudo = resultado_escaneo["spider_raw"]
     zap_crudo = resultado_escaneo["zap_raw"]
     ffuf_crudo = resultado_escaneo["ffuf_raw"]
+    sqlmap_crudo = resultado_escaneo["sqlmap_raw"]
 
     #Parsear el spider
     spider_parseado = parsear_spider(spider_crudo)
@@ -98,7 +109,9 @@ def run_parser_pipeline(resultado_escaneo):
     #Parsear el ffuf
     ffuf_parseado = parsear_ffuf(ffuf_crudo)
 
+    sqlmap_parseado = parsear_sqlmap(sqlmap_crudo)
+
     #Consolidar los 3 resultados en una sola lista sin duplicados
-    resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado)
+    resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
 
     return resultados_unificados

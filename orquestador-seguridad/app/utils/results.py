@@ -1,6 +1,6 @@
 import json
 #Funcion que junta todos los resultados parseados en una sola estructura
-def consolidar_resultados(dict_spider, dict_zap, dict_ffuf):
+def consolidar_resultados(dict_spider, dict_zap, dict_ffuf, dict_sqlmap):
     #Extraer las listas internas de cada herramienta
     urls_spider = dict_spider.get("urls", [])
     alertas_zap = dict_zap.get("alertas", [])
@@ -28,7 +28,8 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf):
         },
         "spider": dict_spider,
         "zap": dict_zap,
-        "ffuf": dict_ffuf
+        "ffuf": dict_ffuf,
+        "sqlmap": dict_sqlmap
     }
 
 #Crea un archivo en output para mostrar el arhcivo final unificado json.
