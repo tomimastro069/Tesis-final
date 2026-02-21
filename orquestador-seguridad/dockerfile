@@ -18,6 +18,11 @@ RUN wget https://github.com/ffuf/ffuf/releases/latest/download/ffuf_2.1.0_linux_
     && chmod +x /usr/local/bin/ffuf \
     && rm ffuf_2.1.0_linux_amd64.tar.gz
 
+# Instalamos SQLMap (clonamos el repo oficial)
+RUN apt update && apt install -y git \
+    && git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git /opt/sqlmap \
+    && rm -rf /var/lib/apt/lists/*
+
 # Directorio de trabajo dentro del contenedor
 WORKDIR /app
 

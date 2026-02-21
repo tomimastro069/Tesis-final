@@ -50,7 +50,7 @@ def run_security_pipeline(target_url):
     lista_urls = spider_urls.get("results", [])
     sqlmap_raw = run_sqlmap_batch(lista_urls)
 
-    # --- 3. FFUF ---
+    # --- 4. FFUF ---
     print("\n[4/4] Ejecutando FFUF...")
     
     # Crear wordlist dummy si no existe (para evitar errores)

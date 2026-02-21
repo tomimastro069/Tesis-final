@@ -5,6 +5,7 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf, dict_sqlmap):
     urls_spider = dict_spider.get("urls", [])
     alertas_zap = dict_zap.get("alertas", [])
     rutas_ffuf = dict_ffuf.get("rutas", [])
+    vulns_sqlmap = dict_sqlmap.get("vulnerabilidades", [])
 
     #Juntar todas las URLs unicas encontradas por cualquier herramienta
     todas_las_urls = set()
@@ -17,6 +18,10 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf, dict_sqlmap):
 
     for item in rutas_ffuf:
         todas_las_urls.add(item["url"])
+    
+    # Agregar URLs de sqlmap al set
+    for item in vulns_sqlmap:
+        todas_las_urls.add(item["url"])
 
     #Devolver estructura consolidada con los 3 resultados y un resumen
     return {
@@ -24,7 +29,8 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf, dict_sqlmap):
             "total_urls_unicas": len(todas_las_urls),
             "urls_spider": dict_spider.get("total_urls", 0),
             "alertas_zap": dict_zap.get("total_alertas", 0),
-            "rutas_ffuf": dict_ffuf.get("total_rutas", 0)
+            "rutas_ffuf": dict_ffuf.get("total_rutas", 0),
+            "vulnerabilidades_sqlmap": len(vulns_sqlmap)
         },
         "spider": dict_spider,
         "zap": dict_zap,
