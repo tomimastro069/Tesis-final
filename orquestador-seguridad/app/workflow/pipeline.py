@@ -16,7 +16,7 @@ from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
 
 # Configuración
-WORDLIST_PATH = "./wordlist.txt"
+WORDLIST_PATH = "app/wordlists/wordlist.txt"
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
 
