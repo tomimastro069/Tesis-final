@@ -20,7 +20,12 @@ from app.utils.results import consolidar_resultados
 # por lo que la ruta anterior provocaba un FileNotFoundError al crear
 # el archivo. También nos aseguramos de que la carpeta existe antes de
 # intentar escribir la wordlist.
-WORDLIST_PATH = "app/worldlists/wordlist.txt"
+WORDLISTS = {
+    "small": "app/wordlists/Discovery/Web-content/wordlist-small.txt",
+    "medium": "app/wordlists/Discovery/Web-content/wordlist-medium.txt"
+}
+nivel = input("Nivel de escaneo: (small/medium): ").lower()
+WORDLIST_PATH = WORDLISTS.get(nivel)
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
 
