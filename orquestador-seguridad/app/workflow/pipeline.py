@@ -16,7 +16,11 @@ from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
 
 # Configuración
-WORDLIST_PATH = "app/wordlists/wordlist.txt"
+# Nota: el directorio real se llama "worldlists" (con una 'l' extra),
+# por lo que la ruta anterior provocaba un FileNotFoundError al crear
+# el archivo. También nos aseguramos de que la carpeta existe antes de
+# intentar escribir la wordlist.
+WORDLIST_PATH = "app/worldlists/wordlist.txt"
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
 
@@ -54,6 +58,11 @@ def run_security_pipeline(target_url):
     print("\n[4/4] Ejecutando FFUF...")
     
     # Crear wordlist dummy si no existe (para evitar errores)
+    # Asegurarse de que la carpeta padre exista antes de abrir el archivo.
+    wordlist_dir = os.path.dirname(WORDLIST_PATH)
+    if wordlist_dir and not os.path.exists(wordlist_dir):
+        os.makedirs(wordlist_dir, exist_ok=True)
+
     if not os.path.exists(WORDLIST_PATH):
         with open(WORDLIST_PATH, "w") as f:
             f.write("admin\nlogin\nbackup\nconfig\n.env\n")
