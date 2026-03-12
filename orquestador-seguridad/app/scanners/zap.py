@@ -70,6 +70,11 @@ def iniciar_escaneo_activo(target_url: str) -> str:
     Inicia el escaneo activo (Active Scan) en ZAP.
     Devuelve el scan_id.
     """
+    # Si la URL es raiz (ej: http://dvwa), agregamos / al final
+    # para asegurar que coincida con el nodo en el arbol de ZAP.
+    if target_url.count("/") == 2 and "?" not in target_url:
+        target_url += "/"
+
     base_opt = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/ascan/action"
     requests.get(f"{base_opt}/setOptionAttackStrength/", params={"apikey": API_KEY, "strength": "LOW"})
     requests.get(f"{base_opt}/setOptionAlertThreshold/", params={"apikey": API_KEY, "threshold": "MEDIUM"})
