@@ -17,25 +17,35 @@ from app.utils.results import consolidar_resultados
 
 from app.config import settings
 
-# Configuración
-# Nota: el directorio real se llama "worldlists" (con una 'l' extra),
-# por lo que la ruta anterior provocaba un FileNotFoundError al crear
-# el archivo. También nos aseguramos de que la carpeta existe antes de
-# intentar escribir la wordlist.
+# Configuración de Wordlists
+# Se usan rutas dinámicas basadas en WORDLISTS_DIR de settings
 WORDLISTS = {
-    "small": "app/wordlists/Discovery/Web-content/wordlist-small.txt",
-    "medium": "app/wordlists/Discovery/Web-content/wordlist-medium.txt"
+    "small": os.path.join(settings.WORDLISTS_DIR, "Discovery", "Web-content", "wordlist-small.txt"),
+    "medium": os.path.join(settings.WORDLISTS_DIR, "Discovery", "Web-content", "wordlist-medium.txt")
 }
-nivel = input("Nivel de escaneo: (small/medium): ").lower()
-WORDLIST_PATH = WORDLISTS.get(nivel)
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
 
-def run_security_pipeline(target_url):
+def run_security_pipeline(target_url, nivel="medium"):
     """
     Función principal que coordina todo el escaneo.
+    
+    Args:
+        target_url: URL objetivo a escanear
+        nivel: Nivel de wordlist a usar ("small" o "medium"). Default: "medium"
+    
+    Returns:
+        dict: Datos crudos consolidados de todos los escaneos
     """
+    # Validar nivel y obtener ruta de wordlist
+    if nivel not in WORDLISTS:
+        print(f"Error: Nivel '{nivel}' inválido. Use 'small' o 'medium'")
+        return None
+    
+    WORDLIST_PATH = WORDLISTS[nivel]
+    
     print(f"--- Iniciando Orquestador para: {target_url} ---")
+    print(f"Nivel de wordlist: {nivel}")
     
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
