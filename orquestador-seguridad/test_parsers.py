@@ -61,7 +61,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("CONSOLIDACIÓN")
     print("=" * 60)
-    resultado_final = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado)
+    resultado_final = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, {})
 
     print(f"\n  URLs únicas totales: {resultado_final['resumen']['total_urls_unicas']}")
     print(f"  URLs del spider: {resultado_final['resumen']['urls_spider']}")

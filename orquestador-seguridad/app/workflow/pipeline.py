@@ -15,14 +15,12 @@ from app.parsers.zap_parser import parsear_spider, parsear_zap
 from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
 
+from app.config import settings
+
 # Configuración
-# Nota: el directorio real se llama "worldlists" (con una 'l' extra),
-# por lo que la ruta anterior provocaba un FileNotFoundError al crear
-# el archivo. También nos aseguramos de que la carpeta existe antes de
-# intentar escribir la wordlist.
-WORDLIST_PATH = "app/worldlists/wordlist.txt"
-OUTPUT_DIR = "./output/raw"
-FINAL_REPORT_FILE = "resultado.json"
+WORDLIST_PATH = settings.WORDLIST_PATH
+OUTPUT_DIR = settings.OUTPUT_DIR
+FINAL_REPORT_FILE = settings.FINAL_REPORT_FILE
 
 def run_security_pipeline(target_url):
     """
