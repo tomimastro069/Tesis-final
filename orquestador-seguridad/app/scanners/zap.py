@@ -3,9 +3,11 @@
 import time
 import requests
 
-ZAP_HOST = "zap"
-ZAP_PORT = 8090
-API_KEY = "12345"
+from app.config import settings
+
+ZAP_HOST = settings.ZAP_HOST
+ZAP_PORT = settings.ZAP_PORT
+API_KEY = settings.ZAP_API_KEY
 
 
 def iniciar_spider(target_url: str) -> str:

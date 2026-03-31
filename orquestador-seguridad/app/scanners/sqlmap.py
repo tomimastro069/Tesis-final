@@ -3,8 +3,10 @@
 from app.runners.exec import run_command
 
 
+from app.config import settings
+
 # Ruta donde se clonó sqlmap dentro del contenedor
-SQLMAP_PATH = "/opt/sqlmap/sqlmap.py"
+SQLMAP_PATH = settings.SQLMAP_PATH
 
 
 def filtrar_urls_con_parametros(urls: list) -> list:
@@ -28,7 +30,7 @@ def filtrar_urls_con_parametros(urls: list) -> list:
     return [url for url in urls if "?" in url]
 
 
-def run_sqlmap(url: str, timeout: int = 300) -> dict:
+def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT) -> dict:
     """
     Ejecuta SQLMap contra UNA URL que tenga parámetros GET.
 
@@ -80,7 +82,7 @@ def run_sqlmap(url: str, timeout: int = 300) -> dict:
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = 300) -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT) -> list:
     """
     Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
 

@@ -15,6 +15,8 @@ from app.parsers.zap_parser import parsear_spider, parsear_zap
 from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
 
+from app.config import settings
+
 # Configuración
 # Nota: el directorio real se llama "worldlists" (con una 'l' extra),
 # por lo que la ruta anterior provocaba un FileNotFoundError al crear
@@ -129,3 +131,7 @@ def run_parser_pipeline(resultado_escaneo):
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
 
     return resultados_unificados
+
+
+
+    #docker exec -it security-app sh

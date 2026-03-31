@@ -41,7 +41,8 @@ def consolidar_resultados(dict_spider, dict_zap, dict_ffuf, dict_sqlmap):
 #Crea un archivo en output para mostrar el arhcivo final unificado json.
 def resultados_prueba_json(resultados):
     import os
-    output_dir = "./output/raw"
+    from app.config import settings
+    output_dir = settings.OUTPUT_DIR
     os.makedirs(output_dir, exist_ok=True)
 
     ruta_archivo = os.path.join(output_dir, "resultado_unificado.json")

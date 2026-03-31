@@ -3,7 +3,8 @@
         "total_urls_unicas": 16,
         "urls_spider": 16,
         "alertas_zap": 10,
-        "rutas_ffuf": 2
+        "rutas_ffuf": 2,
+        "vulnerabilidades_sqlmap": 0
     },
     "spider": {
         "herramienta": "ZAP Spider",
@@ -150,5 +151,6 @@
                 "status": 200
             }
         ]
-    }
+    },
+    "sqlmap": {}
 }
