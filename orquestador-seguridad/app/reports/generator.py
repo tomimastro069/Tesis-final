@@ -13,9 +13,8 @@ def generar_reporte(resultados, formato="markdown", output_dir=settings.REPORTS_
     """
     os.makedirs(output_dir, exist_ok=True)
     
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     extension = "md" if formato == "markdown" else "txt"
-    ruta_archivo = os.path.join(output_dir, f"reporte_seguridad_{timestamp}.{extension}")
+    ruta_archivo = os.path.join(output_dir, f"reporte_seguridad.{extension}")
     
     if formato == "markdown":
         contenido = _generar_contenido_markdown(resultados)
