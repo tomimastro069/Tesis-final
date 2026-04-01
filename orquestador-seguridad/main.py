@@ -1,6 +1,7 @@
 from app.workflow.pipeline import run_security_pipeline, run_parser_pipeline
 from app.utils.results import resultados_prueba_json
 from app.config import settings
+from app.reports.generator import generar_reporte
 
 if __name__ == "__main__":
     # Puedes cambiar el target por http://testphp.vulnweb.com/ para ver más acción
@@ -18,4 +19,8 @@ if __name__ == "__main__":
 
     #Funcion de prueba para ver el json unificado y final
     resultados_prueba_json(resultado_parseo)
-    print("\nEjecución finalizada. Revisa la carpeta /output/raw")
+    
+    # Generar el reporte en markdown
+    generar_reporte(resultado_parseo)
+
+    print("\nEjecución finalizada. Revisa la carpeta /output/raw y /output/reports")

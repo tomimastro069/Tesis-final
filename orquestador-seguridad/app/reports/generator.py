@@ -63,22 +63,26 @@ def _generar_contenido_markdown(resultados):
     if ffuf_data and ffuf_data.get("rutas"):
         md.append("## Detalles Técnicos: Rutas Ocultas o Sensibles (FFUF)")
         for ruta in ffuf_data.get("rutas", []):
+            md.append(f"### Directorio/Archivo Sensible o Expuesto")
+            md.append(f"- **Severidad:** Low (Informational)")
             md.append(f"- **URL:** `{ruta.get('url', 'N/A')}`")
-            md.append(f"  - **Status:** {ruta.get('status', 'N/A')}")
-            md.append(f"  - **Words:** {ruta.get('words', 'N/A')}")
-            md.append(f"  - **Lines:** {ruta.get('lines', 'N/A')}")
-            md.append("")
+            md.append(f"- **Método:** GET")
+            md.append(f"- **Descripción:** Archivo o directorio descubierto (HTTP Status: {ruta.get('status', 'N/A')}, Lines: {ruta.get('lines', 'N/A')}, Words: {ruta.get('words', 'N/A')})")
+            md.append(f"- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>")
+            md.append("\n---")
     
     # Detalle SQLMap
     sqlmap_data = resultados.get("sqlmap", {})
     if sqlmap_data and sqlmap_data.get("vulnerabilidades"):
         md.append("\n## Detalles Técnicos: Inyecciones SQL (SQLMap)")
         for vuln in sqlmap_data.get("vulnerabilidades", []):
-            md.append(f"### Inyección en parámetro: {vuln.get('parametro', 'N/A')}")
+            titulo = vuln.get('titulo', 'N/A')
+            md.append(f"### SQL Injection ({titulo})")
+            md.append(f"- **Severidad:** High (High)")
             md.append(f"- **URL:** `{vuln.get('url', 'N/A')}`")
-            md.append(f"- **Tipo:** {vuln.get('tipo', 'N/A')}")
-            md.append(f"- **Título:** {vuln.get('titulo', 'N/A')}")
-            md.append(f"- **Payload:** `{vuln.get('payload', 'N/A')}`")
+            md.append(f"- **Método:** N/A")
+            md.append(f"- **Descripción:** Inyección en parámetro `{vuln.get('parametro', 'N/A')}` mediante un payload tipo `{vuln.get('tipo', 'N/A')}`: `{vuln.get('payload', 'N/A')}`")
+            md.append(f"- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>")
             md.append("\n---")
             
     # Detalle Spider (Opcional, podría ser muy largo)

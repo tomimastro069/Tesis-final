@@ -46,11 +46,6 @@ def run_security_pipeline(target_url, nivel="medium"):
     
     print(f"--- Iniciando Orquestador para: {target_url} ---")
     print(f"Nivel de wordlist: {nivel}")
-    print(f"DEBUG - WORDLIST_PATH: {WORDLIST_PATH}")
-    print(f"DEBUG - Archivo existe: {os.path.exists(WORDLIST_PATH)}")
-    if os.path.exists(WORDLIST_PATH):
-        lineas = len(open(WORDLIST_PATH).readlines())
-        print(f"DEBUG - Términos en wordlist: {lineas}")
     
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
