@@ -13,7 +13,8 @@ ZAP_API_KEY = os.getenv("ZAP_API_KEY", "12345")
 
 # FFUF Configurations
 # We resolve the path relative to the base directory to avoid FileNotFoundError
-WORDLIST_PATH = os.getenv("WORDLIST_PATH", os.path.join(BASE_DIR, "worldlists", "wordlist.txt"))
+WORDLISTS_DIR = os.getenv("WORDLISTS_DIR", os.path.join(BASE_DIR, "worldlists"))
+WORDLIST_PATH = os.getenv("WORDLIST_PATH", os.path.join(WORDLISTS_DIR, "wordlist.txt"))
 
 # SQLMap Configurations
 SQLMAP_PATH = os.getenv("SQLMAP_PATH", "/opt/sqlmap/sqlmap.py")

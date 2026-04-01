@@ -17,16 +17,40 @@ from app.utils.results import consolidar_resultados
 
 from app.config import settings
 
-# Configuración
-WORDLIST_PATH = settings.WORDLIST_PATH
-OUTPUT_DIR = settings.OUTPUT_DIR
-FINAL_REPORT_FILE = settings.FINAL_REPORT_FILE
+# Configuración de Wordlists
+# Se usan rutas dinámicas basadas en WORDLISTS_DIR de settings
+WORDLISTS = {
+    "small": os.path.join(settings.WORDLISTS_DIR, "Discovery", "Web-content", "wordlist-small.txt"),
+    "medium": os.path.join(settings.WORDLISTS_DIR, "Discovery", "Web-content", "wordlist-medium.txt")
+}
+OUTPUT_DIR = "./output/raw"
+FINAL_REPORT_FILE = "resultado.json"
 
-def run_security_pipeline(target_url):
+def run_security_pipeline(target_url, nivel="medium"):
     """
     Función principal que coordina todo el escaneo.
+    
+    Args:
+        target_url: URL objetivo a escanear
+        nivel: Nivel de wordlist a usar ("small" o "medium"). Default: "medium"
+    
+    Returns:
+        dict: Datos crudos consolidados de todos los escaneos
     """
+    # Validar nivel y obtener ruta de wordlist
+    if nivel not in WORDLISTS:
+        print(f"Error: Nivel '{nivel}' inválido. Use 'small' o 'medium'")
+        return None
+    
+    WORDLIST_PATH = WORDLISTS[nivel]
+    
     print(f"--- Iniciando Orquestador para: {target_url} ---")
+    print(f"Nivel de wordlist: {nivel}")
+    print(f"DEBUG - WORDLIST_PATH: {WORDLIST_PATH}")
+    print(f"DEBUG - Archivo existe: {os.path.exists(WORDLIST_PATH)}")
+    if os.path.exists(WORDLIST_PATH):
+        lineas = len(open(WORDLIST_PATH).readlines())
+        print(f"DEBUG - Términos en wordlist: {lineas}")
     
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -122,3 +146,7 @@ def run_parser_pipeline(resultado_escaneo):
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
 
     return resultados_unificados
+
+
+
+    #docker exec -it security-app sh
