@@ -30,14 +30,15 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str) -> dict:
     
     # Comando ffuf
     cmd = [
-    "ffuf",
-    "-u", f"{base_url}/FUZZ",
-    "-w", wordlist_path,
-    "-e", ".php",
-    "-mc", "200,302",
-    "-of", "json",
-    "-o", output_file
-]
+        "ffuf",
+        "-u", f"{base_url}/FUZZ",
+        "-w", wordlist_path,
+        "-e", ".php",
+        "-mc", "200,302",
+        "-ic", # ignore wordlist comments
+        "-of", "json",
+        "-o", output_file
+    ]
     
     # Ejecutar comando usando exec.py
     result = run_command(cmd)
