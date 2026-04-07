@@ -30,7 +30,7 @@ def filtrar_urls_con_parametros(urls: list) -> list:
     return [url for url in urls if "?" in url]
 
 
-def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT) -> dict:
+def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> dict:
     """
     Ejecuta SQLMap contra UNA URL que tenga parámetros GET.
 
@@ -69,6 +69,9 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT) -> dict:
         "--level=2",
         "--risk=2"
     ]
+    
+    if cookies:
+        cmd.extend(["--cookie", cookies])
 
     # Ejecutar usando el mismo runner que ffuf
     result = run_command(cmd, timeout=timeout)
@@ -82,7 +85,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT) -> dict:
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT) -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> list:
     """
     Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
 
@@ -113,7 +116,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT) -> list
     resultados = []
     for i, url in enumerate(urls_con_params, 1):
         print(f"    [{i}/{len(urls_con_params)}] Testeando: {url}")
-        resultado = run_sqlmap(url, timeout=timeout)
+        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies)
         resultados.append(resultado)
 
     return resultados

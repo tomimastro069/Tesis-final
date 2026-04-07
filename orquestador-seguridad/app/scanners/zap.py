@@ -10,6 +10,32 @@ ZAP_PORT = settings.ZAP_PORT
 API_KEY = settings.ZAP_API_KEY
 
 
+def configurar_autenticacion(cookies: str) -> None:
+    """
+    Agrega una regla en el Replacer de ZAP para inyectar 
+    las cookies de sesión en todas las peticiones (Spider y Active Scan).
+    """
+    # Remover la regla si ya existe de un escaneo previo
+    url_remove = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/replacer/action/removeRule/"
+    try:
+        requests.get(url_remove, params={"apikey": API_KEY, "description": "OrquestadorGlobalCookie"})
+    except requests.exceptions.RequestException:
+        pass
+
+    url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/replacer/action/addRule/"
+    params = {
+        "apikey": API_KEY,
+        "description": "OrquestadorGlobalCookie",
+        "enabled": "true",
+        "matchType": "REQ_HEADER",
+        "matchRegex": "false",
+        "matchString": "Cookie",
+        "replacement": cookies
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+
+
 def iniciar_spider(target_url: str) -> str:
     """
     Inicia el spider en ZAP.

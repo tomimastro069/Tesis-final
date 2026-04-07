@@ -4,7 +4,7 @@ import os
 from ..runners.exec import run_command
 
 
-def run_ffuf(target_url: str, wordlist_path: str, output_dir: str) -> dict:
+def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str = None) -> dict:
     """
     Ejecuta ffuf contra un target y guarda el resultado en JSON.
     
@@ -12,6 +12,7 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str) -> dict:
         target_url (str): URL objetivo con FUZZ.
         wordlist_path (str): Path al archivo de palabras.
         output_dir (str): Carpeta donde se guardará el JSON.
+        cookies (str): Opcional. String de cookies.
 
     Returns:
         dict: {
@@ -39,6 +40,9 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str) -> dict:
         "-of", "json",
         "-o", output_file
     ]
+    
+    if cookies:
+        cmd.extend(["-b", cookies])
     
     # Ejecutar comando usando exec.py
     result = run_command(cmd)

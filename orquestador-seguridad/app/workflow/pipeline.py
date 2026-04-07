@@ -8,7 +8,8 @@ from app.scanners.zap import (
     obtener_urls,
     iniciar_escaneo_activo, 
     esperar_escaneo_activo, 
-    obtener_reporte_json
+    obtener_reporte_json,
+    configurar_autenticacion
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
@@ -26,13 +27,14 @@ WORDLISTS = {
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
 
-def run_security_pipeline(target_url, nivel="medium"):
+def run_security_pipeline(target_url, nivel="medium", cookies=None):
     """
     Función principal que coordina todo el escaneo.
     
     Args:
         target_url: URL objetivo a escanear
         nivel: Nivel de wordlist a usar ("small" o "medium"). Default: "medium"
+        cookies: String opcional con cookies (ej: "PHPSESSID=123")
     
     Returns:
         dict: Datos crudos consolidados de todos los escaneos
@@ -46,9 +48,15 @@ def run_security_pipeline(target_url, nivel="medium"):
     
     print(f"--- Iniciando Orquestador para: {target_url} ---")
     print(f"Nivel de wordlist: {nivel}")
+    if cookies:
+        print(f"Autenticando con cookies en ZAP, FFUF y SQLMap...")
     
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # --- Configuración Autenticación Global (ZAP) ---
+    if cookies:
+        configurar_autenticacion(cookies)
     
     # --- 1. ZAP SPIDER ---
     print("\n[1/4] Ejecutando ZAP Spider...")
@@ -69,7 +77,7 @@ def run_security_pipeline(target_url, nivel="medium"):
     # Sacamos la lista de URLs del resultado del spider
     # spider_urls es un dict tipo {"results": ["http://...", ...]}
     lista_urls = spider_urls.get("results", [])
-    sqlmap_raw = run_sqlmap_batch(lista_urls)
+    sqlmap_raw = run_sqlmap_batch(lista_urls, cookies=cookies)
 
     # --- 4. FFUF ---
     print("\n[4/4] Ejecutando FFUF...")
@@ -86,7 +94,7 @@ def run_security_pipeline(target_url, nivel="medium"):
     
     # Ejecutar FFUF
     # Nota: Esto creará un archivo JSON con datos crudos de FFUF en OUTPUT_DIR
-    ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR)
+    ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR, cookies=cookies)
     
     # Leer los datos crudos de FFUF para incluirlos en el reporte final
     # (run_ffuf guarda el archivo y aquí lo leemos para consolidarlo)

@@ -10,9 +10,15 @@ if __name__ == "__main__":
     # Pedir nivel de escaneo al usuario
     nivel = input("Nivel de escaneo (small/medium) [default: medium]: ").lower().strip() or "medium"
     
+    # Pedir la cookie de sesion
+    cookies = input("Cookie de sesion (opcional, ej. PHPSESSID=123..; security=low) [default: none]: ").strip() or None
+    
     print(f"Iniciando escaneo contra: {target}")
     print(f"Nivel seleccionado: {nivel}")
-    resultado_escaneo = run_security_pipeline(target, nivel)
+    if cookies:
+        print(f"Cookies inyectadas: {cookies}")
+        
+    resultado_escaneo = run_security_pipeline(target, nivel, cookies)
     
     print(f"Iniciando parseo de ZAP, SPIDER y FFUF:")
     resultado_parseo = run_parser_pipeline(resultado_escaneo)
