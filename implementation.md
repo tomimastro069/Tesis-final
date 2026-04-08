@@ -1,3 +1,12 @@
+
+# Apartir de ahora vamos a empezar el desarrollo de optimizacion
+
+### dejamos dado el proyecto como finalizado, para luego continuar a comparar la nueva version y analizar resultados
+
+---
+---
+---
+
 # Optimización de FFUF con Base de Datos de Historial
 
 ## Descripción
