@@ -15,6 +15,7 @@ from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
 from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
+from app.db.database import init_db
 
 from app.config import settings
 
@@ -39,6 +40,9 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     Returns:
         dict: Datos crudos consolidados de todos los escaneos
     """
+    # Inicializar la base de datos de historial
+    init_db()
+    
     # Validar nivel y obtener ruta de wordlist
     if nivel not in WORDLISTS:
         print(f"Error: Nivel '{nivel}' inválido. Use 'small' o 'medium'")
@@ -96,15 +100,20 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     # Nota: Esto creará un archivo JSON con datos crudos de FFUF en OUTPUT_DIR
     ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR, cookies=cookies)
     
-    # Leer los datos crudos de FFUF para incluirlos en el reporte final
-    # (run_ffuf guarda el archivo y aquí lo leemos para consolidarlo)
-    ffuf_data = {}
-    if os.path.exists(ffuf_raw["output_file"]):
-        with open(ffuf_raw["output_file"], "r") as f:
-            try:
-                ffuf_data = json.load(f)
-            except json.JSONDecodeError:
-                print("Advertencia: No se pudo leer el JSON crudo de FFUF.")
+    # Manejar caso de escaneo omitido (todas las palabras ya fueron probadas)
+    if ffuf_raw.get("skipped"):
+        print(f"  [FFUF] Escaneo omitido: todas las palabras ya fueron probadas anteriormente.")
+        ffuf_data = {}
+    else:
+        # Leer los datos crudos de FFUF para incluirlos en el reporte final
+        # (run_ffuf guarda el archivo y aquí lo leemos para consolidarlo)
+        ffuf_data = {}
+        if os.path.exists(ffuf_raw["output_file"]):
+            with open(ffuf_raw["output_file"], "r") as f:
+                try:
+                    ffuf_data = json.load(f)
+                except json.JSONDecodeError:
+                    print("Advertencia: No se pudo leer el JSON crudo de FFUF.")
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")

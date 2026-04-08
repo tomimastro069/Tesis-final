@@ -21,14 +21,14 @@ De esta forma, en futuras ejecuciones sobre la misma URL:
 4. FFUF ejecutará el escaneo sólo empleando esta wordlist reducida.
 5. Una vez finalizado el escaneo, se guardarán esas nuevas palabras en el historial de la BD.
 
-## ⚠️ User Review Required
+## ✅ User Review Required (COMPLETADO)
 
-1. **Ubicación de la Base de Datos:** Se creará un directorio `app/db/` que albergará el archivo SQLite (`history.db`). ¿Deseas que este archivo sea rastreado en Git o lo agregamos a `.gitignore` para que el historial sea estrictamente local de la máquina?
-2. **Dependencias:** Utilizaremos la librería estándar `sqlite3` de Python, por lo que no es necesario instalar nuevos paquetes en el `requirements.txt`. ¿Estás de acuerdo con este enfoque?
+1. **Ubicación de la Base de Datos:** ✅ NO rastrear en Git — agregada a `.gitignore` para que el historial sea local de cada máquina.
+2. **Dependencias:** ✅ Usamos `sqlite3` nativo de Python — sin nuevos paquetes.
 
 ## Proposed Changes
 
-### `app/db` (Nueva Capa)
+### `app/db` (Nueva Capa) — ✅ COMPLETADO
 
 #### [NEW] `app/db/__init__.py`
 
@@ -40,7 +40,7 @@ Se creará un nuevo módulo para manejar SQLite que contará con:
 * Función `get_tested_words(target_url)`: Para obtener un conjunto (`Set`) de todas las palabras ya probadas en ese target.
 * Función `save_tested_words(target_url, words_list)`: Para registrar un nuevo lote de palabras probadas en un target dado.
 
-### `app/scanners`
+### `app/scanners` — ✅ COMPLETADO
 
 #### [MODIFY] `app/scanners/ffuf.py`
 
@@ -50,12 +50,18 @@ Se creará un nuevo módulo para manejar SQLite que contará con:
 * Si `temp_wordlist.txt` queda vacío (se probaron ya todas las palabras), lo indicaremos y devolveremos un resultado con salida "Omitido" (para no afectar los reportes y evitar llamadas innecesarias a FFUF).
 * Si se ejecuta y termina exitosamente, invocaremos a `save_tested_words` para guardar el registro de escaneo en ese target.
 
-### `app/workflow`
+### `app/workflow` — ✅ COMPLETADO
 
 #### [MODIFY] `app/workflow/pipeline.py`
 
 * En `run_security_pipeline`, importaremos y llamaremos a `init_db()` en las fases iniciales, garantizando que el esquema de la BD exista antes de que intervenga `run_ffuf`.
 * Validaremos apropiadamente cuando el resultado crudo regrese vacío debido a un escaneo omitido.
+
+---
+
+## ✅ Estado: IMPLEMENTACIÓN COMPLETA
+
+*Todos los cambios descritos arriba han sido implementados.*
 
 ---
 

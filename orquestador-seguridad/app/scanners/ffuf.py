@@ -2,11 +2,15 @@
 
 import os
 from ..runners.exec import run_command
+from ..db.database import get_tested_words, save_tested_words
 
 
 def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str = None) -> dict:
     """
     Ejecuta ffuf contra un target y guarda el resultado en JSON.
+    
+    Si existen palabras ya probadas para el target, crea una wordlist temporal
+    con únicamente las palabras no probadas.
     
     Args:
         target_url (str): URL objetivo con FUZZ.
@@ -18,22 +22,59 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
         dict: {
             'output_file': str,   # path al JSON
             'stdout': str,        # salida cruda de ffuf
-            'stderr': str         # errores crudos de ffuf
+            'stderr': str,        # errores crudos de ffuf
+            'skipped': bool       # True si se omitió el escaneo
         }
     """
+    # Normalizar URL
+    target_url = target_url.rstrip("/")
+    
+    # Leer wordlist original
+    if not os.path.exists(wordlist_path):
+        raise FileNotFoundError(f"Wordlist no encontrada: {wordlist_path}")
+    
+    with open(wordlist_path, "r", encoding="utf-8", errors="ignore") as f:
+        all_words = set(line.strip() for line in f if line.strip() and not line.startswith("#"))
+    
+    # Obtener palabras ya probadas para este target
+    tested_words = get_tested_words(target_url)
+    
+    # Filtrar palabras no probadas
+    untested_words = all_words - tested_words
+    
+    # Si no hay palabras nuevas, omitir escaneo
+    if not untested_words:
+        return {
+            "output_file": None,
+            "stdout": "",
+            "stderr": "Todas las palabras ya fueron probadas",
+            "skipped": True
+        }
+    
+    # Crear wordlist temporal con palabras no probadas
+    temp_wordlist_path = os.path.join(output_dir, "temp_wordlist.txt")
+    os.makedirs(output_dir, exist_ok=True)
+    
+    with open(temp_wordlist_path, "w", encoding="utf-8") as f:
+        for word in sorted(untested_words):
+            f.write(word + "\n")
+    
+    # Usar la wordlist temporal en lugar de la original
+    wordlist_to_use = temp_wordlist_path
+    
     # Asegurarse de que la carpeta de salida exista
     os.makedirs(output_dir, exist_ok=True)
     
     output_file = os.path.join(output_dir, "ffuf_raw.json")
     
     # Asegurar que no haya doble slash al concatenar (ej: http://sitio.com/ + /FUZZ)
-    base_url = target_url.rstrip("/")
+    base_url = target_url
     
-    # Comando ffuf
+    # Comando ffuf usando la wordlist temporal
     cmd = [
         "ffuf",
         "-u", f"{base_url}/FUZZ",
-        "-w", wordlist_path,
+        "-w", wordlist_to_use,
         "-e", ".php",
         "-mc", "200,302",
         "-ic", # ignore wordlist comments
@@ -47,8 +88,13 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     # Ejecutar comando usando exec.py
     result = run_command(cmd)
     
+    # Guardar las palabras probadas en la base de datos
+    if untested_words:
+        save_tested_words(target_url, untested_words)
+    
     return {
         "output_file": output_file,
         "stdout": result.get("stdout"),
-        "stderr": result.get("stderr")
+        "stderr": result.get("stderr"),
+        "skipped": False
     }

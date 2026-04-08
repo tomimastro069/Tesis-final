@@ -1,0 +1,253 @@
+{
+    "resumen": {
+        "total_urls_unicas": 52,
+        "urls_spider": 51,
+        "alertas_zap": 0,
+        "rutas_ffuf": 8,
+        "vulnerabilidades_sqlmap": 0
+    },
+    "spider": {
+        "herramienta": "ZAP Spider",
+        "total_urls": 51,
+        "urls": [
+            {
+                "url": "http://dvwa/vulnerabilities/xss_r/"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/spanner.png"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/fi/?page=file2.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/javascript/"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=readme"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=PHPIDS-license"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/weak_id/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli_blind/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP"
+            },
+            {
+                "url": "http://dvwa/docs/DVWA_v1.3.pdf"
+            },
+            {
+                "url": "http://dvwa/instructions.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/fi/?page=file1.php"
+            },
+            {
+                "url": "http://dvwa/dvwa/js/dvwaPage.js"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/exec/"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/login_logo.png"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/upload/"
+            },
+            {
+                "url": "http://dvwa/security.php?phpids=on"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/xss_s/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/captcha/"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=changelog"
+            },
+            {
+                "url": "http://dvwa/logout.php"
+            },
+            {
+                "url": "http://dvwa"
+            },
+            {
+                "url": "http://dvwa/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/fi/?page=include.php"
+            },
+            {
+                "url": "http://dvwa/setup.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP"
+            },
+            {
+                "url": "http://dvwa/favicon.ico"
+            },
+            {
+                "url": "http://dvwa/dvwa/js/add_event_listeners.js"
+            },
+            {
+                "url": "http://dvwa/phpinfo.php"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/logo.png"
+            },
+            {
+                "url": "http://dvwa/login.php"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=copying"
+            },
+            {
+                "url": "http://dvwa/about.php"
+            },
+            {
+                "url": "http://dvwa/sitemap.xml"
+            },
+            {
+                "url": "http://dvwa/ids_log.php"
+            },
+            {
+                "url": "http://dvwa/var/www/html/config/config.inc.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/"
+            },
+            {
+                "url": "http://dvwa/instructions.php?doc=PDF"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/RandomStorm.png"
+            },
+            {
+                "url": "http://dvwa/security.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/csrf/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/"
+            },
+            {
+                "url": "http://dvwa/security.php?test=%2522%3E%3Cscript%3Eeval(window.name)%3C/script%3E"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/xss_d/"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/csp/"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/main.css"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/fi/?page=file3.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/login.css"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/lock.png"
+            },
+            {
+                "url": "http://dvwa/robots.txt"
+            }
+        ]
+    },
+    "zap": {
+        "herramienta": "ZAP",
+        "fecha": "Wed, 8 Apr 2026 18:24:24",
+        "host": "dvwa",
+        "puerto": "443",
+        "ssl": "true",
+        "total_alertas": 0,
+        "alertas": []
+    },
+    "ffuf": {
+        "herramienta": "ffuf",
+        "comando": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=ph1n8rc5faaqqh94sb01i39tb4;security=low",
+        "fecha": "2026-04-08T18:34:14Z",
+        "total_rutas": 8,
+        "rutas": [
+            {
+                "url": "http://dvwa/about.php",
+                "input": {
+                    "FFUFHASH": "8f0ee12da6",
+                    "FUZZ": "about.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/index.php",
+                "input": {
+                    "FFUFHASH": "8f0ee1cae6",
+                    "FUZZ": "index.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/instructions.php",
+                "input": {
+                    "FFUFHASH": "8f0ee1d376",
+                    "FUZZ": "instructions.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/login.php",
+                "input": {
+                    "FFUFHASH": "8f0ee1ed4a",
+                    "FUZZ": "login.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/logout.php",
+                "input": {
+                    "FFUFHASH": "8f0ee1ef58",
+                    "FUZZ": "logout.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/phpinfo.php",
+                "input": {
+                    "FFUFHASH": "8f0ee22df2",
+                    "FUZZ": "phpinfo.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/security.php",
+                "input": {
+                    "FFUFHASH": "8f0ee258f4",
+                    "FUZZ": "security.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/setup.php",
+                "input": {
+                    "FFUFHASH": "8f0ee25c24",
+                    "FUZZ": "setup.php"
+                },
+                "status": 200
+            }
+        ]
+    },
+    "sqlmap": {
+        "herramienta": "SQLMAP",
+        "vulnerabilidades": []
+    }
+}

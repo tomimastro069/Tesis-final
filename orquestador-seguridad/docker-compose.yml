@@ -2,6 +2,23 @@ version: "3.8"
 
 services:
 
+  db:
+    image: postgres:16-alpine
+    container_name: security-db
+    environment:
+      POSTGRES_DB: security_history
+      POSTGRES_USER: security_user
+      POSTGRES_PASSWORD: security_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security_user -d security_history"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   dvwa:
     image: vulnerables/web-dvwa
     container_name: dvwa
@@ -25,7 +42,21 @@ services:
     build: .
     container_name: security-app
     depends_on:
-      - zap
-      - dvwa
+      db:
+        condition: service_healthy
+      zap:
+        condition: service_started
+      dvwa:
+        condition: service_started
+    environment:
+      DB_ENGINE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: security_history
+      DB_USER: security_user
+      DB_PASSWORD: security_pass
     volumes:
       - .:/app   # monta la carpeta del proyecto dentro del contenedor
+
+volumes:
+  postgres_data:
