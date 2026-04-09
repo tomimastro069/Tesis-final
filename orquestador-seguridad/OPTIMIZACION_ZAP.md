@@ -67,3 +67,80 @@ Para erradicar esta pérdida de tiempo, forzamos la inyección de **banderas agr
   A pesar de todo lo anterior, SQLMap solía ser lento porque tiene una técnica letal llamada *Time-Based Blind SQLi* (Técnica T). Esta técnica se dedica a inyectarle comandos al servidor diciendo "Si entiendes este comando, quédate congelado por 5 segundos". El gran problema es que testear matemáticas obliga al orquestador a esperar físicamente esos tiempos muertos una y otra vez. Al pasarle `BEUQ`, le indicamos que es libre de usar Lógica Booleana, Errores, Unión y Queries, pero le prohíbe terminantemente usar tiempo. Esto aniquila el retraso residual.
 * **Optimizaciones Generales Inter-Servidor (`-o`):**
   Activa de golpe todos los interruptores de aceleración interna de red: habilitando soporte de conexiones persistentes (*Keep-Alive*), evitando descargar gráficas o cuerpos HTML muy pesados si la petición solo busca evaluar los headers de error (*Null connection*), y agilizando las respuestas ciegas.
+
+---
+
+## 🧠 Caché Incremental para SQLMap
+
+Siguiendo la misma filosofía aplicada en FFUF, SQLMap también fue equipado con un sistema de memoria persistente. Sin este mecanismo, el orquestador sometía las mismas URLs con parámetros (detectadas por el Spider) a SQLMap en cada ejecución, repitiendo ataques completos contra endpoints que ya habían sido declarados seguros en rondas previas.
+
+### Tabla `sqlmap_history` (base de datos)
+Se agregó una nueva tabla al módulo `app/db/database.py` que almacena cada URL ya analizada:
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `url` | TEXT (PK) | URL completa con parámetros testeados |
+| `timestamp` | TEXT | Fecha y hora del análisis |
+
+### Lógica de Ejecución (Antes vs. Ahora)
+* **Antes:** Si el Spider encontraba 15 URLs con parámetros (`?id=`, `?Submit=`, etc.), SQLMap lanzaba sus payloads contra las 15 en absolutamente cada ejecución del orquestador.
+* **Ahora:**
+    1. Al comenzar, `run_sqlmap_batch()` consulta la tabla `sqlmap_history` por cada URL de la lista.
+    2. Las URLs ya registradas imprimirán `[CACHE] Omitiendo...` y se descartan de la cola de ataque.
+    3. SQLMap solo trabaja realmente contra las URLs nuevas, no vistas anteriormente.
+    4. Tras analizar cada URL nueva, la persiste en la tabla para no repetirla en el futuro.
+
+### Impacto
+En la segunda ejecución, si no hay URLs nuevas en el Spider, el bloque entero de SQLMap termina en menos de 1 segundo imprimiendo: `[SQLMAP] Escaneo omitido: todas las URLs ya fueron analizadas.`
+
+---
+
+## 🔁 Re-Testeo Automático de URLs Vulnerables
+
+El sistema de caché tiene una excepción deliberada y crítica: las URLs donde se detectó una vulnerabilidad real **nunca son cacheadas**. En su lugar, se marcan en una tabla especial y son atacadas nuevamente en cada ejecución para confirmar si la debilidad sigue presente o fue corregida.
+
+### Tabla `vulnerable_urls` (base de datos)
+Nueva tabla persistente añadida a `app/db/database.py`:
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `url` | TEXT | URL donde se detectó la vulnerabilidad |
+| `tool` | TEXT | Herramienta que la detectó (`ZAP` o `SQLMap`) |
+| `vulnerabilidad` | TEXT | Nombre del ataque exitoso (ej: `SQL Injection`) |
+| `severidad` | TEXT | Nivel de riesgo (`High`, `Medium (Low)`, etc.) |
+| `primera_vez` | TEXT | Timestamp del primer hallazgo |
+| `ultima_vez` | TEXT | Timestamp de la última confirmación |
+
+La clave primaria compuesta `(url, tool, vulnerabilidad)` garantiza que si la misma falla es detectada por ZAP y SQLMap, se registren como dos entradas separadas con su propio historial de confirmaciones.
+
+### Flujo Completo en el Pipeline
+
+**Al finalizar un escaneo** (`run_parser_pipeline` en `pipeline.py`):
+1. Se iteran todas las alertas del reporte de ZAP parseado y se llama a `save_vulnerable_url()` por cada una.
+2. Se hace lo mismo con las vulnerabilidades encontradas por SQLMap.
+3. La consola informa cuántas URLs quedaron marcadas.
+
+**Al iniciar el siguiente escaneo** (`run_sqlmap_batch` en `sqlmap.py`):
+1. Se consulta `get_vulnerable_urls()` para obtener el set de URLs marcadas.
+2. Para cada URL en la lista del Spider:
+   - Si está en `vulnerable_urls` → se agrega a la cola de ataque **siempre**, imprimiendo `[⚠ RETEST]`.
+   - Si está en `sqlmap_history` (y no es vulnerable) → se omite con `[CACHE]`.
+   - Si es nueva → se escanea y se guarda en `sqlmap_history`.
+3. Las URLs bajo RETEST **no se guardan** en `sqlmap_history`, asegurando que nunca queden "congeladas" en el caché.
+
+### Ejemplo de salida en consola
+
+```
+[3/4] Ejecutando SQLMAP...
+    Se encontraron 8 URLs con parámetros.
+    [⚠ RETEST] http://dvwa/vulnerabilities/sqli/?id=ZAP → fue vulnerable antes, re-testeando siempre
+    [CACHE] Omitiendo http://dvwa/vulnerabilities/brute/?Login=Login (ya analizada y sin vulnerabilidades)
+    [CACHE] Omitiendo http://dvwa/vulnerabilities/csrf/?Change=Change (ya analizada y sin vulnerabilidades)
+    Iniciando escaneo real en 1 URLs...
+    [1/1] Testeando: http://dvwa/vulnerabilities/sqli/?id=ZAP
+
+[⚠] 1 URL(s) marcadas para re-testeo automático en el próximo escaneo.
+```
+
+### Valor para la Auditoría de Seguridad
+Este mecanismo convierte al orquestador en una herramienta de **seguimiento de vulnerabilidades en el tiempo**. Si un equipo de desarrollo parchea una debilidad, el campo `ultima_vez` en la BD dejará de actualizarse y la diferencia entre `primera_vez` y `ultima_vez` queda como evidencia histórica del período de exposición, ideal para reportes formales de seguridad y para la defensa de la tesis.

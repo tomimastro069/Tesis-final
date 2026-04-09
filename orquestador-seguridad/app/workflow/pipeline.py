@@ -9,7 +9,8 @@ from app.scanners.zap import (
     iniciar_escaneo_activo, 
     esperar_escaneo_activo, 
     obtener_reporte_json,
-    configurar_autenticacion
+    configurar_autenticacion,
+    agregar_urls_a_zap
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
@@ -68,26 +69,9 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     esperar_spider(spider_id)
     spider_urls = obtener_urls(spider_id)
 
-    # --- 2. ZAP ACTIVE SCAN ---
-    print("\n[2/4] Ejecutando ZAP Active Scan...")
-    ascan_id = iniciar_escaneo_activo(target_url)
-    esperar_escaneo_activo(ascan_id)
-    
-    # Obtener reporte crudo de ZAP (se mantiene en memoria para el reporte final)
-    reporte_zap_crudo = obtener_reporte_json()
+    # --- 2. FFUF (antes del Active Scan para enriquecer el contexto de ZAP) ---
+    print("\n[2/4] Ejecutando FFUF...")
 
-    # --- 3. SQLMAP ---
-    print("\n[3/4] Ejecutando SQLMAP...")
-    # Sacamos la lista de URLs del resultado del spider
-    # spider_urls es un dict tipo {"results": ["http://...", ...]}
-    lista_urls = spider_urls.get("results", [])
-    sqlmap_raw = run_sqlmap_batch(lista_urls, cookies=cookies)
-
-    # --- 4. FFUF ---
-    print("\n[4/4] Ejecutando FFUF...")
-    
-    # Crear wordlist dummy si no existe (para evitar errores)
-    # Asegurarse de que la carpeta padre exista antes de abrir el archivo.
     wordlist_dir = os.path.dirname(WORDLIST_PATH)
     if wordlist_dir and not os.path.exists(wordlist_dir):
         os.makedirs(wordlist_dir, exist_ok=True)
@@ -95,25 +79,49 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     if not os.path.exists(WORDLIST_PATH):
         with open(WORDLIST_PATH, "w") as f:
             f.write("admin\nlogin\nbackup\nconfig\n.env\n")
-    
-    # Ejecutar FFUF
-    # Nota: Esto creará un archivo JSON con datos crudos de FFUF en OUTPUT_DIR
+
     ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR, cookies=cookies)
-    
-    # Manejar caso de escaneo omitido (todas las palabras ya fueron probadas)
+
     if ffuf_raw.get("skipped"):
         print(f"  [FFUF] Escaneo omitido: todas las palabras ya fueron probadas anteriormente.")
         ffuf_data = {}
+        rutas_ffuf_nuevas = []
     else:
-        # Leer los datos crudos de FFUF para incluirlos en el reporte final
-        # (run_ffuf guarda el archivo y aquí lo leemos para consolidarlo)
         ffuf_data = {}
-        if os.path.exists(ffuf_raw["output_file"]):
+        if ffuf_raw.get("output_file") and os.path.exists(ffuf_raw["output_file"]):
             with open(ffuf_raw["output_file"], "r") as f:
                 try:
                     ffuf_data = json.load(f)
                 except json.JSONDecodeError:
                     print("Advertencia: No se pudo leer el JSON crudo de FFUF.")
+        # Extraer rutas encontradas para inyectarlas en ZAP
+        rutas_ffuf_nuevas = ffuf_data.get("results", [])
+        # Normalizar al formato [{"url": "..."}] si FFUF devuelve otro formato
+        if rutas_ffuf_nuevas and isinstance(rutas_ffuf_nuevas[0], dict) and "url" not in rutas_ffuf_nuevas[0]:
+            rutas_ffuf_nuevas = [{"url": r.get("url", "")} for r in rutas_ffuf_nuevas]
+
+    # --- 3. INYECTAR RUTAS DE FFUF EN ZAP (enriquecer el contexto antes del Active Scan) ---
+    if rutas_ffuf_nuevas:
+        print(f"\n[3/4-pre] Inyectando {len(rutas_ffuf_nuevas)} rutas de FFUF en ZAP...")
+        agregar_urls_a_zap(rutas_ffuf_nuevas)
+    else:
+        print("\n[3/4-pre] Sin rutas nuevas de FFUF para inyectar en ZAP.")
+
+    # --- 4. ZAP ACTIVE SCAN (ahora ataca Spider + rutas de FFUF) ---
+    print("\n[3/4] Ejecutando ZAP Active Scan...")
+    ascan_id = iniciar_escaneo_activo(target_url)
+    esperar_escaneo_activo(ascan_id)
+
+    # Obtener reporte crudo de ZAP
+    reporte_zap_crudo = obtener_reporte_json()
+
+    # --- 5. SQLMAP (recibe URLs del Spider + FFUF combinadas) ---
+    print("\n[4/4] Ejecutando SQLMAP...")
+    lista_urls_spider = spider_urls.get("results", [])
+    # Combinar con las rutas de FFUF que tengan parámetros (?
+    lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas if "?" in r.get("url", "")]
+    lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")
