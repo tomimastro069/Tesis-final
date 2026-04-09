@@ -1,7 +1,7 @@
 # app/scanners/sqlmap.py
 
 from app.runners.exec import run_command
-
+from app.db.database import is_url_tested_in_sqlmap, save_tested_sqlmap_url, get_vulnerable_urls
 
 from app.config import settings
 
@@ -56,24 +56,31 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
             'timeout': bool      # si se pasó del tiempo límite
         }
     """
-    # Comando SQLMap
+    # Comando SQLMap Optimizado
     # --batch        → modo automático, no pide confirmaciones al usuario
     # --random-agent → usa un User-Agent aleatorio (para no ser detectado)
     # --level=2      → nivel de profundidad de pruebas (1-5, 2 es moderado)
     # --risk=2       → nivel de riesgo de los payloads (1-3, 2 es moderado)
+    # --smart        → [OPTIMIZACIÓN] Heurística previa: solo ataca parámetros que cambian el comportamiento del sitio (ahorra un 80% de tiempo).
+    # --threads=10   → [OPTIMIZACIÓN] Dispara 10 hilos concurrentes en vez de 1 (límite máximo de sqlmap).
+    # -o             → [OPTIMIZACIÓN] Activa Keep-Alive, Null connection y otros aceleradores HTTP internos.
+    # --technique=BEUQ → [OPTIMIZACIÓN RADICAL] Prohíbe inyecciones basadas en tiempo ('T'). Evita que el servidor se quede "durmiendo" a propósito.
     cmd = [
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
         "--random-agent",
         "--level=2",
-        "--risk=2"
+        "--risk=2",
+        "--smart",
+        "--threads=10",
+        "-o",
+        "--technique=BEUQ"
     ]
     
     if cookies:
         cmd.extend(["--cookie", cookies])
 
-    # Ejecutar usando el mismo runner que ffuf
     result = run_command(cmd, timeout=timeout)
 
     return {
@@ -112,11 +119,33 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
 
     print(f"    Se encontraron {len(urls_con_params)} URLs con parámetros.")
 
-    # Paso 2: Ejecutar SQLMap en cada URL
+    # Paso 2: Separar URLs en: a re-testear (vulnerables conocidas) y nuevas vs cacheadas
     resultados = []
-    for i, url in enumerate(urls_con_params, 1):
-        print(f"    [{i}/{len(urls_con_params)}] Testeando: {url}")
+    urls_a_escanear = []
+    vulnerable_conocidas = get_vulnerable_urls()
+    
+    for url in urls_con_params:
+        if url in vulnerable_conocidas:
+            print(f"    [⚠ RETEST] {url} fue vulnerable antes → re-testeando siempre")
+            urls_a_escanear.append(url)
+        elif is_url_tested_in_sqlmap(url):
+            print(f"    [CACHE] Omitiendo {url} (ya analizada y sin vulnerabilidades previas)")
+        else:
+            urls_a_escanear.append(url)
+
+    if not urls_a_escanear:
+        print("    [SQLMAP] Escaneo omitido: todas las URLs ya fueron analizadas.")
+        return []
+
+    print(f"    Iniciando escaneo real en {len(urls_a_escanear)} URLs...")
+
+    for i, url in enumerate(urls_a_escanear, 1):
+        print(f"    [{i}/{len(urls_a_escanear)}] Testeando: {url}")
         resultado = run_sqlmap(url, timeout=timeout, cookies=cookies)
         resultados.append(resultado)
+        
+        # Solo guardar en caché si no es una URL vulnerable (las vulnerables siempre se re-testean)
+        if url not in vulnerable_conocidas:
+            save_tested_sqlmap_url(url)
 
     return resultados

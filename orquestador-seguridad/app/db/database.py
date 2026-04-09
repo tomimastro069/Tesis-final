@@ -16,6 +16,8 @@ except ImportError:  # pragma: no cover - se resuelve por requirements en runtim
 
 
 TABLE_NAME = "ffuf_history"
+SQLMAP_TABLE = "sqlmap_history"
+VULN_TABLE = "vulnerable_urls"
 DB_ENGINE = os.getenv("DB_ENGINE", "sqlite").lower()
 DB_PATH = os.path.join(os.path.dirname(__file__), "history.db")
 
@@ -54,15 +56,37 @@ def init_db():
             CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
                 id SERIAL PRIMARY KEY,
                 target_url TEXT NOT NULL,
+                wordlist_name TEXT NOT NULL DEFAULT 'default',
                 word TEXT NOT NULL,
                 timestamp TEXT NOT NULL,
-                UNIQUE(target_url, word)
+                UNIQUE(target_url, wordlist_name, word)
             )
             """
         )
         cursor.execute(
             f"""
             CREATE INDEX IF NOT EXISTS idx_target ON {TABLE_NAME}(target_url)
+            """
+        )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SQLMAP_TABLE} (
+                url TEXT PRIMARY KEY,
+                timestamp TEXT NOT NULL
+            )
+            """
+        )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {VULN_TABLE} (
+                url TEXT NOT NULL,
+                tool TEXT NOT NULL,
+                vulnerabilidad TEXT NOT NULL,
+                severidad TEXT NOT NULL DEFAULT 'Desconocida',
+                primera_vez TEXT NOT NULL,
+                ultima_vez TEXT NOT NULL,
+                PRIMARY KEY (url, tool, vulnerabilidad)
+            )
             """
         )
     else:
@@ -71,9 +95,10 @@ def init_db():
             CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 target_url TEXT NOT NULL,
+                wordlist_name TEXT NOT NULL DEFAULT 'default',
                 word TEXT NOT NULL,
                 timestamp TEXT NOT NULL,
-                UNIQUE(target_url, word)
+                UNIQUE(target_url, wordlist_name, word)
             )
             """
         )
@@ -82,20 +107,45 @@ def init_db():
             CREATE INDEX IF NOT EXISTS idx_target ON {TABLE_NAME}(target_url)
             """
         )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SQLMAP_TABLE} (
+                url TEXT PRIMARY KEY,
+                timestamp TEXT NOT NULL
+            )
+            """
+        )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {VULN_TABLE} (
+                url TEXT NOT NULL,
+                tool TEXT NOT NULL,
+                vulnerabilidad TEXT NOT NULL,
+                severidad TEXT NOT NULL DEFAULT 'Desconocida',
+                primera_vez TEXT NOT NULL,
+                ultima_vez TEXT NOT NULL,
+                PRIMARY KEY (url, tool, vulnerabilidad)
+            )
+            """
+        )
 
     conn.commit()
     conn.close()
 
 
-def get_tested_words(target_url: str) -> set:
+def get_tested_words(target_url: str, wordlist_name: str = "default") -> set:
     """
-    Obtiene todas las palabras ya probadas para un target.
+    Obtiene todas las palabras ya probadas para un target Y una wordlist específica.
+    
+    La clave de caché es (target_url + wordlist_name), así 'small' y 'medium'
+    son cachés independientes y no se contaminan entre sí.
     
     Args:
         target_url (str): URL del target (sin trailing slash).
+        wordlist_name (str): Nombre de la wordlist usada (ej: 'small', 'medium').
     
     Returns:
-        set: Conjunto de palabras ya probadas.
+        set: Conjunto de palabras ya probadas para esa combinación.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -105,13 +155,13 @@ def get_tested_words(target_url: str) -> set:
     
     if _is_postgres():
         cursor.execute(
-            f"SELECT word FROM {TABLE_NAME} WHERE target_url = %s",
-            (target_url,),
+            f"SELECT word FROM {TABLE_NAME} WHERE target_url = %s AND wordlist_name = %s",
+            (target_url, wordlist_name),
         )
     else:
         cursor.execute(
-            f"SELECT word FROM {TABLE_NAME} WHERE target_url = ?",
-            (target_url,),
+            f"SELECT word FROM {TABLE_NAME} WHERE target_url = ? AND wordlist_name = ?",
+            (target_url, wordlist_name),
         )
     
     words = {row[0] for row in cursor.fetchall()}
@@ -120,13 +170,14 @@ def get_tested_words(target_url: str) -> set:
     return words
 
 
-def save_tested_words(target_url: str, words_list: list):
+def save_tested_words(target_url: str, words_list: list, wordlist_name: str = "default"):
     """
-    Guarda un lote de palabras probadas para un target.
+    Guarda un lote de palabras probadas para un target Y una wordlist específica.
     
     Args:
         target_url (str): URL del target (sin trailing slash).
         words_list (list): Lista de palabras a guardar.
+        wordlist_name (str): Nombre de la wordlist usada (ej: 'small', 'medium').
     """
     if not words_list:
         return
@@ -139,23 +190,111 @@ def save_tested_words(target_url: str, words_list: list):
     
     timestamp = datetime.now().isoformat()
     
-    rows = [(target_url, word, timestamp) for word in words_list]
+    rows = [(target_url, wordlist_name, word, timestamp) for word in words_list]
 
     if _is_postgres():
         cursor.executemany(
             f"""
-            INSERT INTO {TABLE_NAME} (target_url, word, timestamp)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (target_url, word) DO NOTHING
+            INSERT INTO {TABLE_NAME} (target_url, wordlist_name, word, timestamp)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (target_url, wordlist_name, word) DO NOTHING
             """,
             rows,
         )
     else:
         # Insertar ignorando duplicados
         cursor.executemany(
-            f"INSERT OR IGNORE INTO {TABLE_NAME} (target_url, word, timestamp) VALUES (?, ?, ?)",
+            f"INSERT OR IGNORE INTO {TABLE_NAME} (target_url, wordlist_name, word, timestamp) VALUES (?, ?, ?, ?)",
             rows,
         )
     
     conn.commit()
     conn.close()
+
+
+def is_url_tested_in_sqlmap(url: str) -> bool:
+    """Verifica si una URL ya fue analizada por SQLMap."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    if _is_postgres():
+        cursor.execute(f"SELECT 1 FROM {SQLMAP_TABLE} WHERE url = %s", (url,))
+    else:
+        cursor.execute(f"SELECT 1 FROM {SQLMAP_TABLE} WHERE url = ?", (url,))
+    
+    result = cursor.fetchone() is not None
+    conn.close()
+    return result
+
+
+def save_tested_sqlmap_url(url: str):
+    """Guarda una URL como probada en SQLMap."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    timestamp = datetime.now().isoformat()
+    
+    if _is_postgres():
+        cursor.execute(
+            f"INSERT INTO {SQLMAP_TABLE} (url, timestamp) VALUES (%s, %s) ON CONFLICT (url) DO NOTHING",
+            (url, timestamp)
+        )
+    else:
+        cursor.execute(
+            f"INSERT OR IGNORE INTO {SQLMAP_TABLE} (url, timestamp) VALUES (?, ?)",
+            (url, timestamp)
+        )
+        
+    conn.commit()
+    conn.close()
+
+
+def save_vulnerable_url(url: str, tool: str, vulnerabilidad: str, severidad: str = "Desconocida"):
+    """
+    Marca una URL como vulnerable para que siempre sea re-testeada.
+    
+    Si la URL+tool+vulnerabilidad ya existe, actualiza 'ultima_vez' para
+    registrar cuándo fue confirmada por última vez. Así se puede ver si
+    sigue siendo débil en escaneos futuros.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    now = datetime.now().isoformat()
+    
+    if _is_postgres():
+        cursor.execute(
+            f"""
+            INSERT INTO {VULN_TABLE} (url, tool, vulnerabilidad, severidad, primera_vez, ultima_vez)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (url, tool, vulnerabilidad)
+            DO UPDATE SET ultima_vez = EXCLUDED.ultima_vez, severidad = EXCLUDED.severidad
+            """,
+            (url, tool, vulnerabilidad, severidad, now, now)
+        )
+    else:
+        # Intentar insertar nueva. Si ya existe, solo actualizar ultima_vez.
+        cursor.execute(
+            f"""
+            INSERT INTO {VULN_TABLE} (url, tool, vulnerabilidad, severidad, primera_vez, ultima_vez)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT (url, tool, vulnerabilidad)
+            DO UPDATE SET ultima_vez = excluded.ultima_vez, severidad = excluded.severidad
+            """,
+            (url, tool, vulnerabilidad, severidad, now, now)
+        )
+    
+    conn.commit()
+    conn.close()
+
+
+def get_vulnerable_urls() -> set:
+    """
+    Devuelve el set de URLs que fueron vulnerables en algún escaneo anterior.
+    SQLMap siempre las re-testeará sin importar el caché.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute(f"SELECT DISTINCT url FROM {VULN_TABLE}")
+    urls = {row[0] for row in cursor.fetchall()}
+    
+    conn.close()
+    return urls

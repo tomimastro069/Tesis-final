@@ -15,7 +15,7 @@ from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
 from app.parsers.sqlmap_parser import parsear_sqlmap
 from app.utils.results import consolidar_resultados 
-from app.db.database import init_db
+from app.db.database import init_db, save_vulnerable_url
 
 from app.config import settings
 
@@ -156,6 +156,29 @@ def run_parser_pipeline(resultado_escaneo):
 
     #Consolidar los 3 resultados en una sola lista sin duplicados
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
+
+    # --- Marcar URLs vulnerables para re-testeo automático ---
+    # ZAP: guardar cada alerta encontrada
+    for alerta in zap_parseado.get("alertas", []):
+        save_vulnerable_url(
+            url=alerta["url"],
+            tool="ZAP",
+            vulnerabilidad=alerta["vulnerabilidad"],
+            severidad=alerta["severidad"]
+        )
+    
+    # SQLMap: guardar cada vulnerabilidad encontrada
+    for vuln in sqlmap_parseado.get("vulnerabilidades", []):
+        save_vulnerable_url(
+            url=vuln["url"],
+            tool="SQLMap",
+            vulnerabilidad=vuln.get("tipo", "SQL Injection"),
+            severidad="High"
+        )
+    
+    total_marcadas = len(zap_parseado.get("alertas", [])) + len(sqlmap_parseado.get("vulnerabilidades", []))
+    if total_marcadas > 0:
+        print(f"\n[⚠] {total_marcadas} URL(s) marcadas para re-testeo automático en el próximo escaneo.")
 
     return resultados_unificados
 

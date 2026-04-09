@@ -29,6 +29,11 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     # Normalizar URL
     target_url = target_url.rstrip("/")
     
+    # Extraer el nombre de la wordlist (sin extensión) como clave de caché.
+    # Así 'small' y 'medium' son cachés totalmente independientes.
+    # Ej: "/wordlists/common-small.txt" -> "common-small"
+    wordlist_name = os.path.splitext(os.path.basename(wordlist_path))[0]
+    
     # Leer wordlist original
     if not os.path.exists(wordlist_path):
         raise FileNotFoundError(f"Wordlist no encontrada: {wordlist_path}")
@@ -36,8 +41,8 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     with open(wordlist_path, "r", encoding="utf-8", errors="ignore") as f:
         all_words = set(line.strip() for line in f if line.strip() and not line.startswith("#"))
     
-    # Obtener palabras ya probadas para este target
-    tested_words = get_tested_words(target_url)
+    # Obtener palabras ya probadas para este target CON ESTA WORDLIST específica
+    tested_words = get_tested_words(target_url, wordlist_name)
     
     # Filtrar palabras no probadas
     untested_words = all_words - tested_words
@@ -88,9 +93,9 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     # Ejecutar comando usando exec.py
     result = run_command(cmd)
     
-    # Guardar las palabras probadas en la base de datos
+    # Guardar las palabras probadas en la base de datos (vinculadas a esta wordlist)
     if untested_words:
-        save_tested_words(target_url, untested_words)
+        save_tested_words(target_url, untested_words, wordlist_name)
     
     return {
         "output_file": output_file,

@@ -104,8 +104,21 @@ def iniciar_escaneo_activo(target_url: str) -> str:
         target_url += "/"
 
     base_opt = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/ascan/action"
+    # Optimización 1: Reducir fuerza y umbral para menor carga
     requests.get(f"{base_opt}/setOptionAttackStrength/", params={"apikey": API_KEY, "strength": "LOW"})
     requests.get(f"{base_opt}/setOptionAlertThreshold/", params={"apikey": API_KEY, "threshold": "MEDIUM"})
+
+    # Optimización 2: Aumentar la cantidad de hilos/peticiones concurrentes (por defecto 2, lo subimos a 20)
+    requests.get(f"{base_opt}/setOptionThreadPerHost/", params={"apikey": API_KEY, "Integer": 20})
+    
+    # Optimización 3: Limitar a 1 minuto máximo el tiempo que ZAP se queda intentando validar UNA variante
+    requests.get(f"{base_opt}/setOptionMaxRuleDurationInMins/", params={"apikey": API_KEY, "Integer": 1})
+    
+    # Optimización 4: Limitar a 10 minutos máximo el ACTIVE SCAN completo para evitar que quede colgado
+    requests.get(f"{base_opt}/setOptionMaxScanDurationInMins/", params={"apikey": API_KEY, "Integer": 10})
+
+    # Optimización 5: Desactivar la validación y busqueda agresiva de tokens CSRF (ahorra mucho tiempo)
+    requests.get(f"{base_opt}/setOptionHandleAntiCSRFTokens/", params={"apikey": API_KEY, "Boolean": "false"})
 
     url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/ascan/action/scan/"
     params = {
