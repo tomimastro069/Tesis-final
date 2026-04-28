@@ -1,98 +1,17 @@
 # Reporte Consolidado de Seguridad
-**Fecha de generación:** 2026-04-06 19:30:17
+**Fecha de generación:** 2026-04-28 20:52:22
 
 ## Estadísticas Generales
-- **Total de URLs únicas analizadas:** 16
-- **URLs descubiertas por Spider:** 16
-- **Alertas identificadas por ZAP:** 10
-- **Rutas descubiertas por FFUF:** 2
+- **Total de URLs únicas analizadas:** 56
+- **URLs descubiertas por Spider:** 55
+- **Alertas identificadas por ZAP:** 0
+- **Rutas descubiertas por FFUF:** 9
 - **Vulnerabilidades detectadas por SQLMap:** 0
 
-## Detalles Técnicos: Alertas de ZAP
-### Cross Site Scripting (Reflected)
-- **Severidad:** High (Medium)
-- **URL:** `http://target.com/search`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Phase: Architecture and Design. Use a vetted library or framework that does not allow this weakness to occur. Validate all input. Use Content-Security-Policy header.</p>
-
----
-### Cross Site Scripting (Reflected)
-- **Severidad:** High (Medium)
-- **URL:** `http://target.com/feedback`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Phase: Architecture and Design. Use a vetted library or framework that does not allow this weakness to occur. Validate all input. Use Content-Security-Policy header.</p>
-
----
-### SQL Injection
-- **Severidad:** High (High)
-- **URL:** `http://target.com/login`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
-
----
-### Missing Anti-clickjacking Header
-- **Severidad:** Medium (Medium)
-- **URL:** `http://target.com`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Set one of these on all web pages returned by your site/app.</p>
-
----
-### Missing Anti-clickjacking Header
-- **Severidad:** Medium (Medium)
-- **URL:** `http://target.com/login`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Set one of these on all web pages returned by your site/app.</p>
-
----
-### Missing Anti-clickjacking Header
-- **Severidad:** Medium (Medium)
-- **URL:** `http://target.com/admin`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Set one of these on all web pages returned by your site/app.</p>
-
----
-### X-Content-Type-Options Header Missing
-- **Severidad:** Low (Medium)
-- **URL:** `http://target.com`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p>
-
----
-### X-Content-Type-Options Header Missing
-- **Severidad:** Low (Medium)
-- **URL:** `http://target.com/login`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p>
-
----
-### Server Leaks Version Information via 'Server' HTTP Response Header Field
-- **Severidad:** Low (High)
-- **URL:** `http://target.com`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the 'Server' header or provide generic details.</p>
-
----
-### Modern Web Application
-- **Severidad:** Informational (Medium)
-- **URL:** `http://target.com`
-- **Método:** N/A
-- **Descripción:** N/A
-- **Solución:** <p>This is an informational alert and so no changes are required.</p>
-
----
 ## Detalles Técnicos: Rutas Ocultas o Sensibles (FFUF)
 ### Directorio/Archivo Sensible o Expuesto
 - **Severidad:** Low (Informational)
-- **URL:** `http://target.com/admin`
+- **URL:** `http://dvwa/login.php`
 - **Método:** GET
 - **Descripción:** Archivo o directorio descubierto (HTTP Status: 200, Lines: N/A, Words: N/A)
 - **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
@@ -100,9 +19,65 @@
 ---
 ### Directorio/Archivo Sensible o Expuesto
 - **Severidad:** Low (Informational)
-- **URL:** `http://target.com/login`
+- **URL:** `http://dvwa/security.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 302, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 302, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/about.php`
 - **Método:** GET
 - **Descripción:** Archivo o directorio descubierto (HTTP Status: 200, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/logout.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 302, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/index.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 302, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/setup.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 200, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/instructions.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 200, Lines: N/A, Words: N/A)
+- **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
+
+---
+### Directorio/Archivo Sensible o Expuesto
+- **Severidad:** Low (Informational)
+- **URL:** `http://dvwa/phpinfo.php`
+- **Método:** GET
+- **Descripción:** Archivo o directorio descubierto (HTTP Status: 302, Lines: N/A, Words: N/A)
 - **Solución:** <p>Verifique si este recurso debe ser público. Si contiene información confidencial, configure controles de acceso o retírelo del servidor.</p>
 
 ---
@@ -111,21 +86,60 @@
 <details><summary>Ver lista completa de URLs descubiertas</summary>
 
 <ul>
-<li><code>http://target.com</code></li>
-<li><code>http://target.com/login</code></li>
-<li><code>http://target.com/admin</code></li>
-<li><code>http://target.com/admin/dashboard</code></li>
-<li><code>http://target.com/api</code></li>
-<li><code>http://target.com/api/</code></li>
-<li><code>http://target.com/api/users</code></li>
-<li><code>http://target.com/search</code></li>
-<li><code>http://target.com/search?q=test</code></li>
-<li><code>http://target.com/feedback</code></li>
-<li><code>http://target.com/assets/main.js</code></li>
-<li><code>http://target.com/assets/style.css</code></li>
-<li><code>http://target.com/robots.txt</code></li>
-<li><code>http://target.com/sitemap.xml</code></li>
-<li><code>http://target.com/contact</code></li>
-<li><code>http://target.com/about</code></li>
+<li><code>http://dvwa/vulnerabilities/xss_r/</code></li>
+<li><code>http://dvwa/dvwa/images/spanner.png</code></li>
+<li><code>http://dvwa/vulnerabilities/fi/?page=file2.php</code></li>
+<li><code>http://dvwa/vulnerabilities/javascript/</code></li>
+<li><code>http://dvwa/instructions.php?doc=readme</code></li>
+<li><code>http://dvwa/instructions.php?doc=PHPIDS-license</code></li>
+<li><code>http://dvwa/vulnerabilities/weak_id/</code></li>
+<li><code>http://dvwa/vulnerabilities/sqli_blind/</code></li>
+<li><code>http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP</code></li>
+<li><code>http://dvwa/docs/DVWA_v1.3.pdf</code></li>
+<li><code>http://dvwa/instructions.php</code></li>
+<li><code>http://dvwa/vulnerabilities/fi/?page=file1.php</code></li>
+<li><code>http://dvwa/dvwa/js/dvwaPage.js</code></li>
+<li><code>http://dvwa/vulnerabilities/exec/</code></li>
+<li><code>http://dvwa/dvwa/images/login_logo.png</code></li>
+<li><code>http://dvwa/vulnerabilities/upload/</code></li>
+<li><code>http://dvwa/security.php?phpids=on</code></li>
+<li><code>http://dvwa/vulnerabilities/xss_s/</code></li>
+<li><code>http://dvwa/vulnerabilities/captcha/</code></li>
+<li><code>http://dvwa/instructions.php?doc=changelog</code></li>
+<li><code>http://dvwa/logout.php</code></li>
+<li><code>http://dvwa</code></li>
+<li><code>http://dvwa/vulnerabilities/xss_d/?default</code></li>
+<li><code>http://dvwa/</code></li>
+<li><code>http://dvwa/vulnerabilities/fi/?page=include.php</code></li>
+<li><code>http://dvwa/setup.php</code></li>
+<li><code>http://dvwa/vulnerabilities/xss_r/?name=ZAP</code></li>
+<li><code>http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP</code></li>
+<li><code>http://dvwa/favicon.ico</code></li>
+<li><code>http://dvwa/dvwa/js/add_event_listeners.js</code></li>
+<li><code>http://dvwa/phpinfo.php</code></li>
+<li><code>http://dvwa/dvwa/images/logo.png</code></li>
+<li><code>http://dvwa/login.php</code></li>
+<li><code>http://dvwa/instructions.php?doc=copying</code></li>
+<li><code>http://dvwa/about.php</code></li>
+<li><code>http://dvwa/sitemap.xml</code></li>
+<li><code>http://dvwa/ids_log.php</code></li>
+<li><code>http://dvwa/var/www/html/config/config.inc.php</code></li>
+<li><code>http://dvwa/vulnerabilities/sqli/</code></li>
+<li><code>http://dvwa/instructions.php?doc=PDF</code></li>
+<li><code>http://dvwa/dvwa/images/RandomStorm.png</code></li>
+<li><code>http://dvwa/security.php</code></li>
+<li><code>http://dvwa/vulnerabilities/csrf/</code></li>
+<li><code>http://dvwa/DTD/xhtml1-transitional.dtd</code></li>
+<li><code>http://dvwa/vulnerabilities/brute/</code></li>
+<li><code>http://dvwa/security.php?test=%2522%3E%3Cscript%3Eeval(window.name)%3C/script%3E</code></li>
+<li><code>http://dvwa/vulnerabilities/xss_d/</code></li>
+<li><code>http://dvwa/vulnerabilities/csp/</code></li>
+<li><code>http://dvwa/dvwa/css/main.css</code></li>
+<li><code>http://dvwa/vulnerabilities/fi/?page=file3.php</code></li>
+<li><code>http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP</code></li>
+<li><code>http://dvwa/dvwa/css/login.css</code></li>
+<li><code>http://dvwa/dvwa/images/lock.png</code></li>
+<li><code>http://dvwa/robots.txt</code></li>
+<li><code>http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP</code></li>
 </ul>
 </details>

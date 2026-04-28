@@ -149,3 +149,42 @@ def obtener_reporte_json() -> dict:
     response.raise_for_status()
 
     return response.json()
+
+
+def agregar_urls_a_zap(rutas_ffuf: list) -> None:
+    """
+    Inyecta en el árbol interno de ZAP las URLs descubiertas por FFUF
+    para que el Active Scan posterior también las ataque.
+
+    FFUF descubre rutas que el Spider de ZAP no puede encontrar (fuerza bruta
+    de diccionario vs. crawling de links). Sin esta función, el Active Scan
+    solo ataca lo que el Spider vio. Con ella, todas las rutas nuevas de FFUF
+    quedan registradas en el contexto de ZAP antes del ataque.
+
+    Args:
+        rutas_ffuf (list): Lista de dicts con clave 'url', tal como devuelve
+                           el parser de FFUF. Ej: [{"url": "http://dvwa/admin/"}]
+    """
+    url_access = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/core/action/accessUrl/"
+
+    total = len(rutas_ffuf)
+    if total == 0:
+        return
+
+    print(f"    [ZAP] Inyectando {total} rutas de FFUF en el árbol de ZAP...")
+
+    for item in rutas_ffuf:
+        ruta = item.get("url", "")
+        if not ruta:
+            continue
+        try:
+            requests.get(url_access, params={
+                "apikey": API_KEY,
+                "url": ruta,
+                "followRedirects": "true"
+            }, timeout=5)
+        except requests.exceptions.RequestException:
+            # Si una URL falla (timeout, 404, etc.) simplemente se ignora
+            pass
+
+    print(f"    [ZAP] Rutas inyectadas. El Active Scan las incluirá en su ataque.")
