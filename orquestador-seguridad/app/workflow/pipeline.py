@@ -71,6 +71,11 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
 
     # --- 2. FFUF (antes del Active Scan para enriquecer el contexto de ZAP) ---
     print("\n[2/4] Ejecutando FFUF...")
+    
+    # [MEJORA 1] Limpieza Proactiva: Borrar resultado anterior para evitar datos fantasmas
+    ffuf_output = os.path.join(OUTPUT_DIR, "ffuf_raw.json")
+    if os.path.exists(ffuf_output):
+        os.remove(ffuf_output)
 
     wordlist_dir = os.path.dirname(WORDLIST_PATH)
     if wordlist_dir and not os.path.exists(wordlist_dir):
