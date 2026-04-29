@@ -6,10 +6,20 @@ def parsear_sqlmap(dato_dict_crudo):
         lista_sql = list()
 
         for url_analizada in data:
-            if "is vulnerable" in url_analizada["stdout"]:
+            stdout = url_analizada.get("stdout", "")
+            # Buscamos múltiples patrones que indican éxito en SQLMap
+            patrones_exito = [
+                "is vulnerable",
+                "is injectable",
+                "vulnerability: SQL injection",
+                "Payload:",
+                "Type: "
+            ]
+            
+            if any(p.lower() in stdout.lower() for p in patrones_exito):
                 url_filtrada = {
                     "url": url_analizada["url"],
-                    "salida": url_analizada["stdout"]
+                    "salida": stdout
                 }
                 lista_sql.append(url_filtrada)
 

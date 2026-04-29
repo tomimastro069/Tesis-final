@@ -298,3 +298,25 @@ def get_vulnerable_urls() -> set:
     
     conn.close()
     return urls
+
+
+def limpiar_cache_completa():
+    """
+    Borra todo el historial de FFUF, SQLMap y URLs vulnerables.
+    Útil para empezar escaneos desde cero con nuevas configuraciones.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    tablas = [TABLE_NAME, SQLMAP_TABLE, VULN_TABLE]
+    
+    if _is_postgres():
+        tablas_str = ", ".join(tablas)
+        cursor.execute(f"TRUNCATE TABLE {tablas_str} CASCADE;")
+    else:
+        for tabla in tablas:
+            cursor.execute(f"DELETE FROM {tabla};")
+            
+    conn.commit()
+    conn.close()
+    print("[✓] Caché de base de datos limpiada por completo.")

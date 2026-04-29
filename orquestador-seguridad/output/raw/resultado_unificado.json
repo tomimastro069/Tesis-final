@@ -1,14 +1,14 @@
 {
     "resumen": {
-        "total_urls_unicas": 58,
-        "urls_spider": 52,
-        "alertas_zap": 56,
-        "rutas_ffuf": 0,
+        "total_urls_unicas": 60,
+        "urls_spider": 54,
+        "alertas_zap": 52,
+        "rutas_ffuf": 8,
         "vulnerabilidades_sqlmap": 0
     },
     "spider": {
         "herramienta": "ZAP Spider",
-        "total_urls": 52,
+        "total_urls": 54,
         "urls": [
             {
                 "url": "http://dvwa/vulnerabilities/xss_r/"
@@ -77,6 +77,9 @@
                 "url": "http://dvwa"
             },
             {
+                "url": "http://dvwa/vulnerabilities/xss_d/?default"
+            },
+            {
                 "url": "http://dvwa/"
             },
             {
@@ -84,6 +87,9 @@
             },
             {
                 "url": "http://dvwa/setup.php"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/xss_r/?name=ZAP"
             },
             {
                 "url": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP"
@@ -134,9 +140,6 @@
                 "url": "http://dvwa/vulnerabilities/csrf/"
             },
             {
-                "url": "http://dvwa/DTD/xhtml1-transitional.dtd"
-            },
-            {
                 "url": "http://dvwa/vulnerabilities/brute/"
             },
             {
@@ -165,25 +168,20 @@
             },
             {
                 "url": "http://dvwa/robots.txt"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP"
             }
         ]
     },
     "zap": {
         "herramienta": "ZAP",
-        "fecha": "Wed, 29 Apr 2026 13:45:49",
+        "fecha": "Wed, 29 Apr 2026 14:04:02",
         "host": "dvwa",
         "puerto": "443",
         "ssl": "true",
-        "total_alertas": 56,
+        "total_alertas": 52,
         "alertas": [
-            {
-                "url": "http://dvwa/instructions.php?doc=readme%27+AND+%271%27%3D%271%27+--+",
-                "vulnerabilidad": "SQL Injection",
-                "severidad": "High (Medium)",
-                "metodo": "GET",
-                "descripcion": "<p>SQL injection may be possible.</p>",
-                "solucion": "<p>Do not trust client side input, even if there is client side validation in place.</p><p>In general, type check all data on the server side.</p><p>If the application uses JDBC, use PreparedStatement or CallableStatement, with parameters passed by '?'</p><p>If the application uses ASP, use ADO Command Objects with strong type checking and parameterized queries.</p><p>If database Stored Procedures can be used, use them.</p><p>Do *not* concatenate strings into queries in the stored procedure, or use 'exec', 'exec immediate', or equivalent functionality!</p><p>Do not create dynamic SQL queries using simple string concatenation.</p><p>Escape all data received from the client.</p><p>Apply an 'allow list' of allowed characters, or a 'deny list' of disallowed characters in user input.</p><p>Apply the principle of least privilege by using the least privileged database user possible.</p><p>In particular, avoid using the 'sa' or 'db-owner' database users. This does not eliminate SQL injection, but minimizes its impact.</p><p>Grant the minimum database access that is necessary for the application.</p>"
-            },
             {
                 "url": "http://dvwa/vulnerabilities/captcha/",
                 "vulnerabilidad": "Absence of Anti-CSRF Tokens",
@@ -201,7 +199,7 @@
                 "solucion": "<p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/javascript/",
+                "url": "http://dvwa/vulnerabilities/exec/",
                 "vulnerabilidad": "Absence of Anti-CSRF Tokens",
                 "severidad": "Medium (Low)",
                 "metodo": "GET",
@@ -273,7 +271,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>"
             },
             {
-                "url": "http://dvwa/sitemap.xml",
+                "url": "http://dvwa/setup.php",
                 "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
                 "severidad": "Medium (High)",
                 "metodo": "GET",
@@ -281,7 +279,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/fi/?page=include.php",
+                "url": "http://dvwa/sitemap.xml",
                 "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
                 "severidad": "Medium (High)",
                 "metodo": "GET",
@@ -361,7 +359,7 @@
                 "solucion": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/csrf/",
+                "url": "http://dvwa/setup.php",
                 "vulnerabilidad": "Missing Anti-clickjacking Header",
                 "severidad": "Medium (Medium)",
                 "metodo": "GET",
@@ -369,7 +367,7 @@
                 "solucion": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/fi/?page=include.php",
+                "url": "http://dvwa/vulnerabilities/brute/",
                 "vulnerabilidad": "Missing Anti-clickjacking Header",
                 "severidad": "Medium (Medium)",
                 "metodo": "GET",
@@ -391,14 +389,6 @@
                 "metodo": "GET",
                 "descripcion": "<p>The page includes one or more script files from a third-party domain.</p>",
                 "solucion": "<p>Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application.</p>"
-            },
-            {
-                "url": "http://dvwa/DTD/xhtml1-transitional.dtd",
-                "vulnerabilidad": "In Page Banner Information Leak",
-                "severidad": "Low (High)",
-                "metodo": "GET",
-                "descripcion": "<p>The server returned a version banner string in the response content. Such information leaks may allow attackers to further target specific issues impacting the product and version in use.</p>",
-                "solucion": "<p>Configure the server to prevent such information leaks. For example:</p><p>Under Tomcat this is done via the \"server\" directive and implementation of custom error pages.</p><p>Under Apache this is done via the \"ServerSignature\" and \"ServerTokens\" directives.</p>"
             },
             {
                 "url": "http://dvwa/sitemap.xml",
@@ -433,14 +423,6 @@
                 "solucion": "<p>Disable debugging messages before pushing to production.</p>"
             },
             {
-                "url": "http://dvwa/phpinfo.php",
-                "vulnerabilidad": "Private IP Disclosure",
-                "severidad": "Low (Medium)",
-                "metodo": "GET",
-                "descripcion": "<p>A private IP (such as 10.x.x.x, 172.x.x.x, 192.168.x.x) or an Amazon EC2 private hostname (for example, ip-10-0-56-78) has been found in the HTTP response body. This information might be helpful for further attacks targeting internal systems.</p>",
-                "solucion": "<p>Remove the private IP address from the HTTP response body. For comments, use JSP/ASP/PHP comment instead of HTML/JavaScript comment which can be seen by client browsers.</p>"
-            },
-            {
                 "url": "http://dvwa",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
@@ -465,7 +447,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>"
             },
             {
-                "url": "http://dvwa/sitemap.xml",
+                "url": "http://dvwa/setup.php",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
                 "metodo": "GET",
@@ -473,7 +455,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/fi/?page=include.php",
+                "url": "http://dvwa/sitemap.xml",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
                 "metodo": "GET",
@@ -505,14 +487,6 @@
                 "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
             },
             {
-                "url": "http://dvwa/instructions.php",
-                "vulnerabilidad": "X-Content-Type-Options Header Missing",
-                "severidad": "Low (Medium)",
-                "metodo": "GET",
-                "descripcion": "<p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>",
-                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
-            },
-            {
                 "url": "http://dvwa/robots.txt",
                 "vulnerabilidad": "X-Content-Type-Options Header Missing",
                 "severidad": "Low (Medium)",
@@ -521,7 +495,15 @@
                 "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/fi/?page=include.php",
+                "url": "http://dvwa/setup.php",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "metodo": "GET",
+                "descripcion": "<p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/",
                 "vulnerabilidad": "X-Content-Type-Options Header Missing",
                 "severidad": "Low (Medium)",
                 "metodo": "GET",
@@ -577,15 +559,7 @@
                 "solucion": "<p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>"
             },
             {
-                "url": "http://dvwa/phpinfo.php",
-                "vulnerabilidad": "Modern Web Application",
-                "severidad": "Informational (Medium)",
-                "metodo": "GET",
-                "descripcion": "<p>The application appears to be a modern web application. If you need to explore it automatically then the Ajax Spider may well be more effective than the standard one.</p>",
-                "solucion": "<p>This is an informational alert and so no changes are required.</p>"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/exec/",
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
                 "vulnerabilidad": "User Agent Fuzzer",
                 "severidad": "Informational (Medium)",
                 "metodo": "GET",
@@ -593,15 +567,7 @@
                 "solucion": ""
             },
             {
-                "url": "http://dvwa/vulnerabilities/weak_id/",
-                "vulnerabilidad": "User Agent Fuzzer",
-                "severidad": "Informational (Medium)",
-                "metodo": "GET",
-                "descripcion": "<p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>",
-                "solucion": ""
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/xss_d/",
+                "url": "http://dvwa/vulnerabilities/xss_d/?default",
                 "vulnerabilidad": "User Agent Fuzzer",
                 "severidad": "Informational (Medium)",
                 "metodo": "GET",
@@ -610,6 +576,14 @@
             },
             {
                 "url": "http://dvwa/vulnerabilities/xss_r/",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "metodo": "GET",
+                "descripcion": "<p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>",
+                "solucion": ""
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/xss_r/?name=ZAP",
                 "vulnerabilidad": "User Agent Fuzzer",
                 "severidad": "Informational (Medium)",
                 "metodo": "GET",
@@ -628,10 +602,75 @@
     },
     "ffuf": {
         "herramienta": "ffuf",
-        "comando": "",
-        "fecha": "",
-        "total_rutas": 0,
-        "rutas": []
+        "comando": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=i0kha1arbj3anq82lkgrdt1u00; security=low",
+        "fecha": "2026-04-29T13:59:30Z",
+        "total_rutas": 8,
+        "rutas": [
+            {
+                "url": "http://dvwa/about.php",
+                "input": {
+                    "FFUFHASH": "18bd22560e",
+                    "FUZZ": "about.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/index.php",
+                "input": {
+                    "FFUFHASH": "18bd23e430",
+                    "FUZZ": "index.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/instructions.php",
+                "input": {
+                    "FFUFHASH": "18bd23f9d8",
+                    "FUZZ": "instructions.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/login.php",
+                "input": {
+                    "FFUFHASH": "18bd243cde",
+                    "FUZZ": "login.php"
+                },
+                "status": 200
+            },
+            {
+                "url": "http://dvwa/logout.php",
+                "input": {
+                    "FFUFHASH": "18bd2441f8",
+                    "FUZZ": "logout.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/phpinfo.php",
+                "input": {
+                    "FFUFHASH": "18bd24e014",
+                    "FUZZ": "phpinfo.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/security.php",
+                "input": {
+                    "FFUFHASH": "18bd254aea",
+                    "FUZZ": "security.php"
+                },
+                "status": 302
+            },
+            {
+                "url": "http://dvwa/setup.php",
+                "input": {
+                    "FFUFHASH": "18bd2552b4",
+                    "FUZZ": "setup.php"
+                },
+                "status": 200
+            }
+        ]
     },
     "sqlmap": {
         "herramienta": "SQLMAP",

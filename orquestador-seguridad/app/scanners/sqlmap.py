@@ -58,23 +58,32 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     # --threads=10   → [OPTIMIZACIÓN] Dispara 10 hilos concurrentes en vez de 1 (límite máximo de sqlmap).
     # -o             → [OPTIMIZACIÓN] Activa Keep-Alive, Null connection y otros aceleradores HTTP internos.
     # --technique=BEUQ → [OPTIMIZACIÓN RADICAL] Prohíbe inyecciones basadas en tiempo ('T'). Evita que el servidor se quede "durmiendo" a propósito.
+    # Construcción base del comando
     cmd = [
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
         "--forms",           # [TIGER] Ataca formularios POST
-        "--proxy", proxy if proxy else "", # [MEJORA] Enrutamiento vía ZAP
-        "--random-agent",
+        "--dbms=MySQL",      # [TIGER] Optimizado para DVWA
         "--level=3",         # [TIGER] Nivel de profundidad 3
         "--risk=3",          # [TIGER] Riesgo máximo
         "--threads=5",       # [TIGER] 5 hilos paralelos
-        "--dbms=MySQL",      # [TIGER] Optimizado para DVWA
         "--smart",
+        "--technique=BEUST", # [TIGER] Todas las técnicas: Boolean, Error, Union, Stacked, Time
         "-o"
     ]
     
+    # Agregar Proxy solo si se define
+    if proxy:
+        cmd.extend(["--proxy", proxy])
+    
+    # Agregar Cookies si existen
     if cookies:
         cmd.extend(["--cookie", cookies])
+    
+    # Usar un User-Agent fijo y real para no romper la sesión de DVWA
+    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    cmd.extend(["--user-agent", ua])
 
     result = run_command(cmd, timeout=timeout)
 
