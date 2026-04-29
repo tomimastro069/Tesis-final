@@ -11,23 +11,16 @@ SQLMAP_PATH = settings.SQLMAP_PATH
 
 def filtrar_urls_con_parametros(urls: list) -> list:
     """
-    Filtra una lista de URLs y devuelve solo las que tienen
-    parámetros GET (contienen '?').
-
-    SQLMap necesita parámetros para inyectar SQL.
-    Sin '?' no tiene dónde probar.
-
-    Ejemplo:
-        Entrada: [
-            "http://dvwa/login.php",
-            "http://dvwa/vulnerabilities/sqli/?id=1",
-            "http://dvwa/about.php"
-        ]
-        Salida: [
-            "http://dvwa/vulnerabilities/sqli/?id=1"
-        ]
+    Filtra una lista de URLs para SQLMap.
+    Ahora incluimos:
+    1. URLs con parámetros GET ('?')
+    2. Archivos dinámicos (.php) para que SQLMap busque formularios (--forms)
     """
-    return [url for url in urls if "?" in url]
+    extensiones_interesantes = [".php", ".php7", ".asp", ".aspx", ".jsp"]
+    return [
+        url for url in urls 
+        if "?" in url or any(ext in url.lower() for ext in extensiones_interesantes)
+    ]
 
 
 def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> dict:
@@ -69,13 +62,14 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
+        "--forms",           # [TIGER] Ataca formularios POST
         "--random-agent",
-        "--level=2",
-        "--risk=2",
+        "--level=3",         # [TIGER] Nivel de profundidad 3
+        "--risk=3",          # [TIGER] Riesgo máximo
+        "--threads=5",       # [TIGER] 5 hilos paralelos
+        "--dbms=MySQL",      # [TIGER] Optimizado para DVWA
         "--smart",
-        "--threads=10",
-        "-o",
-        "--technique=BEUQ"
+        "-o"
     ]
     
     if cookies:

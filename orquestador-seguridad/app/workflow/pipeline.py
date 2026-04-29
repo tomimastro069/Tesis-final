@@ -10,7 +10,8 @@ from app.scanners.zap import (
     esperar_escaneo_activo, 
     obtener_reporte_json,
     configurar_autenticacion,
-    agregar_urls_a_zap
+    agregar_urls_a_zap,
+    limpiar_sesion_zap
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
@@ -59,9 +60,22 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
-    # --- Configuración Autenticación Global (ZAP) ---
+    # --- 0. PREPARACIÓN DE SESIÓN EN ZAP ---
+    print("Limpiando sesión previa de ZAP...")
+    limpiar_sesion_zap()
+
     if cookies:
+        print(f"[*] Configurando scanners con cookies: {cookies}")
         configurar_autenticacion(cookies)
+        
+        # [MEJORA 4] Cebado de Sesión (Priming): Visita forzada para que ZAP capture la sesión
+        print(f"[*] Cebando sesión (Priming) en {target_url}...")
+        try:
+            # Usamos un User-Agent de navegador para que DVWA nos acepte la cookie
+            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+            requests.get(target_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
+        except Exception as e:
+            print(f" [!] Advertencia en Priming: {e}")
     
     # --- 1. ZAP SPIDER ---
     print("\n[1/4] Ejecutando ZAP Spider...")
