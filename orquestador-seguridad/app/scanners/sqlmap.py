@@ -23,7 +23,7 @@ def filtrar_urls_con_parametros(urls: list) -> list:
     ]
 
 
-def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> dict:
+def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None) -> dict:
     """
     Ejecuta SQLMap contra UNA URL que tenga parámetros GET.
 
@@ -62,19 +62,20 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
+        "--proxy", proxy if proxy else "",
+        "--random-agent", # Ya no importa tanto porque ZAP lo va a reemplazar, pero por si acaso
         "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-        "--forms",
-        "--level=3",        # Subimos el nivel para ser más exhaustivos
-        "--risk=2",         # Subimos el riesgo para que pruebe más payloads
+        "--level=3",
+        "--risk=2",
         "--threads=5",
         "--dbms=MySQL",
         "--flush-session",
-        # Cabeceras para simular un Chrome real al 100%
-        "--header=Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "--header=Accept-Language: es-ES,es;q=0.9,en;q=0.8",
-        "--header=Cache-Control: max-age=0",
+        "--drop-set-cookie",   # Mantenemos esto para que no nos pisen la sesión
+        # Cabeceras para mimetizar un navegador al 100%
+        "--header=Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "--header=Connection: keep-alive",
         "--header=Upgrade-Insecure-Requests: 1",
-        f"--referer={url.split('?')[0]}", # Referer a la carpeta base, más natural
+        f"--referer={url.split('?')[0]}", 
     ]
     
     if cookies:
@@ -94,7 +95,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None) -> list:
     """
     Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
 
@@ -125,7 +126,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
     resultados = []
     for i, url in enumerate(urls_con_params, 1):
         print(f"    [{i}/{len(urls_con_params)}] Testeando: {url}")
-        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies)
+        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies, proxy=proxy)
         resultados.append(resultado)
 
     return resultados

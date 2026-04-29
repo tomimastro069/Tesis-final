@@ -10,6 +10,19 @@ ZAP_PORT = settings.ZAP_PORT
 API_KEY = settings.ZAP_API_KEY
 
 
+def configurar_user_agent_zap(user_agent: str) -> None:
+    """
+    Configura el User-Agent por defecto que usará ZAP para todas sus peticiones.
+    """
+    url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/core/action/setOptionDefaultUserAgent/"
+    params = {
+        "apikey": API_KEY,
+        "String": user_agent
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+
+
 def configurar_autenticacion(cookies: str) -> None:
     """
     Agrega una regla en el Replacer de ZAP para inyectar 

@@ -20,6 +20,10 @@ if __name__ == "__main__":
         
     resultado_escaneo = run_security_pipeline(target, nivel, cookies)
     
+    if not resultado_escaneo or "error" in resultado_escaneo:
+        print("\n [!] El escaneo no se completó debido a errores de sesión o configuración.")
+        exit(1)
+        
     print(f"Iniciando parseo de ZAP, SPIDER y FFUF:")
     resultado_parseo = run_parser_pipeline(resultado_escaneo)
 
