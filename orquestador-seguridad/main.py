@@ -11,7 +11,7 @@ if __name__ == "__main__":
     nivel = input("Nivel de escaneo (small/medium) [default: medium]: ").lower().strip() or "medium"
     
     # Pedir la cookie de sesion
-    cookies = input("Cookie de sesion (opcional, ej. PHPSESSID=123..; security=low) [default: none]: ").strip() or None
+    cookies = input("Cookie de sesion (Opcional, Enter para Auto-Login en DVWA): ").strip() or None
     
     print(f"Iniciando escaneo contra: {target}")
     print(f"Nivel seleccionado: {nivel}")

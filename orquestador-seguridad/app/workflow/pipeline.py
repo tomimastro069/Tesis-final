@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from app.scanners.ffuf import run_ffuf
 from app.scanners.sqlmap import run_sqlmap_batch
 from app.scanners.zap import (
@@ -57,12 +58,93 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
     # Limpiar ZAP de ejecuciones anteriores para que no se filtre basura de otros targets
+    # --- 0. LOGIN AUTOMÁTICO (DVWA) ---
+    print(f"[*] Iniciando sesión automática en {target_url}...")
+    session = requests.Session()
+    # Forzar un User-Agent de navegador real
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+    })
+    
+    try:
+        # 1. Obtener token de login (user_token)
+        login_url = f"{target_url.rstrip('/')}/login.php"
+        r = session.get(login_url)
+        import re
+        token_match = re.search(r"name='user_token' value='(.*?)'", r.text)
+        user_token = token_match.group(1) if token_match else ""
+        
+        # 2. Hacer POST de login
+        data = {
+            "username": "admin",
+            "password": "password",
+            "Login": "Login",
+            "user_token": user_token
+        }
+        session.post(login_url, data=data)
+        
+        # 3. Forzar nivel de seguridad a 'low'
+        security_url = f"{target_url.rstrip('/')}/security.php"
+        # Obtener nuevo token
+        r = session.get(security_url)
+        token_match = re.search(r"name='user_token' value='(.*?)'", r.text)
+        sec_token = token_match.group(1) if token_match else ""
+        
+        session.post(security_url, data={
+            "security": "low",
+            "seclev_submit": "Submit",
+            "user_token": sec_token
+        })
+        
+        # Extraer las cookies finales
+        cookies_dict = session.cookies.get_dict()
+        cookies = "; ".join([f"{k}={v}" for k, v in cookies_dict.items()])
+        if "security" not in cookies:
+            cookies += "; security=low"
+            
+        print(f" [+] Sesión establecida automáticamente. Cookie: {cookies}")
+        
+    except Exception as e:
+        print(f" [!] Error en login automático: {e}")
+        # Si falla el login automático, seguimos con las cookies manuales si existen
+
     print("Limpiando sesión previa de ZAP...")
     limpiar_sesion_zap()
     
     # --- Configuración Autenticación Global (ZAP) ---
     if cookies:
         configurar_autenticacion(cookies)
+        
+        # [VALIDACIÓN] Verificar si la sesión permite entrar a las carpetas vulnerables
+        print(f"[*] Validando acceso a rutas protegidas en {target_url}...")
+        try:
+            test_url = f"{target_url.rstrip('/')}/vulnerabilities/sqli/"
+            # Usamos un User-Agent fijo para coincidir con SQLMap
+            headers = {
+                'Cookie': cookies,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+            }
+            r = requests.get(test_url, headers=headers, allow_redirects=True, timeout=10)
+            if "login.php" in r.url or "Login" in r.text:
+                print(f" [!] ALERTA: La sesión ha EXPIRADO o es INVÁLIDA.")
+                print(f" [!] Contenido detectado: {r.text[:100]}...")
+                print(" [!] El servidor te redirigió al login. Por favor, obtené una cookie fresca.")
+                return # Frenamos el escaneo si la sesión no sirve
+            elif r.status_code == 200:
+                print(" [+] Sesión VALIDADA exitosamente para rutas protegidas.")
+                import re
+                title_match = re.search(r'<title>(.*?)</title>', r.text, re.IGNORECASE)
+                title = title_match.group(1) if title_match else "Sin título"
+                print(f" [+] Título de la página: {title}")
+                if "Login" in title:
+                    print(" [!] ALERTA: La sesión es válida pero estás en la página de LOGIN.")
+                    return
+                body_preview = r.text[:150].replace('\n', ' ')
+                print(f" [+] Debug Body: {body_preview}...")
+            else:
+                print(f" [?] Respuesta inesperada en validación: {r.status_code}")
+        except Exception as e:
+            print(f" [!] Error durante validación de sesión: {e}")
     
     # --- 1. FFUF ---
     print("\n[1/4] Ejecutando FFUF...")

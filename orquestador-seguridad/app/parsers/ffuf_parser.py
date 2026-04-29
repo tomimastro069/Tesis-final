@@ -6,13 +6,13 @@ def parsear_ffuf(dato_dict_crudo):
         urls_vistas = set()
         lista_limpia = []
 
-        for item in data["results"]:
-            if item["status"] in [200, 302] and item["url"] not in urls_vistas:
+        for item in data.get("results", []):
+            if isinstance(item, dict) and item.get("status") in [200, 302] and item.get("url") not in urls_vistas:
                 urls_vistas.add(item["url"])
                 lista_limpia.append({
-                    "url": item["url"],
-                    "input": item["input"],
-                    "status": item["status"]
+                    "url": item.get("url", ""),
+                    "input": item.get("input", ""),
+                    "status": item.get("status", 0)
                 })
 
         #Devolver dict con datos unicos arriba y rutas parseadas adentro

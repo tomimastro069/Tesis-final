@@ -62,19 +62,25 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
-        "--random-agent",
+        "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
         "--forms",
-        "--level=2",
-        "--risk=1",
-        "--smart",
+        "--level=3",        # Subimos el nivel para ser más exhaustivos
+        "--risk=2",         # Subimos el riesgo para que pruebe más payloads
         "--threads=5",
         "--dbms=MySQL",
         "--flush-session",
-        "--ignore-redirects"
+        # Cabeceras para simular un Chrome real al 100%
+        "--header=Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "--header=Accept-Language: es-ES,es;q=0.9,en;q=0.8",
+        "--header=Cache-Control: max-age=0",
+        "--header=Upgrade-Insecure-Requests: 1",
+        f"--referer={url.split('?')[0]}", # Referer a la carpeta base, más natural
     ]
     
     if cookies:
-        cmd.extend(["--cookie", cookies])
+        # Asegurar espacio después de ; para compatibilidad con PHP
+        cookies_clean = cookies.replace(";", "; ").replace("  ", " ")
+        cmd.extend(["--cookie", cookies_clean])
 
     # Ejecutar usando el mismo runner que ffuf
     result = run_command(cmd, timeout=timeout)
