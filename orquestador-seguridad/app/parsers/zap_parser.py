@@ -20,6 +20,8 @@ def parsear_zap(dato_dict_crudo):
                             "url": url,
                             "vulnerabilidad": alerta.get("alert", "Vulnerabilidad sin nombre"),
                             "severidad": alerta.get("riskdesc", "No clasificado"),
+                            "metodo": instancia.get("method", "N/A"),
+                            "descripcion": alerta.get("desc", "N/A"),
                             "solucion": alerta.get("solution", "No hay solución disponible")
                         })
         

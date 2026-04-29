@@ -201,3 +201,15 @@ def agregar_urls_a_zap(rutas_ffuf: list) -> None:
             pass
 
     print(f"    [ZAP] Rutas inyectadas. El Active Scan las incluirá en su ataque.")
+
+
+def limpiar_sesion_zap() -> None:
+    """
+    Inicia una nueva sesión en ZAP, borrando todo el historial, 
+    árbol de sitios y alertas previas.
+    """
+    url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/core/action/newSession/"
+    try:
+        requests.get(url, params={"apikey": API_KEY, "overwrite": "true"})
+    except requests.exceptions.RequestException as e:
+        print(f"    [ZAP] Error limpiando sesión: {e}")
