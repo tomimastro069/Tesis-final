@@ -26,6 +26,13 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     
     output_file = os.path.join(output_dir, "ffuf_raw.json")
     
+    # Limpiar resultado anterior para evitar contaminación cruzada si FFUF falla
+    if os.path.exists(output_file):
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+    
     # Asegurar que no haya doble slash al concatenar (ej: http://sitio.com/ + /FUZZ)
     base_url = target_url.rstrip("/")
     
@@ -37,6 +44,8 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
         "-e", ".php",
         "-mc", "200,302",
         "-ic", # ignore wordlist comments
+        "-recursion",
+        "-recursion-depth", "2",
         "-of", "json",
         "-o", output_file
     ]

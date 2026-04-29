@@ -1,271 +1,240 @@
 {
     "resumen": {
-        "total_urls_unicas": 56,
-        "urls_spider": 55,
-        "alertas_zap": 0,
-        "rutas_ffuf": 9,
+        "total_urls_unicas": 13,
+        "urls_spider": 8,
+        "alertas_zap": 24,
+        "rutas_ffuf": 0,
         "vulnerabilidades_sqlmap": 0
     },
     "spider": {
         "herramienta": "ZAP Spider",
-        "total_urls": 55,
+        "total_urls": 8,
         "urls": [
             {
-                "url": "http://dvwa/vulnerabilities/xss_r/"
-            },
-            {
-                "url": "http://dvwa/dvwa/images/spanner.png"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/fi/?page=file2.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/javascript/"
-            },
-            {
-                "url": "http://dvwa/instructions.php?doc=readme"
-            },
-            {
-                "url": "http://dvwa/instructions.php?doc=PHPIDS-license"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/weak_id/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/sqli_blind/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP"
-            },
-            {
-                "url": "http://dvwa/docs/DVWA_v1.3.pdf"
-            },
-            {
-                "url": "http://dvwa/instructions.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/fi/?page=file1.php"
-            },
-            {
-                "url": "http://dvwa/dvwa/js/dvwaPage.js"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/exec/"
-            },
-            {
-                "url": "http://dvwa/dvwa/images/login_logo.png"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/upload/"
-            },
-            {
-                "url": "http://dvwa/security.php?phpids=on"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/xss_s/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/captcha/"
-            },
-            {
-                "url": "http://dvwa/instructions.php?doc=changelog"
-            },
-            {
-                "url": "http://dvwa/logout.php"
+                "url": "http://dvwa/dvwa/images/RandomStorm.png"
             },
             {
                 "url": "http://dvwa"
             },
             {
-                "url": "http://dvwa/vulnerabilities/xss_d/?default"
-            },
-            {
-                "url": "http://dvwa/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/fi/?page=include.php"
-            },
-            {
-                "url": "http://dvwa/setup.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/xss_r/?name=ZAP"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP"
-            },
-            {
-                "url": "http://dvwa/favicon.ico"
-            },
-            {
-                "url": "http://dvwa/dvwa/js/add_event_listeners.js"
-            },
-            {
-                "url": "http://dvwa/phpinfo.php"
-            },
-            {
-                "url": "http://dvwa/dvwa/images/logo.png"
-            },
-            {
                 "url": "http://dvwa/login.php"
-            },
-            {
-                "url": "http://dvwa/instructions.php?doc=copying"
-            },
-            {
-                "url": "http://dvwa/about.php"
-            },
-            {
-                "url": "http://dvwa/sitemap.xml"
-            },
-            {
-                "url": "http://dvwa/ids_log.php"
-            },
-            {
-                "url": "http://dvwa/var/www/html/config/config.inc.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/sqli/"
-            },
-            {
-                "url": "http://dvwa/instructions.php?doc=PDF"
-            },
-            {
-                "url": "http://dvwa/dvwa/images/RandomStorm.png"
-            },
-            {
-                "url": "http://dvwa/security.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/csrf/"
-            },
-            {
-                "url": "http://dvwa/DTD/xhtml1-transitional.dtd"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/brute/"
-            },
-            {
-                "url": "http://dvwa/security.php?test=%2522%3E%3Cscript%3Eeval(window.name)%3C/script%3E"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/xss_d/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/csp/"
-            },
-            {
-                "url": "http://dvwa/dvwa/css/main.css"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/fi/?page=file3.php"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP"
             },
             {
                 "url": "http://dvwa/dvwa/css/login.css"
             },
             {
-                "url": "http://dvwa/dvwa/images/lock.png"
-            },
-            {
                 "url": "http://dvwa/robots.txt"
             },
             {
-                "url": "http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP"
+                "url": "http://dvwa/"
+            },
+            {
+                "url": "http://dvwa/sitemap.xml"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/login_logo.png"
             }
         ]
     },
     "zap": {
         "herramienta": "ZAP",
-        "fecha": "Tue, 28 Apr 2026 20:46:59",
-        "host": "dvwa",
-        "puerto": "443",
-        "ssl": "true",
-        "total_alertas": 0,
-        "alertas": []
-    },
-    "ffuf": {
-        "herramienta": "ffuf",
-        "comando": "ffuf -u http://dvwa/FUZZ -w /app/app/worldlists/Discovery/Web-content/wordlist-small.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=bfmagq14lvj3td2tpvmpfkbk96;security=low",
-        "fecha": "2026-04-28T20:38:49Z",
-        "total_rutas": 9,
-        "rutas": [
+        "total_alertas": 24,
+        "alertas": [
             {
                 "url": "http://dvwa/login.php",
-                "input": {
-                    "FFUFHASH": "43bbe50",
-                    "FUZZ": "login.php"
-                },
-                "status": 200
+                "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
+                "severidad": "Medium (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/security.php",
-                "input": {
-                    "FFUFHASH": "43bbe74",
-                    "FUZZ": "security.php"
-                },
-                "status": 302
+                "url": "http://dvwa/sitemap.xml",
+                "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
+                "severidad": "Medium (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/",
+                "vulnerabilidad": "Directory Browsing",
+                "severidad": "Medium (Medium)",
+                "solucion": "<p>Disable directory browsing. If this is required, make sure the listed files does not induce risks.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/",
+                "vulnerabilidad": "Directory Browsing",
+                "severidad": "Medium (Medium)",
+                "solucion": "<p>Disable directory browsing. If this is required, make sure the listed files does not induce risks.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/",
+                "vulnerabilidad": "Directory Browsing",
+                "severidad": "Medium (Medium)",
+                "solucion": "<p>Disable directory browsing. If this is required, make sure the listed files does not induce risks.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
                 "url": "http://dvwa/",
-                "input": {
-                    "FFUFHASH": "43bbe1",
-                    "FUZZ": ""
-                },
-                "status": 302
+                "vulnerabilidad": "HTTP Only Site",
+                "severidad": "Medium (Medium)",
+                "solucion": "<p>Configure your web or application server to use SSL (https).</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/about.php",
-                "input": {
-                    "FFUFHASH": "43bbe1a",
-                    "FUZZ": "about.php"
-                },
-                "status": 200
+                "url": "http://dvwa/login.php",
+                "vulnerabilidad": "Missing Anti-clickjacking Header",
+                "severidad": "Medium (Medium)",
+                "solucion": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/logout.php",
-                "input": {
-                    "FFUFHASH": "43bbe972",
-                    "FUZZ": "logout.php"
-                },
-                "status": 302
+                "url": "http://dvwa/sitemap.xml",
+                "vulnerabilidad": "In Page Banner Information Leak",
+                "severidad": "Low (High)",
+                "solucion": "<p>Configure the server to prevent such information leaks. For example:</p><p>Under Tomcat this is done via the \"server\" directive and implementation of custom error pages.</p><p>Under Apache this is done via the \"ServerSignature\" and \"ServerTokens\" directives.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/index.php",
-                "input": {
-                    "FFUFHASH": "43bbe4",
-                    "FUZZ": "index.php"
-                },
-                "status": 302
+                "url": "http://dvwa",
+                "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+                "severidad": "Low (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/setup.php",
-                "input": {
-                    "FFUFHASH": "43bbeeae",
-                    "FUZZ": "setup.php"
-                },
-                "status": 200
+                "url": "http://dvwa/dvwa/css/login.css",
+                "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+                "severidad": "Low (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/instructions.php",
-                "input": {
-                    "FFUFHASH": "43bbe28ca",
-                    "FUZZ": "instructions.php"
-                },
-                "status": 200
+                "url": "http://dvwa/dvwa/images/login_logo.png",
+                "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+                "severidad": "Low (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
             },
             {
-                "url": "http://dvwa/phpinfo.php",
-                "input": {
-                    "FFUFHASH": "43bbe25e74",
-                    "FUZZ": "phpinfo.php"
-                },
-                "status": 302
+                "url": "http://dvwa/robots.txt",
+                "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+                "severidad": "Low (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/sitemap.xml",
+                "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
+                "severidad": "Low (High)",
+                "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/css/login.css",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/RandomStorm.png",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/images/login_logo.png",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/login.php",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/robots.txt",
+                "vulnerabilidad": "X-Content-Type-Options Header Missing",
+                "severidad": "Low (Medium)",
+                "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/login.php",
+                "vulnerabilidad": "Authentication Request Identified",
+                "severidad": "Informational (High)",
+                "solucion": "<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>",
+                "metodo": "POST",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "solucion": "",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "solucion": "",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "solucion": "",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/dvwa/css",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "solucion": "",
+                "metodo": "GET",
+                "descripcion": "N/A"
+            },
+            {
+                "url": "http://dvwa/login.php",
+                "vulnerabilidad": "User Agent Fuzzer",
+                "severidad": "Informational (Medium)",
+                "solucion": "",
+                "metodo": "POST",
+                "descripcion": "N/A"
             }
         ]
     },
+    "ffuf": {},
     "sqlmap": {
         "herramienta": "SQLMAP",
         "vulnerabilidades": []

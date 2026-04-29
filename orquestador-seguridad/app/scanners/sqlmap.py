@@ -11,23 +11,16 @@ SQLMAP_PATH = settings.SQLMAP_PATH
 
 def filtrar_urls_con_parametros(urls: list) -> list:
     """
-    Filtra una lista de URLs y devuelve solo las que tienen
-    parámetros GET (contienen '?').
-
-    SQLMap necesita parámetros para inyectar SQL.
-    Sin '?' no tiene dónde probar.
-
-    Ejemplo:
-        Entrada: [
-            "http://dvwa/login.php",
-            "http://dvwa/vulnerabilities/sqli/?id=1",
-            "http://dvwa/about.php"
-        ]
-        Salida: [
-            "http://dvwa/vulnerabilities/sqli/?id=1"
-        ]
+    Filtra una lista de URLs para SQLMap.
+    Ahora incluimos:
+    1. URLs con parámetros GET ('?')
+    2. Archivos dinámicos (.php) para que SQLMap busque formularios (--forms)
     """
-    return [url for url in urls if "?" in url]
+    extensiones_interesantes = [".php", ".php7", ".asp", ".aspx", ".jsp"]
+    return [
+        url for url in urls 
+        if "?" in url or any(ext in url.lower() for ext in extensiones_interesantes)
+    ]
 
 
 def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> dict:
@@ -56,18 +49,28 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
             'timeout': bool      # si se pasó del tiempo límite
         }
     """
-    # Comando SQLMap
-    # --batch        → modo automático, no pide confirmaciones al usuario
-    # --random-agent → usa un User-Agent aleatorio (para no ser detectado)
-    # --level=2      → nivel de profundidad de pruebas (1-5, 2 es moderado)
-    # --risk=2       → nivel de riesgo de los payloads (1-3, 2 es moderado)
+    # Comando SQLMap optimizado para velocidad
+    # --batch        → modo automático
+    # --random-agent → evita bloqueos por User-Agent
+    # --forms        → busca formularios POST
+    # --level=2      → nivel intermedio (suficiente para la mayoría)
+    # --risk=1       → riesgo bajo (evita payloads pesados/destructivos)
+    # --smart        → ¡CLAVE! Solo testea a fondo si hay indicios de vulnerabilidad
+    # --threads=5     → velocidad en paralelo
+    # --dbms=MySQL   → directo al motor de DVWA
     cmd = [
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
         "--random-agent",
+        "--forms",
         "--level=2",
-        "--risk=2"
+        "--risk=1",
+        "--smart",
+        "--threads=5",
+        "--dbms=MySQL",
+        "--flush-session",
+        "--ignore-redirects"
     ]
     
     if cookies:

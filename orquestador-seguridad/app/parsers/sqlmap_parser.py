@@ -6,7 +6,9 @@ def parsear_sqlmap(dato_dict_crudo):
         lista_sql = list()
 
         for url_analizada in data:
-            if "is vulnerable" in url_analizada["stdout"]:
+            stdout = url_analizada.get("stdout", "").lower()
+            # Buscamos indicios claros de éxito:
+            if any(term in stdout for term in ["vulnerable", "back-end dbms", "payload:"]):
                 url_filtrada = {
                     "url": url_analizada["url"],
                     "salida": url_analizada["stdout"]

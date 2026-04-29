@@ -41,10 +41,13 @@ def run_command(
         }
 
     except subprocess.TimeoutExpired as e:
+        # Aseguramos que la salida sea string, incluso si viene como bytes tras un timeout
+        stdout = e.stdout.decode('utf-8', errors='replace') if isinstance(e.stdout, bytes) else (e.stdout or "")
+        stderr = e.stderr.decode('utf-8', errors='replace') if isinstance(e.stderr, bytes) else (e.stderr or "")
         return {
             "success": False,
-            "stdout": e.stdout or "",
-            "stderr": e.stderr or "",
+            "stdout": stdout,
+            "stderr": stderr,
             "returncode": None,
             "timeout": True,
             "error_type": "timeout"

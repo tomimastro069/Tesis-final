@@ -10,7 +10,8 @@ from app.scanners.zap import (
     esperar_escaneo_activo, 
     obtener_reporte_json,
     configurar_autenticacion,
-    agregar_urls_a_zap
+    agregar_urls_a_zap,
+    limpiar_sesion_zap
 )
 from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
@@ -55,18 +56,16 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
+    # Limpiar ZAP de ejecuciones anteriores para que no se filtre basura de otros targets
+    print("Limpiando sesión previa de ZAP...")
+    limpiar_sesion_zap()
+    
     # --- Configuración Autenticación Global (ZAP) ---
     if cookies:
         configurar_autenticacion(cookies)
     
-    # --- 1. ZAP SPIDER ---
-    print("\n[1/4] Ejecutando ZAP Spider...")
-    spider_id = iniciar_spider(target_url)
-    esperar_spider(spider_id)
-    spider_urls = obtener_urls(spider_id)
-
-    # --- 2. FFUF ---
-    print("\n[2/4] Ejecutando FFUF...")
+    # --- 1. FFUF ---
+    print("\n[1/4] Ejecutando FFUF...")
     
     # Crear wordlist dummy si no existe (para evitar errores)
     # Asegurarse de que la carpeta padre exista antes de abrir el archivo.
@@ -96,12 +95,42 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
             except json.JSONDecodeError:
                 print("Advertencia: No se pudo leer el JSON crudo de FFUF.")
 
-    # --- 3. INYECTAR RUTAS DE FFUF EN ZAP (enriquecer el contexto antes del Active Scan) ---
+    # --- 2. INYECTAR RUTAS DE FFUF EN ZAP (antes del Spider) ---
     if rutas_ffuf_nuevas:
-        print(f"\n[3/4-pre] Inyectando {len(rutas_ffuf_nuevas)} rutas de FFUF en ZAP...")
+        print(f"\n[1/4-pre] Inyectando {len(rutas_ffuf_nuevas)} rutas de FFUF en ZAP...")
         agregar_urls_a_zap(rutas_ffuf_nuevas)
     else:
-        print("\n[3/4-pre] Sin rutas nuevas de FFUF para inyectar en ZAP.")
+        print("\n[1/4-pre] Sin rutas nuevas de FFUF para inyectar en ZAP.")
+
+    # --- 3. ZAP SPIDER ---
+    print("\n[2/4] Ejecutando ZAP Spider...")
+    
+    # Cebamos ZAP con la URL principal para que el Spider empiece logueado
+    if cookies:
+        print(f"    [ZAP] Cebando sitio con cookies para acceso autenticado...")
+        agregar_urls_a_zap([{"url": target_url}])
+
+    # 3.1 Spider en la URL principal
+    spider_id = iniciar_spider(target_url)
+    esperar_spider(spider_id)
+    spider_urls_dict = obtener_urls(spider_id)
+    todas_urls_spider = spider_urls_dict.get("results", [])
+    
+    # 3.2 Spider en las puertas ocultas descubiertas por FFUF
+    if rutas_ffuf_nuevas:
+        print("    [ZAP] Lanzando Spider en las rutas ocultas para mapeo profundo...")
+        for item in rutas_ffuf_nuevas:
+            ruta = item.get("url", "")
+            # Evitamos spiderar la raiz de nuevo si FFUF la devolvió
+            if ruta and ruta.strip("/") != target_url.strip("/"):
+                print(f"    [ZAP] Spidering ruta oculta: {ruta}")
+                s_id = iniciar_spider(ruta)
+                esperar_spider(s_id)
+                s_urls = obtener_urls(s_id)
+                todas_urls_spider.extend(s_urls.get("results", []))
+                
+    # Reconstruimos la estructura que espera el resto del código (removiendo duplicados)
+    spider_urls = {"results": list(set(todas_urls_spider))}
 
     # --- 4. ZAP ACTIVE SCAN ---
     print("\n[3/4] Ejecutando ZAP Active Scan...")
@@ -116,7 +145,16 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     lista_urls_spider = spider_urls.get("results", [])
     # Combinar con las rutas de FFUF que tengan parámetros (?
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas if "?" in r.get("url", "")]
-    lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
+    
+    # [SEMBRADO] Rutas críticas de DVWA que a veces el spider se salta
+    rutas_semilla = [
+        f"{target_url}/vulnerabilities/sqli/?id=1&Submit=Submit",
+        f"{target_url}/vulnerabilities/sqli_blind/?id=1&Submit=Submit",
+        f"{target_url}/vulnerabilities/fi/?page=include.php",
+        f"{target_url}/vulnerabilities/exec/"
+    ]
+    
+    lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf + rutas_semilla))  # sin duplicados
     sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies)
     
     # --- 5. CONSOLIDACIÓN Y REPORTE FINAL ---

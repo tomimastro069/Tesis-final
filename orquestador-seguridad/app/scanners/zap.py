@@ -36,11 +36,32 @@ def configurar_autenticacion(cookies: str) -> None:
     response.raise_for_status()
 
 
+def limpiar_sesion_zap() -> None:
+    """
+    Inicia una nueva sesión vacía en ZAP, borrando el Site Tree y las alertas viejas.
+    Esto evita que reportes de escaneos anteriores se filtren al escaneo actual.
+    """
+    url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/core/action/newSession/"
+    params = {
+        "apikey": API_KEY,
+        "name": "",
+        "overwrite": "true"
+    }
+    try:
+        requests.get(url, params=params, timeout=5)
+    except requests.exceptions.RequestException:
+        pass
+
+
 def iniciar_spider(target_url: str) -> str:
     """
     Inicia el spider en ZAP.
     Devuelve el scan_id.
     """
+    # Configurar profundidad antes del scan
+    url_depth = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/spider/action/setOptionMaxDepth/"
+    requests.get(url_depth, params={"apikey": API_KEY, "Integer": 5})
+
     url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/spider/action/scan/"
     params = {
         "apikey": API_KEY,

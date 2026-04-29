@@ -1,41 +1,40 @@
 def parsear_zap(dato_dict_crudo):
-    #Intentamos ejecutar el parseo
+    # Intentamos ejecutar el parseo
     try:
         data = dato_dict_crudo
-
-        #Alertas que trae OWASP ZAP
-        alertas_sin_parsear = data["site"][0]["alerts"]
-
-        #Aplanar alertas: una entrada por cada URL afectada, sin duplicados
-        vistas = set()
         alertas_parseadas = []
+        vistas = set()
 
-        for alerta in alertas_sin_parsear:
-            for instancia in alerta["instances"]:
-                url = instancia["uri"]
-                clave = (url, alerta["alert"])
+        # ZAP organiza las alertas por "site". Iteramos por todos los sitios registrados
+        # para no perder alertas si ZAP separó el target en varios nodos (ej: con y sin barra).
+        sitios = data.get("site", [])
+        for sitio in sitios:
+            alertas_sin_parsear = sitio.get("alerts", [])
 
-                if clave not in vistas:
-                    vistas.add(clave)
-                    alertas_parseadas.append({
-                        "url": url,
-                        "vulnerabilidad": alerta["alert"],
-                        "severidad": alerta["riskdesc"],
-                        "solucion": alerta["solution"]
-                    })
+            for alerta in alertas_sin_parsear:
+                for instancia in alerta.get("instances", []):
+                    url = instancia.get("uri")
+                    clave = (url, alerta.get("alert"))
 
-        #Devolver dict con datos unicos arriba y alertas parseadas adentro
+                    if clave not in vistas:
+                        vistas.add(clave)
+                        alertas_parseadas.append({
+                            "url": url,
+                            "vulnerabilidad": alerta.get("alert"),
+                            "severidad": alerta.get("riskdesc"),
+                            "solucion": alerta.get("solution"),
+                            "metodo": instancia.get("method", "N/A"),
+                            "descripcion": alerta.get("description", "N/A")
+                        })
+
+        # Devolver dict con datos consolidados de todos los sitios
         return {
             "herramienta": "ZAP",
-            "fecha": data["@generated"],
-            "host": data["site"][0]["@host"],
-            "puerto": data["site"][0]["@port"],
-            "ssl": data["site"][0]["@ssl"],
             "total_alertas": len(alertas_parseadas),
             "alertas": alertas_parseadas
         }
 
-    #Si hay un error de clave o tipo en el diccionario, retornamos un dict vacio
+    # Si hay un error de clave o tipo en el diccionario, retornamos un dict vacio
     except (KeyError, TypeError) as e:
         print(f"Error al parsear los datos de ZAP: {e}")
         return {}
