@@ -23,7 +23,7 @@ def filtrar_urls_con_parametros(urls: list) -> list:
     ]
 
 
-def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> dict:
+def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None) -> dict:
     """
     Ejecuta SQLMap contra UNA URL que tenga parámetros GET.
 
@@ -63,6 +63,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "-u", url,
         "--batch",
         "--forms",           # [TIGER] Ataca formularios POST
+        "--proxy", proxy if proxy else "", # [MEJORA] Enrutamiento vía ZAP
         "--random-agent",
         "--level=3",         # [TIGER] Nivel de profundidad 3
         "--risk=3",          # [TIGER] Riesgo máximo
@@ -86,7 +87,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None) -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None) -> list:
     """
     Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
 
@@ -135,7 +136,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
 
     for i, url in enumerate(urls_a_escanear, 1):
         print(f"    [{i}/{len(urls_a_escanear)}] Testeando: {url}")
-        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies)
+        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies, proxy=proxy)
         resultados.append(resultado)
         
         # Solo guardar en caché si no es una URL vulnerable (las vulnerables siempre se re-testean)

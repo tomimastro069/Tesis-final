@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from app.scanners.ffuf import run_ffuf
 from app.scanners.sqlmap import run_sqlmap_batch
 from app.scanners.zap import (
@@ -29,6 +30,59 @@ WORDLISTS = {
 }
 OUTPUT_DIR = "./output/raw"
 FINAL_REPORT_FILE = "resultado.json"
+
+def establecer_sesion_automatica(target_url):
+    """
+    Realiza un login automático en DVWA y devuelve las cookies.
+    También establece el nivel de seguridad a 'low'.
+    """
+    print(f"[*] Iniciando sesión automática en {target_url}...")
+    login_url = f"{target_url.rstrip('/')}/login.php"
+    security_url = f"{target_url.rstrip('/')}/security.php"
+    
+    session = requests.Session()
+    # User-Agent de navegador para evitar bloqueos
+    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    session.headers.update({'User-Agent': ua})
+    
+    try:
+        # 1. Obtener el token user_token del formulario de login
+        r = session.get(login_url, timeout=10)
+        # Extraer user_token si existe (DVWA lo usa como CSRF básico)
+        import re
+        token_match = re.search(r"name='user_token' value='(.*?)'", r.text)
+        user_token = token_match.group(1) if token_match else ""
+        
+        # 2. Hacer el Login (credenciales por defecto de DVWA)
+        payload = {
+            "username": "admin",
+            "password": "password",
+            "Login": "Login",
+            "user_token": user_token
+        }
+        session.post(login_url, data=payload, timeout=10)
+        
+        # 3. Establecer nivel de seguridad a 'low'
+        # DVWA usa un formulario en security.php para esto
+        payload_sec = {
+            "security": "low",
+            "seclev_submit": "Submit"
+        }
+        session.post(security_url, data=payload_sec, timeout=10)
+        
+        # 4. Extraer cookies consolidadas
+        cookies_dict = session.cookies.get_dict()
+        if "PHPSESSID" in cookies_dict:
+            cookie_str = "; ".join([f"{k}={v}" for k, v in cookies_dict.items()])
+            print(f" [+] Sesión establecida automáticamente. Cookie: {cookie_str}")
+            return cookie_str
+        else:
+            print(" [!] Falló el inicio de sesión automático.")
+            return None
+            
+    except Exception as e:
+        print(f" [!] Error en login automático: {e}")
+        return None
 
 def run_security_pipeline(target_url, nivel="medium", cookies=None):
     """
@@ -60,6 +114,10 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     # Asegurar que el directorio de salida exista
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
+    # --- [MEJORA] LOGIN AUTOMÁTICO ---
+    if not cookies:
+        cookies = establecer_sesion_automatica(target_url)
+    
     # --- 0. PREPARACIÓN DE SESIÓN EN ZAP ---
     print("Limpiando sesión previa de ZAP...")
     limpiar_sesion_zap()
@@ -69,11 +127,13 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
         configurar_autenticacion(cookies)
         
         # [MEJORA 4] Cebado de Sesión (Priming): Visita forzada para que ZAP capture la sesión
-        print(f"[*] Cebando sesión (Priming) en {target_url}...")
+        # Apuntamos a una ruta protegida real para confirmar acceso
+        test_url = f"{target_url.rstrip('/')}/vulnerabilities/sqli/"
+        print(f"[*] Cebando sesión (Priming) en {test_url}...")
         try:
             # Usamos un User-Agent de navegador para que DVWA nos acepte la cookie
             ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-            requests.get(target_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
+            requests.get(test_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
         except Exception as e:
             print(f" [!] Advertencia en Priming: {e}")
     
@@ -137,10 +197,10 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
     # --- 5. SQLMAP (recibe URLs del Spider + FFUF combinadas) ---
     print("\n[4/4] Ejecutando SQLMAP...")
     lista_urls_spider = spider_urls.get("results", [])
-    # Combinar con las rutas de FFUF que tengan parámetros (?
-    lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas if "?" in r.get("url", "")]
+    # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
+    lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
     lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
-    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies)
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090")
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")

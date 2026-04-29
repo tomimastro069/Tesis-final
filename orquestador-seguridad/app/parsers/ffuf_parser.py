@@ -6,7 +6,7 @@ def parsear_ffuf(dato_dict_crudo):
         urls_vistas = set()
         lista_limpia = []
 
-        for item in data["results"]:
+        for item in data.get("results", []):
             if item["status"] in [200, 302] and item["url"] not in urls_vistas:
                 urls_vistas.add(item["url"])
                 lista_limpia.append({
