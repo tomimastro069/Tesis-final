@@ -56,7 +56,25 @@ services:
       DB_USER: security_user
       DB_PASSWORD: security_pass
     volumes:
-      - .:/app   # monta la carpeta del proyecto dentro del contenedor
+      - .:/app
+    ports:
+      - "8000:8000"
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: security-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - app
 
 volumes:
   postgres_data:
+  n8n_data:
