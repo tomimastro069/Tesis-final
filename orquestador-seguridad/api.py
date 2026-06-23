@@ -24,6 +24,7 @@ class ScanRequest(BaseModel):
     cookies: Optional[str] = None
     callback_url: Optional[str] = None
     clean_cache: Optional[bool] = False
+    sqlmap_level: Optional[str] = "basic"
 
     model_config = {
         "json_schema_extra": {
@@ -32,12 +33,13 @@ class ScanRequest(BaseModel):
                 "nivel": "small",
                 "cookies": "PHPSESSID=your_session_id; security=low",
                 "callback_url": "http://security-n8n:5678/webhook/scan-completado",
-                "clean_cache": False
+                "clean_cache": False,
+                "sqlmap_level": "basic"
             }
         }
     }
 
-def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[str], callback_url: Optional[str], clean_cache: bool = False):
+def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[str], callback_url: Optional[str], clean_cache: bool = False, sqlmap_level: str = "basic"):
     logger.info(f"Iniciando escaneo de seguridad en segundo plano para: {target} (Nivel: {nivel})")
     try:
         # [MEJORA] Borrado opcional de caché
@@ -52,7 +54,7 @@ def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[s
             cookies = None
 
         # 1. Ejecutar el pipeline de escaneo
-        resultado_escaneo = run_security_pipeline(target, nivel, cookies)
+        resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level)
         if not resultado_escaneo:
             raise Exception("El pipeline de escaneo no retornó ningún resultado.")
 
@@ -128,11 +130,13 @@ def iniciar_escaneo(request: ScanRequest, background_tasks: BackgroundTasks):
         nivel=request.nivel,
         cookies=request.cookies,
         callback_url=request.callback_url,
-        clean_cache=request.clean_cache
+        clean_cache=request.clean_cache,
+        sqlmap_level=request.sqlmap_level
     )
 
     return {
         "message": "Escaneo lanzado! Vas a recibir una notificacion cuando termine.",
         "target": request.target,
-        "nivel": request.nivel
+        "nivel": request.nivel,
+        "sqlmap_level": request.sqlmap_level
     }

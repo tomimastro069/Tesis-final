@@ -84,7 +84,7 @@ def establecer_sesion_automatica(target_url):
         print(f" [!] Error en login automático: {e}")
         return None
 
-def run_security_pipeline(target_url, nivel="medium", cookies=None):
+def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic"):
     """
     Función principal que coordina todo el escaneo.
     
@@ -196,11 +196,23 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None):
 
     # --- 5. SQLMAP (recibe URLs del Spider + FFUF combinadas) ---
     print("\n[4/4] Ejecutando SQLMAP...")
+    
+    # [MEJORA] Refrescar la cookie de sesión antes de SQLMap
+    # porque el escaneo activo de ZAP tarda mucho y la sesión de la víctima pudo haber expirado.
+    if cookies is not None:
+        print("    [*] Refrescando sesión para SQLMap (evitando caducidad por inactividad)...")
+        nuevas_cookies = establecer_sesion_automatica(target_url)
+        if nuevas_cookies:
+            cookies = nuevas_cookies
+            print(f"    [+] Sesión refrescada con éxito. Nueva Cookie: {cookies}")
+        else:
+            print("    [-] Falló el refresco de sesión. Usando cookie anterior o modo anónimo.")
+
     lista_urls_spider = spider_urls.get("results", [])
     # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
     lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
-    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090")
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090", sqlmap_level=sqlmap_level)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")

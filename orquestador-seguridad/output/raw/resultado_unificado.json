@@ -1,14 +1,14 @@
 {
     "resumen": {
-        "total_urls_unicas": 60,
-        "urls_spider": 54,
-        "alertas_zap": 52,
+        "total_urls_unicas": 59,
+        "urls_spider": 53,
+        "alertas_zap": 56,
         "rutas_ffuf": 8,
         "vulnerabilidades_sqlmap": 0
     },
     "spider": {
         "herramienta": "ZAP Spider",
-        "total_urls": 54,
+        "total_urls": 53,
         "urls": [
             {
                 "url": "http://dvwa/vulnerabilities/xss_r/"
@@ -33,9 +33,6 @@
             },
             {
                 "url": "http://dvwa/vulnerabilities/sqli_blind/"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP"
             },
             {
                 "url": "http://dvwa/docs/DVWA_v1.3.pdf"
@@ -140,6 +137,9 @@
                 "url": "http://dvwa/vulnerabilities/csrf/"
             },
             {
+                "url": "http://dvwa/DTD/xhtml1-transitional.dtd"
+            },
+            {
                 "url": "http://dvwa/vulnerabilities/brute/"
             },
             {
@@ -168,30 +168,19 @@
             },
             {
                 "url": "http://dvwa/robots.txt"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP"
             }
         ]
     },
     "zap": {
         "herramienta": "ZAP",
-        "fecha": "Wed, 29 Apr 2026 14:04:02",
+        "fecha": "Tue, 23 Jun 2026 21:43:02",
         "host": "dvwa",
         "puerto": "443",
         "ssl": "true",
-        "total_alertas": 52,
+        "total_alertas": 56,
         "alertas": [
             {
                 "url": "http://dvwa/vulnerabilities/captcha/",
-                "vulnerabilidad": "Absence of Anti-CSRF Tokens",
-                "severidad": "Medium (Low)",
-                "metodo": "GET",
-                "descripcion": "<p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>",
-                "solucion": "<p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>"
-            },
-            {
-                "url": "http://dvwa/vulnerabilities/csp/",
                 "vulnerabilidad": "Absence of Anti-CSRF Tokens",
                 "severidad": "Medium (Low)",
                 "metodo": "GET",
@@ -216,6 +205,14 @@
             },
             {
                 "url": "http://dvwa/vulnerabilities/weak_id/",
+                "vulnerabilidad": "Absence of Anti-CSRF Tokens",
+                "severidad": "Medium (Low)",
+                "metodo": "GET",
+                "descripcion": "<p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>",
+                "solucion": "<p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/xss_s/",
                 "vulnerabilidad": "Absence of Anti-CSRF Tokens",
                 "severidad": "Medium (Low)",
                 "metodo": "GET",
@@ -271,7 +268,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>"
             },
             {
-                "url": "http://dvwa/setup.php",
+                "url": "http://dvwa/sitemap.xml",
                 "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
                 "severidad": "Medium (High)",
                 "metodo": "GET",
@@ -279,7 +276,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>"
             },
             {
-                "url": "http://dvwa/sitemap.xml",
+                "url": "http://dvwa/vulnerabilities/brute/",
                 "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
                 "severidad": "Medium (High)",
                 "metodo": "GET",
@@ -359,7 +356,7 @@
                 "solucion": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive.</p>"
             },
             {
-                "url": "http://dvwa/setup.php",
+                "url": "http://dvwa/vulnerabilities/brute/",
                 "vulnerabilidad": "Missing Anti-clickjacking Header",
                 "severidad": "Medium (Medium)",
                 "metodo": "GET",
@@ -367,7 +364,7 @@
                 "solucion": "<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/brute/",
+                "url": "http://dvwa/vulnerabilities/exec/",
                 "vulnerabilidad": "Missing Anti-clickjacking Header",
                 "severidad": "Medium (Medium)",
                 "metodo": "GET",
@@ -389,6 +386,14 @@
                 "metodo": "GET",
                 "descripcion": "<p>The page includes one or more script files from a third-party domain.</p>",
                 "solucion": "<p>Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application.</p>"
+            },
+            {
+                "url": "http://dvwa/DTD/xhtml1-transitional.dtd",
+                "vulnerabilidad": "In Page Banner Information Leak",
+                "severidad": "Low (High)",
+                "metodo": "GET",
+                "descripcion": "<p>The server returned a version banner string in the response content. Such information leaks may allow attackers to further target specific issues impacting the product and version in use.</p>",
+                "solucion": "<p>Configure the server to prevent such information leaks. For example:</p><p>Under Tomcat this is done via the \"server\" directive and implementation of custom error pages.</p><p>Under Apache this is done via the \"ServerSignature\" and \"ServerTokens\" directives.</p>"
             },
             {
                 "url": "http://dvwa/sitemap.xml",
@@ -423,6 +428,14 @@
                 "solucion": "<p>Disable debugging messages before pushing to production.</p>"
             },
             {
+                "url": "http://dvwa/phpinfo.php",
+                "vulnerabilidad": "Private IP Disclosure",
+                "severidad": "Low (Medium)",
+                "metodo": "GET",
+                "descripcion": "<p>A private IP (such as 10.x.x.x, 172.x.x.x, 192.168.x.x) or an Amazon EC2 private hostname (for example, ip-10-0-56-78) has been found in the HTTP response body. This information might be helpful for further attacks targeting internal systems.</p>",
+                "solucion": "<p>Remove the private IP address from the HTTP response body. For comments, use JSP/ASP/PHP comment instead of HTML/JavaScript comment which can be seen by client browsers.</p>"
+            },
+            {
                 "url": "http://dvwa",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
@@ -439,7 +452,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>"
             },
             {
-                "url": "http://dvwa/robots.txt",
+                "url": "http://dvwa/instructions.php",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
                 "metodo": "GET",
@@ -447,7 +460,7 @@
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>"
             },
             {
-                "url": "http://dvwa/setup.php",
+                "url": "http://dvwa/robots.txt",
                 "vulnerabilidad": "Server Leaks Version Information via \"Server\" HTTP Response Header Field",
                 "severidad": "Low (High)",
                 "metodo": "GET",
@@ -461,6 +474,14 @@
                 "metodo": "GET",
                 "descripcion": "<p>The web/application server is leaking version information via the \"Server\" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>",
                 "solucion": "<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the \"Server\" header or provide generic details.</p>"
+            },
+            {
+                "url": "http://dvwa/phpinfo.php",
+                "vulnerabilidad": "Timestamp Disclosure - Unix",
+                "severidad": "Low (Low)",
+                "metodo": "GET",
+                "descripcion": "<p>A timestamp was disclosed by the application/web server. - Unix</p>",
+                "solucion": "<p>Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.</p>"
             },
             {
                 "url": "http://dvwa/vulnerabilities/javascript/",
@@ -487,7 +508,7 @@
                 "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
             },
             {
-                "url": "http://dvwa/robots.txt",
+                "url": "http://dvwa/instructions.php",
                 "vulnerabilidad": "X-Content-Type-Options Header Missing",
                 "severidad": "Low (Medium)",
                 "metodo": "GET",
@@ -495,7 +516,7 @@
                 "solucion": "<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>"
             },
             {
-                "url": "http://dvwa/setup.php",
+                "url": "http://dvwa/robots.txt",
                 "vulnerabilidad": "X-Content-Type-Options Header Missing",
                 "severidad": "Low (Medium)",
                 "metodo": "GET",
@@ -559,7 +580,15 @@
                 "solucion": "<p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>"
             },
             {
-                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+                "url": "http://dvwa/phpinfo.php",
+                "vulnerabilidad": "Modern Web Application",
+                "severidad": "Informational (Medium)",
+                "metodo": "GET",
+                "descripcion": "<p>The application appears to be a modern web application. If you need to explore it automatically then the Ajax Spider may well be more effective than the standard one.</p>",
+                "solucion": "<p>This is an informational alert and so no changes are required.</p>"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/upload/",
                 "vulnerabilidad": "User Agent Fuzzer",
                 "severidad": "Informational (Medium)",
                 "metodo": "GET",
@@ -602,14 +631,14 @@
     },
     "ffuf": {
         "herramienta": "ffuf",
-        "comando": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=i0kha1arbj3anq82lkgrdt1u00; security=low",
-        "fecha": "2026-04-29T13:59:30Z",
+        "comando": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=1a2ho3kpmerbq7eblklsi3orq2; security=low",
+        "fecha": "2026-06-23T21:37:15Z",
         "total_rutas": 8,
         "rutas": [
             {
                 "url": "http://dvwa/about.php",
                 "input": {
-                    "FFUFHASH": "18bd22560e",
+                    "FFUFHASH": "c929c2560e",
                     "FUZZ": "about.php"
                 },
                 "status": 200
@@ -617,7 +646,7 @@
             {
                 "url": "http://dvwa/index.php",
                 "input": {
-                    "FFUFHASH": "18bd23e430",
+                    "FFUFHASH": "c929c3e430",
                     "FUZZ": "index.php"
                 },
                 "status": 302
@@ -625,7 +654,7 @@
             {
                 "url": "http://dvwa/instructions.php",
                 "input": {
-                    "FFUFHASH": "18bd23f9d8",
+                    "FFUFHASH": "c929c3f9d8",
                     "FUZZ": "instructions.php"
                 },
                 "status": 200
@@ -633,7 +662,7 @@
             {
                 "url": "http://dvwa/login.php",
                 "input": {
-                    "FFUFHASH": "18bd243cde",
+                    "FFUFHASH": "c929c43cde",
                     "FUZZ": "login.php"
                 },
                 "status": 200
@@ -641,7 +670,7 @@
             {
                 "url": "http://dvwa/logout.php",
                 "input": {
-                    "FFUFHASH": "18bd2441f8",
+                    "FFUFHASH": "c929c441f8",
                     "FUZZ": "logout.php"
                 },
                 "status": 302
@@ -649,7 +678,7 @@
             {
                 "url": "http://dvwa/phpinfo.php",
                 "input": {
-                    "FFUFHASH": "18bd24e014",
+                    "FFUFHASH": "c929c4e014",
                     "FUZZ": "phpinfo.php"
                 },
                 "status": 302
@@ -657,7 +686,7 @@
             {
                 "url": "http://dvwa/security.php",
                 "input": {
-                    "FFUFHASH": "18bd254aea",
+                    "FFUFHASH": "c929c54aea",
                     "FUZZ": "security.php"
                 },
                 "status": 302
@@ -665,7 +694,7 @@
             {
                 "url": "http://dvwa/setup.php",
                 "input": {
-                    "FFUFHASH": "18bd2552b4",
+                    "FFUFHASH": "c929c552b4",
                     "FUZZ": "setup.php"
                 },
                 "status": 200

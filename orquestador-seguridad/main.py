@@ -19,12 +19,29 @@ if __name__ == "__main__":
     if limpiar:
         limpiar_cache_completa()
     
-    print(f"Iniciando escaneo contra: {target}")
+    # [NUEVO] Nivel de SQLMap
+    print("\n--- Nivel de Explotación SQLMap ---")
+    print("[1] Básico: Solo detecta vulnerabilidad (Recomendado)")
+    print("[2] Evidencia Rápida: Extrae bases de datos y usuario actual")
+    print("[3] Extracción Completa: Extrae todos los datos (Puede tardar HORAS)")
+    
+    sqlmap_opcion = input("Selecciona el nivel (1, 2 o 3) [default: 1]: ").strip()
+    
+    if sqlmap_opcion == "2":
+        sqlmap_level = "fast_evidence"
+    elif sqlmap_opcion == "3":
+        sqlmap_level = "full_dump"
+        print("⚠️ ADVERTENCIA: Has seleccionado Extracción Completa. El escaneo puede tardar mucho tiempo.")
+    else:
+        sqlmap_level = "basic"
+    
+    print(f"\nIniciando escaneo contra: {target}")
     print(f"Nivel seleccionado: {nivel}")
+    print(f"Nivel SQLMap: {sqlmap_level}")
     if cookies:
         print(f"Cookies inyectadas: {cookies}")
         
-    resultado_escaneo = run_security_pipeline(target, nivel, cookies)
+    resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level)
     
     print(f"Iniciando parseo de ZAP, SPIDER y FFUF:")
     resultado_parseo = run_parser_pipeline(resultado_escaneo)
