@@ -83,7 +83,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
   if (loading) {
     return (
       <div style={{ padding: "40px", color: "#94a3b8", textAlign: "center" }}>
-        Loading scan report for {targetUrl}...
+        Cargando reporte de análisis para {targetUrl}...
       </div>
     );
   }
@@ -91,7 +91,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
   if (!data) {
     return (
       <div style={{ padding: "40px", color: "#ef4444", textAlign: "center" }}>
-        Failed to load scan data. Has a scan been completed for {targetUrl}?
+        Error al cargar datos. ¿Se ha completado un análisis para {targetUrl}?
       </div>
     );
   }
@@ -105,8 +105,8 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
       {/* Header controls inside report */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
         <div>
-          <h2 style={{ fontSize: "20px", color: "#f8fafc", margin: 0, marginBottom: "4px" }}>Security Overview</h2>
-          <div style={{ fontSize: "13px", color: "#94a3b8" }}>Target: {targetUrl}</div>
+          <h2 style={{ fontSize: "20px", color: "#f8fafc", margin: 0, marginBottom: "4px" }}>Resumen de Seguridad</h2>
+          <div style={{ fontSize: "13px", color: "#94a3b8" }}>Objetivo: {targetUrl}</div>
         </div>
       </div>
 
@@ -133,7 +133,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
             }}
           />
           <div style={{ fontSize: "11px", fontWeight: 600, color: "#475569", letterSpacing: "0.8px", marginBottom: "16px" }}>
-            GLOBAL RISK LEVEL
+            NIVEL DE RIESGO GLOBAL
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <div style={{ position: "relative", flexShrink: 0 }}>
@@ -166,7 +166,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
                 <span style={{ fontSize: "16px", fontWeight: 500, color: "#64748b" }}>/100</span>
               </div>
               <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "8px" }}>
-                Security Score
+                Puntuación de Seguridad
               </div>
             </div>
           </div>
@@ -207,7 +207,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
           />
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px" }}>
             <span style={{ fontSize: "11px", fontWeight: 600, color: "#475569", letterSpacing: "0.8px" }}>
-              TOTAL VULNERABILITIES
+              TOTAL DE VULNERABILIDADES
             </span>
             <div
               style={{
@@ -228,7 +228,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
             {data.total}
           </div>
           <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
-            Detected on{" "}
+            Detectado en{" "}
             <span style={{ color: "#94a3b8", fontWeight: 500 }}>{targetUrl}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -274,7 +274,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
           />
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px" }}>
             <span style={{ fontSize: "11px", fontWeight: 600, color: "#475569", letterSpacing: "0.8px" }}>
-              ACTIONABLE ITEMS
+              ELEMENTOS DE ACCIÓN
             </span>
             <div
               style={{
@@ -295,7 +295,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
             {data.severityData.find((s:any)=>s.name==="High")?.count + data.severityData.find((s:any)=>s.name==="Critical")?.count}
           </div>
           <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
-            Immediate Action Required
+            Requieren Acción Inmediata
           </div>
 
         </div>

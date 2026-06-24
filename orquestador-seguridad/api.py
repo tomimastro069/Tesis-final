@@ -18,6 +18,19 @@ app = FastAPI(
     version="1.0.0"
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
+# Permitir CORS desde tu frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # O especificar exactamente ["http://localhost:5173"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 class ScanRequest(BaseModel):
     target: str
     nivel: Optional[str] = "medium"

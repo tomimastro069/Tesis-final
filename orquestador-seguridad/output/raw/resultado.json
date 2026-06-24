@@ -1,5 +1,5 @@
 {
-    "target": "http://dvwa",
+    "target": "http://dvwa/",
     "spider_raw": {
         "results": [
             "http://dvwa/vulnerabilities/xss_r/",
@@ -10,6 +10,7 @@
             "http://dvwa/instructions.php?doc=PHPIDS-license",
             "http://dvwa/vulnerabilities/weak_id/",
             "http://dvwa/vulnerabilities/sqli_blind/",
+            "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
             "http://dvwa/docs/DVWA_v1.3.pdf",
             "http://dvwa/instructions.php",
             "http://dvwa/dvwa/js/dvwaPage.js",
@@ -22,7 +23,6 @@
             "http://dvwa/vulnerabilities/captcha/",
             "http://dvwa/instructions.php?doc=changelog",
             "http://dvwa/logout.php",
-            "http://dvwa",
             "http://dvwa/vulnerabilities/xss_d/?default",
             "http://dvwa/",
             "http://dvwa/vulnerabilities/fi/?page=include.php",
@@ -54,14 +54,15 @@
             "http://dvwa/vulnerabilities/fi/?page=file3.php",
             "http://dvwa/dvwa/css/login.css",
             "http://dvwa/dvwa/images/lock.png",
-            "http://dvwa/robots.txt"
+            "http://dvwa/robots.txt",
+            "http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP"
         ]
     },
     "zap_raw": {
         "@programName": "ZAP",
         "@version": "2.17.0",
-        "@generated": "Tue, 23 Jun 2026 21:43:02",
-        "created": "2026-06-23T21:43:02.743948002Z",
+        "@generated": "Wed, 24 Jun 2026 20:14:36",
+        "created": "2026-06-24T20:14:36.022976250Z",
         "site": [
             {
                 "@name": "https://dvwa",
@@ -87,7 +88,7 @@
                         "desc": "<p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>",
                         "instances": [
                             {
-                                "id": "55",
+                                "id": "57",
                                 "uri": "http://dvwa/vulnerabilities/captcha/",
                                 "nodeName": "http://dvwa/vulnerabilities/captcha/",
                                 "method": "GET",
@@ -97,7 +98,7 @@
                                 "otherinfo": "No known Anti-CSRF token [anticsrf, CSRFToken, __RequestVerificationToken, csrfmiddlewaretoken, authenticity_token, OWASP_CSRFTOKEN, anoncsrf, csrf_token, _csrf, _csrfSecret, __csrf_magic, CSRF, _token, _csrf_token, _csrfToken] was found in the following HTML form: [Form 1: \"Change\" \"password_conf\" \"password_new\" \"step\" ]."
                             },
                             {
-                                "id": "24",
+                                "id": "23",
                                 "uri": "http://dvwa/vulnerabilities/exec/",
                                 "nodeName": "http://dvwa/vulnerabilities/exec/",
                                 "method": "GET",
@@ -107,7 +108,17 @@
                                 "otherinfo": "No known Anti-CSRF token [anticsrf, CSRFToken, __RequestVerificationToken, csrfmiddlewaretoken, authenticity_token, OWASP_CSRFTOKEN, anoncsrf, csrf_token, _csrf, _csrfSecret, __csrf_magic, CSRF, _token, _csrf_token, _csrfToken] was found in the following HTML form: [Form 1: \"ip\" \"Submit\" ]."
                             },
                             {
-                                "id": "42",
+                                "id": "75",
+                                "uri": "http://dvwa/vulnerabilities/javascript/",
+                                "nodeName": "http://dvwa/vulnerabilities/javascript/",
+                                "method": "GET",
+                                "param": "",
+                                "attack": "",
+                                "evidence": "<form name=\"low_js\" method=\"post\">",
+                                "otherinfo": "No known Anti-CSRF token [anticsrf, CSRFToken, __RequestVerificationToken, csrfmiddlewaretoken, authenticity_token, OWASP_CSRFTOKEN, anoncsrf, csrf_token, _csrf, _csrfSecret, __csrf_magic, CSRF, _token, _csrf_token, _csrfToken] was found in the following HTML form: [Form 1: \"phrase\" \"send\" \"token\" ]."
+                            },
+                            {
+                                "id": "40",
                                 "uri": "http://dvwa/vulnerabilities/upload/",
                                 "nodeName": "http://dvwa/vulnerabilities/upload/",
                                 "method": "GET",
@@ -117,17 +128,7 @@
                                 "otherinfo": "No known Anti-CSRF token [anticsrf, CSRFToken, __RequestVerificationToken, csrfmiddlewaretoken, authenticity_token, OWASP_CSRFTOKEN, anoncsrf, csrf_token, _csrf, _csrfSecret, __csrf_magic, CSRF, _token, _csrf_token, _csrfToken] was found in the following HTML form: [Form 1: \"MAX_FILE_SIZE\" \"Upload\" \"uploaded\" ]."
                             },
                             {
-                                "id": "47",
-                                "uri": "http://dvwa/vulnerabilities/weak_id/",
-                                "nodeName": "http://dvwa/vulnerabilities/weak_id/",
-                                "method": "GET",
-                                "param": "",
-                                "attack": "",
-                                "evidence": "<form method=\"post\">",
-                                "otherinfo": "No known Anti-CSRF token [anticsrf, CSRFToken, __RequestVerificationToken, csrfmiddlewaretoken, authenticity_token, OWASP_CSRFTOKEN, anoncsrf, csrf_token, _csrf, _csrfSecret, __csrf_magic, CSRF, _token, _csrf_token, _csrfToken] was found in the following HTML form: [Form 1: \"\" ]."
-                            },
-                            {
-                                "id": "64",
+                                "id": "61",
                                 "uri": "http://dvwa/vulnerabilities/xss_s/",
                                 "nodeName": "http://dvwa/vulnerabilities/xss_s/",
                                 "method": "GET",
@@ -144,97 +145,7 @@
                         "reference": "<p>https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html</p><p>https://cwe.mitre.org/data/definitions/352.html</p>",
                         "cweid": "352",
                         "wascid": "9",
-                        "sourceid": "68"
-                    },
-                    {
-                        "pluginid": "10055",
-                        "alertRef": "10055-13",
-                        "alert": "CSP: Failure to Define Directive with No Fallback",
-                        "name": "CSP: Failure to Define Directive with No Fallback",
-                        "riskcode": "2",
-                        "confidence": "3",
-                        "riskdesc": "Medium (High)",
-                        "desc": "<p>The Content Security Policy fails to define one of the directives that has no fallback. Missing/excluding them is the same as allowing anything.</p>",
-                        "instances": [
-                            {
-                                "id": "75",
-                                "uri": "http://dvwa/vulnerabilities/csp/",
-                                "nodeName": "http://dvwa/vulnerabilities/csp/",
-                                "method": "GET",
-                                "param": "Content-Security-Policy",
-                                "attack": "",
-                                "evidence": "script-src 'self' https://pastebin.com  example.com code.jquery.com https://ssl.google-analytics.com ;",
-                                "otherinfo": "The directive(s): frame-ancestors, form-action is/are among the directives that do not fallback to default-src."
-                            }
-                        ],
-                        "count": "1",
-                        "systemic": false,
-                        "solution": "<p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>",
-                        "otherinfo": "<p>The directive(s): frame-ancestors, form-action is/are among the directives that do not fallback to default-src.</p>",
-                        "reference": "<p>https://www.w3.org/TR/CSP/</p><p>https://caniuse.com/#search=content+security+policy</p><p>https://content-security-policy.com/</p><p>https://github.com/HtmlUnit/htmlunit-csp</p><p>https://web.dev/articles/csp#resource-options</p>",
-                        "cweid": "693",
-                        "wascid": "15",
-                        "sourceid": "84"
-                    },
-                    {
-                        "pluginid": "10055",
-                        "alertRef": "10055-4",
-                        "alert": "CSP: Wildcard Directive",
-                        "name": "CSP: Wildcard Directive",
-                        "riskcode": "2",
-                        "confidence": "3",
-                        "riskdesc": "Medium (High)",
-                        "desc": "<p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks. Including (but not limited to) Cross Site Scripting (XSS), and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page \u2014 covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>",
-                        "instances": [
-                            {
-                                "id": "76",
-                                "uri": "http://dvwa/vulnerabilities/csp/",
-                                "nodeName": "http://dvwa/vulnerabilities/csp/",
-                                "method": "GET",
-                                "param": "Content-Security-Policy",
-                                "attack": "",
-                                "evidence": "script-src 'self' https://pastebin.com  example.com code.jquery.com https://ssl.google-analytics.com ;",
-                                "otherinfo": "The following directives either allow wildcard sources (or ancestors), are not defined, or are overly broadly defined:\nstyle-src, img-src, connect-src, frame-src, font-src, media-src, object-src, manifest-src"
-                            }
-                        ],
-                        "count": "1",
-                        "systemic": false,
-                        "solution": "<p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>",
-                        "otherinfo": "<p>The following directives either allow wildcard sources (or ancestors), are not defined, or are overly broadly defined:</p><p>style-src, img-src, connect-src, frame-src, font-src, media-src, object-src, manifest-src</p>",
-                        "reference": "<p>https://www.w3.org/TR/CSP/</p><p>https://caniuse.com/#search=content+security+policy</p><p>https://content-security-policy.com/</p><p>https://github.com/HtmlUnit/htmlunit-csp</p><p>https://web.dev/articles/csp#resource-options</p>",
-                        "cweid": "693",
-                        "wascid": "15",
-                        "sourceid": "84"
-                    },
-                    {
-                        "pluginid": "10055",
-                        "alertRef": "10055-6",
-                        "alert": "CSP: style-src unsafe-inline",
-                        "name": "CSP: style-src unsafe-inline",
-                        "riskcode": "2",
-                        "confidence": "3",
-                        "riskdesc": "Medium (High)",
-                        "desc": "<p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks. Including (but not limited to) Cross Site Scripting (XSS), and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page \u2014 covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>",
-                        "instances": [
-                            {
-                                "id": "77",
-                                "uri": "http://dvwa/vulnerabilities/csp/",
-                                "nodeName": "http://dvwa/vulnerabilities/csp/",
-                                "method": "GET",
-                                "param": "Content-Security-Policy",
-                                "attack": "",
-                                "evidence": "script-src 'self' https://pastebin.com  example.com code.jquery.com https://ssl.google-analytics.com ;",
-                                "otherinfo": "style-src includes unsafe-inline."
-                            }
-                        ],
-                        "count": "1",
-                        "systemic": false,
-                        "solution": "<p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>",
-                        "otherinfo": "<p>style-src includes unsafe-inline.</p>",
-                        "reference": "<p>https://www.w3.org/TR/CSP/</p><p>https://caniuse.com/#search=content+security+policy</p><p>https://content-security-policy.com/</p><p>https://github.com/HtmlUnit/htmlunit-csp</p><p>https://web.dev/articles/csp#resource-options</p>",
-                        "cweid": "693",
-                        "wascid": "15",
-                        "sourceid": "84"
+                        "sourceid": "69"
                     },
                     {
                         "pluginid": "10038",
@@ -248,16 +159,6 @@
                         "instances": [
                             {
                                 "id": "3",
-                                "uri": "http://dvwa",
-                                "nodeName": "http://dvwa",
-                                "method": "GET",
-                                "param": "",
-                                "attack": "",
-                                "evidence": "",
-                                "otherinfo": ""
-                            },
-                            {
-                                "id": "11",
                                 "uri": "http://dvwa/",
                                 "nodeName": "http://dvwa/",
                                 "method": "GET",
@@ -277,7 +178,17 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "5",
+                                "id": "11",
+                                "uri": "http://dvwa/setup.php",
+                                "nodeName": "http://dvwa/setup.php",
+                                "method": "GET",
+                                "param": "",
+                                "attack": "",
+                                "evidence": "",
+                                "otherinfo": ""
+                            },
+                            {
+                                "id": "1",
                                 "uri": "http://dvwa/sitemap.xml",
                                 "nodeName": "http://dvwa/sitemap.xml",
                                 "method": "GET",
@@ -287,9 +198,9 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "19",
-                                "uri": "http://dvwa/vulnerabilities/brute/",
-                                "nodeName": "http://dvwa/vulnerabilities/brute/",
+                                "id": "22",
+                                "uri": "http://dvwa/vulnerabilities/exec/",
+                                "nodeName": "http://dvwa/vulnerabilities/exec/",
                                 "method": "GET",
                                 "param": "",
                                 "attack": "",
@@ -304,7 +215,7 @@
                         "reference": "<p>https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP</p><p>https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</p><p>https://www.w3.org/TR/CSP/</p><p>https://w3c.github.io/webappsec-csp/</p><p>https://web.dev/articles/csp</p><p>https://caniuse.com/#feat=contentsecuritypolicy</p><p>https://content-security-policy.com/</p>",
                         "cweid": "693",
                         "wascid": "15",
-                        "sourceid": "4"
+                        "sourceid": "6"
                     },
                     {
                         "pluginid": "0",
@@ -317,7 +228,7 @@
                         "desc": "<p>It is possible to view the directory listing. Directory listing may reveal hidden scripts, include files, backup source files, etc. which can be accessed to read sensitive information.</p>",
                         "instances": [
                             {
-                                "id": "239",
+                                "id": "236",
                                 "uri": "http://dvwa/docs/",
                                 "nodeName": "http://dvwa/docs/",
                                 "method": "GET",
@@ -327,7 +238,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "242",
+                                "id": "238",
                                 "uri": "http://dvwa/dvwa/",
                                 "nodeName": "http://dvwa/dvwa/",
                                 "method": "GET",
@@ -337,7 +248,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "241",
+                                "id": "237",
                                 "uri": "http://dvwa/dvwa/css/",
                                 "nodeName": "http://dvwa/dvwa/css/",
                                 "method": "GET",
@@ -347,7 +258,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "240",
+                                "id": "239",
                                 "uri": "http://dvwa/dvwa/images/",
                                 "nodeName": "http://dvwa/dvwa/images/",
                                 "method": "GET",
@@ -357,7 +268,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "243",
+                                "id": "240",
                                 "uri": "http://dvwa/dvwa/js/",
                                 "nodeName": "http://dvwa/dvwa/js/",
                                 "method": "GET",
@@ -374,7 +285,7 @@
                         "reference": "<p>https://httpd.apache.org/docs/current/mod/core.html#options</p>",
                         "cweid": "548",
                         "wascid": "48",
-                        "sourceid": "8287"
+                        "sourceid": "8846"
                     },
                     {
                         "pluginid": "10106",
@@ -387,7 +298,7 @@
                         "desc": "<p>The site is only served under HTTP and not HTTPS.</p>",
                         "instances": [
                             {
-                                "id": "245",
+                                "id": "242",
                                 "uri": "http://dvwa/vulnerabilities/xss_s/",
                                 "nodeName": "https://dvwa/vulnerabilities/xss_s/",
                                 "method": "GET",
@@ -404,7 +315,7 @@
                         "reference": "<p>https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html</p><p>https://letsencrypt.org/</p>",
                         "cweid": "311",
                         "wascid": "4",
-                        "sourceid": "8350"
+                        "sourceid": "8916"
                     },
                     {
                         "pluginid": "10020",
@@ -417,17 +328,7 @@
                         "desc": "<p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>",
                         "instances": [
                             {
-                                "id": "1",
-                                "uri": "http://dvwa",
-                                "nodeName": "http://dvwa",
-                                "method": "GET",
-                                "param": "x-frame-options",
-                                "attack": "",
-                                "evidence": "",
-                                "otherinfo": ""
-                            },
-                            {
-                                "id": "9",
+                                "id": "0",
                                 "uri": "http://dvwa/",
                                 "nodeName": "http://dvwa/",
                                 "method": "GET",
@@ -437,7 +338,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "10",
+                                "id": "9",
                                 "uri": "http://dvwa/instructions.php",
                                 "nodeName": "http://dvwa/instructions.php",
                                 "method": "GET",
@@ -447,7 +348,17 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "18",
+                                "id": "10",
+                                "uri": "http://dvwa/setup.php",
+                                "nodeName": "http://dvwa/setup.php",
+                                "method": "GET",
+                                "param": "x-frame-options",
+                                "attack": "",
+                                "evidence": "",
+                                "otherinfo": ""
+                            },
+                            {
+                                "id": "19",
                                 "uri": "http://dvwa/vulnerabilities/brute/",
                                 "nodeName": "http://dvwa/vulnerabilities/brute/",
                                 "method": "GET",
@@ -474,7 +385,7 @@
                         "reference": "<p>https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options</p>",
                         "cweid": "1021",
                         "wascid": "15",
-                        "sourceid": "4"
+                        "sourceid": "6"
                     },
                     {
                         "pluginid": "90003",
@@ -487,7 +398,7 @@
                         "desc": "<p>The integrity attribute is missing on a script or link tag served by an external server. The integrity tag prevents an attacker who have gained access to this server from injecting a malicious content.</p>",
                         "instances": [
                             {
-                                "id": "58",
+                                "id": "60",
                                 "uri": "http://dvwa/vulnerabilities/captcha/",
                                 "nodeName": "http://dvwa/vulnerabilities/captcha/",
                                 "method": "GET",
@@ -504,7 +415,7 @@
                         "reference": "<p>https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity</p>",
                         "cweid": "345",
                         "wascid": "15",
-                        "sourceid": "68"
+                        "sourceid": "69"
                     },
                     {
                         "pluginid": "10017",
@@ -517,7 +428,7 @@
                         "desc": "<p>The page includes one or more script files from a third-party domain.</p>",
                         "instances": [
                             {
-                                "id": "54",
+                                "id": "55",
                                 "uri": "http://dvwa/vulnerabilities/captcha/",
                                 "nodeName": "http://dvwa/vulnerabilities/captcha/",
                                 "method": "GET",
@@ -534,7 +445,7 @@
                         "reference": "",
                         "cweid": "829",
                         "wascid": "15",
-                        "sourceid": "68"
+                        "sourceid": "69"
                     },
                     {
                         "pluginid": "10009",
@@ -547,7 +458,7 @@
                         "desc": "<p>The server returned a version banner string in the response content. Such information leaks may allow attackers to further target specific issues impacting the product and version in use.</p>",
                         "instances": [
                             {
-                                "id": "197",
+                                "id": "190",
                                 "uri": "http://dvwa/DTD/xhtml1-transitional.dtd",
                                 "nodeName": "http://dvwa/DTD/xhtml1-transitional.dtd",
                                 "method": "GET",
@@ -557,7 +468,7 @@
                                 "otherinfo": "There is a chance that the highlight in the finding is on a value in the headers, versus the actual matched string in the response body."
                             },
                             {
-                                "id": "6",
+                                "id": "2",
                                 "uri": "http://dvwa/sitemap.xml",
                                 "nodeName": "http://dvwa/sitemap.xml",
                                 "method": "GET",
@@ -567,7 +478,7 @@
                                 "otherinfo": "There is a chance that the highlight in the finding is on a value in the headers, versus the actual matched string in the response body."
                             },
                             {
-                                "id": "156",
+                                "id": "151",
                                 "uri": "http://dvwa/var/www/html/config/config.inc.php",
                                 "nodeName": "http://dvwa/var/www/html/config/config.inc.php",
                                 "method": "GET",
@@ -584,7 +495,7 @@
                         "reference": "<p>https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/08-Testing_for_Error_Handling/</p>",
                         "cweid": "497",
                         "wascid": "13",
-                        "sourceid": "153"
+                        "sourceid": "148"
                     },
                     {
                         "pluginid": "10023",
@@ -597,7 +508,7 @@
                         "desc": "<p>The response appeared to contain common error messages returned by platforms such as ASP.NET, and Web-servers such as IIS and Apache. You can configure the list of common debug messages.</p>",
                         "instances": [
                             {
-                                "id": "15",
+                                "id": "13",
                                 "uri": "http://dvwa/instructions.php",
                                 "nodeName": "http://dvwa/instructions.php",
                                 "method": "GET",
@@ -607,7 +518,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "110",
+                                "id": "125",
                                 "uri": "http://dvwa/instructions.php?doc=readme",
                                 "nodeName": "http://dvwa/instructions.php (doc)",
                                 "method": "GET",
@@ -624,7 +535,7 @@
                         "reference": "",
                         "cweid": "1295",
                         "wascid": "13",
-                        "sourceid": "11"
+                        "sourceid": "16"
                     },
                     {
                         "pluginid": "2",
@@ -637,24 +548,24 @@
                         "desc": "<p>A private IP (such as 10.x.x.x, 172.x.x.x, 192.168.x.x) or an Amazon EC2 private hostname (for example, ip-10-0-56-78) has been found in the HTTP response body. This information might be helpful for further attacks targeting internal systems.</p>",
                         "instances": [
                             {
-                                "id": "102",
+                                "id": "78",
                                 "uri": "http://dvwa/phpinfo.php",
                                 "nodeName": "http://dvwa/phpinfo.php",
                                 "method": "GET",
                                 "param": "",
                                 "attack": "",
-                                "evidence": "172.18.0.3:80",
-                                "otherinfo": "172.18.0.3:80\n172.18.0.3\n172.18.0.4\n172.18.0.3\n172.18.0.4\n"
+                                "evidence": "172.18.0.2:80",
+                                "otherinfo": "172.18.0.2:80\n172.18.0.2\n172.18.0.4\n172.18.0.2\n172.18.0.4\n"
                             }
                         ],
                         "count": "1",
                         "systemic": false,
                         "solution": "<p>Remove the private IP address from the HTTP response body. For comments, use JSP/ASP/PHP comment instead of HTML/JavaScript comment which can be seen by client browsers.</p>",
-                        "otherinfo": "<p>172.18.0.3:80</p><p>172.18.0.3</p><p>172.18.0.4</p><p>172.18.0.3</p><p>172.18.0.4</p><p></p>",
+                        "otherinfo": "<p>172.18.0.2:80</p><p>172.18.0.2</p><p>172.18.0.4</p><p>172.18.0.2</p><p>172.18.0.4</p><p></p>",
                         "reference": "<p>https://datatracker.ietf.org/doc/html/rfc1918</p>",
                         "cweid": "497",
                         "wascid": "13",
-                        "sourceid": "106"
+                        "sourceid": "89"
                     },
                     {
                         "pluginid": "10036",
@@ -667,17 +578,7 @@
                         "desc": "<p>The web/application server is leaking version information via the \"Server\" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>",
                         "instances": [
                             {
-                                "id": "4",
-                                "uri": "http://dvwa",
-                                "nodeName": "http://dvwa",
-                                "method": "GET",
-                                "param": "",
-                                "attack": "",
-                                "evidence": "Apache/2.4.25 (Debian)",
-                                "otherinfo": ""
-                            },
-                            {
-                                "id": "13",
+                                "id": "5",
                                 "uri": "http://dvwa/",
                                 "nodeName": "http://dvwa/",
                                 "method": "GET",
@@ -697,7 +598,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "0",
+                                "id": "7",
                                 "uri": "http://dvwa/robots.txt",
                                 "nodeName": "http://dvwa/robots.txt",
                                 "method": "GET",
@@ -707,7 +608,17 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "8",
+                                "id": "15",
+                                "uri": "http://dvwa/setup.php",
+                                "nodeName": "http://dvwa/setup.php",
+                                "method": "GET",
+                                "param": "",
+                                "attack": "",
+                                "evidence": "Apache/2.4.25 (Debian)",
+                                "otherinfo": ""
+                            },
+                            {
+                                "id": "4",
                                 "uri": "http://dvwa/sitemap.xml",
                                 "nodeName": "http://dvwa/sitemap.xml",
                                 "method": "GET",
@@ -724,7 +635,7 @@
                         "reference": "<p>https://httpd.apache.org/docs/current/mod/core.html#servertokens</p><p>https://learn.microsoft.com/en-us/previous-versions/msp-n-p/ff648552(v=pandp.10)</p><p>https://www.troyhunt.com/shhh-dont-let-your-response-headers/</p>",
                         "cweid": "497",
                         "wascid": "13",
-                        "sourceid": "4"
+                        "sourceid": "6"
                     },
                     {
                         "pluginid": "10096",
@@ -737,17 +648,17 @@
                         "desc": "<p>A timestamp was disclosed by the application/web server. - Unix</p>",
                         "instances": [
                             {
-                                "id": "105",
+                                "id": "81",
                                 "uri": "http://dvwa/phpinfo.php",
                                 "nodeName": "http://dvwa/phpinfo.php",
                                 "method": "GET",
                                 "param": "",
                                 "attack": "",
-                                "evidence": "1782250598",
-                                "otherinfo": "1782250598, which evaluates to: 2026-06-23 21:36:38."
+                                "evidence": "1782331818",
+                                "otherinfo": "1782331818, which evaluates to: 2026-06-24 20:10:18."
                             },
                             {
-                                "id": "117",
+                                "id": "99",
                                 "uri": "http://dvwa/vulnerabilities/javascript/",
                                 "nodeName": "http://dvwa/vulnerabilities/javascript/",
                                 "method": "GET",
@@ -757,7 +668,7 @@
                                 "otherinfo": "1473231341, which evaluates to: 2016-09-07 06:55:41."
                             },
                             {
-                                "id": "115",
+                                "id": "96",
                                 "uri": "http://dvwa/vulnerabilities/javascript/",
                                 "nodeName": "http://dvwa/vulnerabilities/javascript/",
                                 "method": "GET",
@@ -767,7 +678,7 @@
                                 "otherinfo": "1732584193, which evaluates to: 2024-11-26 01:23:13."
                             },
                             {
-                                "id": "116",
+                                "id": "98",
                                 "uri": "http://dvwa/vulnerabilities/javascript/",
                                 "nodeName": "http://dvwa/vulnerabilities/javascript/",
                                 "method": "GET",
@@ -777,7 +688,7 @@
                                 "otherinfo": "1732584194, which evaluates to: 2024-11-26 01:23:14."
                             },
                             {
-                                "id": "119",
+                                "id": "101",
                                 "uri": "http://dvwa/vulnerabilities/javascript/",
                                 "nodeName": "http://dvwa/vulnerabilities/javascript/",
                                 "method": "GET",
@@ -790,11 +701,11 @@
                         "count": "5",
                         "systemic": true,
                         "solution": "<p>Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.</p>",
-                        "otherinfo": "<p>1782250598, which evaluates to: 2026-06-23 21:36:38.</p>",
+                        "otherinfo": "<p>1782331818, which evaluates to: 2026-06-24 20:10:18.</p>",
                         "reference": "<p>https://cwe.mitre.org/data/definitions/200.html</p>",
                         "cweid": "497",
                         "wascid": "13",
-                        "sourceid": "106"
+                        "sourceid": "89"
                     },
                     {
                         "pluginid": "10021",
@@ -807,17 +718,7 @@
                         "desc": "<p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>",
                         "instances": [
                             {
-                                "id": "7",
-                                "uri": "http://dvwa",
-                                "nodeName": "http://dvwa",
-                                "method": "GET",
-                                "param": "x-content-type-options",
-                                "attack": "",
-                                "evidence": "",
-                                "otherinfo": "This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.\nAt \"High\" threshold this scan rule will not alert on client or server error responses."
-                            },
-                            {
-                                "id": "14",
+                                "id": "6",
                                 "uri": "http://dvwa/",
                                 "nodeName": "http://dvwa/",
                                 "method": "GET",
@@ -827,7 +728,7 @@
                                 "otherinfo": "This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.\nAt \"High\" threshold this scan rule will not alert on client or server error responses."
                             },
                             {
-                                "id": "17",
+                                "id": "18",
                                 "uri": "http://dvwa/instructions.php",
                                 "nodeName": "http://dvwa/instructions.php",
                                 "method": "GET",
@@ -837,7 +738,7 @@
                                 "otherinfo": "This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.\nAt \"High\" threshold this scan rule will not alert on client or server error responses."
                             },
                             {
-                                "id": "2",
+                                "id": "8",
                                 "uri": "http://dvwa/robots.txt",
                                 "nodeName": "http://dvwa/robots.txt",
                                 "method": "GET",
@@ -847,7 +748,17 @@
                                 "otherinfo": "This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.\nAt \"High\" threshold this scan rule will not alert on client or server error responses."
                             },
                             {
-                                "id": "22",
+                                "id": "17",
+                                "uri": "http://dvwa/setup.php",
+                                "nodeName": "http://dvwa/setup.php",
+                                "method": "GET",
+                                "param": "x-content-type-options",
+                                "attack": "",
+                                "evidence": "",
+                                "otherinfo": "This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.\nAt \"High\" threshold this scan rule will not alert on client or server error responses."
+                            },
+                            {
+                                "id": "25",
                                 "uri": "http://dvwa/vulnerabilities/brute/",
                                 "nodeName": "http://dvwa/vulnerabilities/brute/",
                                 "method": "GET",
@@ -864,7 +775,7 @@
                         "reference": "<p>https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)</p><p>https://owasp.org/www-community/Security_Headers</p>",
                         "cweid": "693",
                         "wascid": "15",
-                        "sourceid": "4"
+                        "sourceid": "6"
                     },
                     {
                         "pluginid": "10111",
@@ -887,7 +798,7 @@
                                 "otherinfo": "userParam=Login\nuserValue=Login\npasswordParam=password\nreferer=http://dvwa/vulnerabilities/brute/"
                             },
                             {
-                                "id": "194",
+                                "id": "191",
                                 "uri": "http://dvwa/login.php",
                                 "nodeName": "http://dvwa/login.php ()(Login,password,user_token,username)",
                                 "method": "POST",
@@ -917,7 +828,7 @@
                         "desc": "<p>The request appeared to contain sensitive information leaked in the URL. This can violate PCI and most organizational compliance policies. You can configure the list of strings for this check to add or remove values specific to your environment.</p>",
                         "instances": [
                             {
-                                "id": "158",
+                                "id": "156",
                                 "uri": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
                                 "nodeName": "http://dvwa/vulnerabilities/brute/ (Login,password,username)",
                                 "method": "GET",
@@ -927,7 +838,7 @@
                                 "otherinfo": "The URL contains potentially sensitive information. The following string was found via the pattern: pass\npassword"
                             },
                             {
-                                "id": "159",
+                                "id": "157",
                                 "uri": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
                                 "nodeName": "http://dvwa/vulnerabilities/brute/ (Login,password,username)",
                                 "method": "GET",
@@ -937,7 +848,7 @@
                                 "otherinfo": "The URL contains potentially sensitive information. The following string was found via the pattern: user\nusername"
                             },
                             {
-                                "id": "163",
+                                "id": "161",
                                 "uri": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP",
                                 "nodeName": "http://dvwa/vulnerabilities/csrf/ (Change,password_conf,password_new)",
                                 "method": "GET",
@@ -947,7 +858,7 @@
                                 "otherinfo": "The URL contains potentially sensitive information. The following string was found via the pattern: pass\npassword_conf"
                             },
                             {
-                                "id": "165",
+                                "id": "163",
                                 "uri": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP",
                                 "nodeName": "http://dvwa/vulnerabilities/csrf/ (Change,password_conf,password_new)",
                                 "method": "GET",
@@ -977,7 +888,7 @@
                         "desc": "<p>The response appears to contain suspicious comments which may help an attacker.</p>",
                         "instances": [
                             {
-                                "id": "29",
+                                "id": "14",
                                 "uri": "http://dvwa/setup.php",
                                 "nodeName": "http://dvwa/setup.php",
                                 "method": "GET",
@@ -987,7 +898,7 @@
                                 "otherinfo": "The following pattern was used: \\bDB\\b and was detected in likely comment: \"<!-- Create db button -->\", see evidence field for the suspicious comment/snippet."
                             },
                             {
-                                "id": "113",
+                                "id": "94",
                                 "uri": "http://dvwa/vulnerabilities/javascript/",
                                 "nodeName": "http://dvwa/vulnerabilities/javascript/",
                                 "method": "GET",
@@ -1004,7 +915,7 @@
                         "reference": "",
                         "cweid": "615",
                         "wascid": "13",
-                        "sourceid": "47"
+                        "sourceid": "14"
                     },
                     {
                         "pluginid": "10109",
@@ -1017,7 +928,7 @@
                         "desc": "<p>The application appears to be a modern web application. If you need to explore it automatically then the Ajax Spider may well be more effective than the standard one.</p>",
                         "instances": [
                             {
-                                "id": "103",
+                                "id": "79",
                                 "uri": "http://dvwa/phpinfo.php",
                                 "nodeName": "http://dvwa/phpinfo.php",
                                 "method": "GET",
@@ -1034,7 +945,7 @@
                         "reference": "",
                         "cweid": "-1",
                         "wascid": "-1",
-                        "sourceid": "106"
+                        "sourceid": "89"
                     },
                     {
                         "pluginid": "10104",
@@ -1047,7 +958,7 @@
                         "desc": "<p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>",
                         "instances": [
                             {
-                                "id": "249",
+                                "id": "247",
                                 "uri": "http://dvwa/vulnerabilities/upload/",
                                 "nodeName": "http://dvwa/vulnerabilities/upload/",
                                 "method": "GET",
@@ -1057,7 +968,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "250",
+                                "id": "244",
                                 "uri": "http://dvwa/vulnerabilities/xss_d/?default",
                                 "nodeName": "http://dvwa/vulnerabilities/xss_d/ (default)",
                                 "method": "GET",
@@ -1067,7 +978,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "247",
+                                "id": "243",
                                 "uri": "http://dvwa/vulnerabilities/xss_r/",
                                 "nodeName": "http://dvwa/vulnerabilities/xss_r/",
                                 "method": "GET",
@@ -1077,7 +988,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "248",
+                                "id": "246",
                                 "uri": "http://dvwa/vulnerabilities/xss_r/?name=ZAP",
                                 "nodeName": "http://dvwa/vulnerabilities/xss_r/ (name)",
                                 "method": "GET",
@@ -1087,7 +998,7 @@
                                 "otherinfo": ""
                             },
                             {
-                                "id": "246",
+                                "id": "245",
                                 "uri": "http://dvwa/vulnerabilities/xss_s/",
                                 "nodeName": "http://dvwa/vulnerabilities/xss_s/",
                                 "method": "GET",
@@ -1104,7 +1015,7 @@
                         "reference": "<p>https://owasp.org/wstg</p>",
                         "cweid": "0",
                         "wascid": "0",
-                        "sourceid": "9664"
+                        "sourceid": "10324"
                     }
                 ]
             }
@@ -1113,191 +1024,100 @@
     },
     "sqlmap_raw": [
         {
-            "url": "http://dvwa/var/www/html/config/config.inc.php",
-            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [)]     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:06 /2026-06-23/\n\n[21:43:06] [INFO] testing connection to the target URL\n[21:43:06] [CRITICAL] page not found (404)\n\n[*] ending @ 21:43:07 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/instructions.php?doc=copying",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [,]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:09 /2026-06-23/\n\n[21:43:09] [INFO] testing connection to the target URL\n[21:43:09] [INFO] searching for forms\n[21:43:09] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:43:09 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": false,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/vulnerabilities/fi/?page=include.php",
-            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [)]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:11 /2026-06-23/\n\n[21:43:11] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:11] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/fi/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=774418d154cd42028a324c445548c5ae\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=774418d154cd42028a324c445548c5ae] (Warning: blank fields detected): username=&password=&Login=Login&user_token=774418d154cd42028a324c445548c5ae\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:11] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:11] [CRITICAL] page not found (404)\n[21:43:11] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:11] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:11 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/login.php",
-            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [.]     | .'| . |\n|___|_  [)]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:12 /2026-06-23/\n\n[21:43:12] [INFO] testing connection to the target URL\n[21:43:12] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=77bbed30575842f8fe6b0a444ce71a5a\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=77bbed30575842f8fe6b0a444ce71a5a] (Warning: blank fields detected): username=&password=&Login=Login&user_token=77bbed30575842f8fe6b0a444ce71a5a\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:13] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:13] [INFO] testing if the target URL content is stable\n[21:43:13] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:14] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:14] [INFO] skipping POST parameter 'username'\n[21:43:14] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:14] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:14] [INFO] skipping POST parameter 'password'\n[21:43:14] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:15] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:15] [INFO] skipping POST parameter 'Login'\n[21:43:15] [INFO] ignoring POST parameter 'user_token'\n[21:43:15] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:15] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:15] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:16] [INFO] skipping Cookie parameter 'security'\n[21:43:16] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:16] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:16] [INFO] skipping parameter 'User-Agent'\n[21:43:16] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:17] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:17] [INFO] skipping parameter 'Referer'\n[21:43:17] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:17] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:17 /2026-06-23/\n\n",
+            "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [)]     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:38 /2026-06-24/\n\n[20:14:38] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:38] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/sqli/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=5471fd8706f82d8d4a36c8cddfa42c16\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=5471fd8706f82d8d4a36c8cddfa42c16] (Warning: blank fields detected): username=&password=&Login=Login&user_token=5471fd8706f82d8d4a36c8cddfa42c16\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:38] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:38] [CRITICAL] page not found (404)\n[20:14:38] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:38] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:38 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
             "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
-            "stdout": "        ___\n       __H__\n ___ ___[(]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:18 /2026-06-23/\n\n[21:43:18] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:19] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/brute/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=8acbfae26f1d98b7ce95ff830307eb2e\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=8acbfae26f1d98b7ce95ff830307eb2e] (Warning: blank fields detected): username=&password=&Login=Login&user_token=8acbfae26f1d98b7ce95ff830307eb2e\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:19] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:19] [CRITICAL] page not found (404)\n[21:43:19] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:19] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:19 /2026-06-23/\n\n",
+            "stdout": "        ___\n       __H__\n ___ ___[)]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [,]     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:39 /2026-06-24/\n\n[20:14:39] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:39] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/brute/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=48d75b6c7880bdc9713e9ac775a793b4\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=48d75b6c7880bdc9713e9ac775a793b4] (Warning: blank fields detected): username=&password=&Login=Login&user_token=48d75b6c7880bdc9713e9ac775a793b4\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:39] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:39] [CRITICAL] page not found (404)\n[20:14:39] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:39] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:39 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
-            "url": "http://dvwa/vulnerabilities/fi/?page=file1.php",
-            "stdout": "        ___\n       __H__\n ___ ___[(]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:21 /2026-06-23/\n\n[21:43:21] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:21] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/fi/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=06ef9bb3940988d44c7a86ec7eff4eb2\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=06ef9bb3940988d44c7a86ec7eff4eb2] (Warning: blank fields detected): username=&password=&Login=Login&user_token=06ef9bb3940988d44c7a86ec7eff4eb2\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:21] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:21] [CRITICAL] page not found (404)\n[21:43:21] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:21] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:21 /2026-06-23/\n\n",
+            "url": "http://dvwa/login.php",
+            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:40 /2026-06-24/\n\n[20:14:40] [INFO] testing connection to the target URL\n[20:14:40] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=f79cd9a7cc0c6c93f7e0b36992556b77\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=f79cd9a7cc0c6c93f7e0b36992556b77] (Warning: blank fields detected): username=&password=&Login=Login&user_token=f79cd9a7cc0c6c93f7e0b36992556b77\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:40] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[20:14:40] [INFO] testing if the target URL content is stable\n[20:14:41] [WARNING] POST parameter 'username' does not appear to be dynamic\n[20:14:41] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[20:14:41] [INFO] skipping POST parameter 'username'\n[20:14:41] [WARNING] POST parameter 'password' does not appear to be dynamic\n[20:14:41] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[20:14:41] [INFO] skipping POST parameter 'password'\n[20:14:41] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[20:14:41] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[20:14:42] [INFO] skipping POST parameter 'Login'\n[20:14:42] [INFO] ignoring POST parameter 'user_token'\n[20:14:42] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[20:14:42] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[20:14:42] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[20:14:42] [INFO] skipping Cookie parameter 'security'\n[20:14:42] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[20:14:42] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[20:14:42] [INFO] skipping parameter 'User-Agent'\n[20:14:42] [WARNING] parameter 'Referer' does not appear to be dynamic\n[20:14:42] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[20:14:42] [INFO] skipping parameter 'Referer'\n[20:14:42] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[20:14:42] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:42 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
-            "url": "http://dvwa/instructions.php?doc=PHPIDS-license",
-            "stdout": "        ___\n       __H__\n ___ ___[(]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [,]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:22 /2026-06-23/\n\n[21:43:22] [INFO] testing connection to the target URL\n[21:43:22] [INFO] searching for forms\n[21:43:22] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:43:22 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": false,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/vulnerabilities/xss_r/?name=ZAP",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [.]     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:24 /2026-06-23/\n\n[21:43:24] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:24] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/xss_r/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=3856192576c189d057af407236a80357\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=3856192576c189d057af407236a80357] (Warning: blank fields detected): username=&password=&Login=Login&user_token=3856192576c189d057af407236a80357\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:24] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:24] [CRITICAL] page not found (404)\n[21:43:24] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:24] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:24 /2026-06-23/\n\n",
+            "url": "http://dvwa/var/www/html/config/config.inc.php",
+            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:43 /2026-06-24/\n\n[20:14:43] [INFO] testing connection to the target URL\n[20:14:43] [CRITICAL] page not found (404)\n\n[*] ending @ 20:14:44 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
             "url": "http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:26 /2026-06-23/\n\n[21:43:26] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:26] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/csrf/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=d1635e8a4877a9d0a03df67cca02b74a\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=d1635e8a4877a9d0a03df67cca02b74a] (Warning: blank fields detected): username=&password=&Login=Login&user_token=d1635e8a4877a9d0a03df67cca02b74a\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:26] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:26] [CRITICAL] page not found (404)\n[21:43:26] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:26] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:26 /2026-06-23/\n\n",
+            "stdout": "        ___\n       __H__\n ___ ___[(]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [,]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:44 /2026-06-24/\n\n[20:14:44] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:44] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/csrf/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=0356f19973159f4c17d0553892c51f1e\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=0356f19973159f4c17d0553892c51f1e] (Warning: blank fields detected): username=&password=&Login=Login&user_token=0356f19973159f4c17d0553892c51f1e\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:45] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:45] [CRITICAL] page not found (404)\n[20:14:45] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:45] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:45 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
-            "url": "http://dvwa/security.php",
-            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:27 /2026-06-23/\n\n[21:43:27] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:27] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=391461f903f8be4f6221399598d97e9d\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=391461f903f8be4f6221399598d97e9d] (Warning: blank fields detected): username=&password=&Login=Login&user_token=391461f903f8be4f6221399598d97e9d\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:28] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:28] [INFO] testing if the target URL content is stable\n[21:43:29] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:29] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:29] [INFO] skipping POST parameter 'username'\n[21:43:29] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:29] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:29] [INFO] skipping POST parameter 'password'\n[21:43:29] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:30] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:30] [INFO] skipping POST parameter 'Login'\n[21:43:30] [INFO] ignoring POST parameter 'user_token'\n[21:43:30] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:30] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:30] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:30] [INFO] skipping Cookie parameter 'security'\n[21:43:30] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:30] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:30] [INFO] skipping parameter 'User-Agent'\n[21:43:30] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:31] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:31] [INFO] skipping parameter 'Referer'\n[21:43:31] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:31] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:31 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/security.php?test=%2522%3E%3Cscript%3Eeval(window.name)%3C/script%3E",
-            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:32 /2026-06-23/\n\n[21:43:32] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:33] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=ec45c2783ee1d7141030878d266487a2\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=ec45c2783ee1d7141030878d266487a2] (Warning: blank fields detected): username=&password=&Login=Login&user_token=ec45c2783ee1d7141030878d266487a2\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:33] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:33] [INFO] testing if the target URL content is stable\n[21:43:34] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:34] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:34] [INFO] skipping POST parameter 'username'\n[21:43:34] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:34] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:34] [INFO] skipping POST parameter 'password'\n[21:43:34] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:34] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:35] [INFO] skipping POST parameter 'Login'\n[21:43:35] [INFO] ignoring POST parameter 'user_token'\n[21:43:35] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:35] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:35] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:35] [INFO] skipping Cookie parameter 'security'\n[21:43:35] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:35] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:35] [INFO] skipping parameter 'User-Agent'\n[21:43:35] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:35] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:35] [INFO] skipping parameter 'Referer'\n[21:43:35] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:35] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:35 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/vulnerabilities/fi/?page=file3.php",
-            "stdout": "        ___\n       __H__\n ___ ___[\"]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:37 /2026-06-23/\n\n[21:43:37] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:37] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/fi/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=829ec3e4fd1d816837bdc859ade87f04\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=829ec3e4fd1d816837bdc859ade87f04] (Warning: blank fields detected): username=&password=&Login=Login&user_token=829ec3e4fd1d816837bdc859ade87f04\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:37] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:37] [CRITICAL] page not found (404)\n[21:43:37] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:37] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:37 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/vulnerabilities/fi/?page=file2.php",
-            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:38 /2026-06-23/\n\n[21:43:39] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:39] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/fi/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=1e4e59e1b9cd5a49d857723ecc61195f\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=1e4e59e1b9cd5a49d857723ecc61195f] (Warning: blank fields detected): username=&password=&Login=Login&user_token=1e4e59e1b9cd5a49d857723ecc61195f\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:39] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:39] [CRITICAL] page not found (404)\n[21:43:39] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:39] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:39 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/instructions.php",
-            "stdout": "        ___\n       __H__\n ___ ___[)]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [)]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:40 /2026-06-23/\n\n[21:43:40] [INFO] testing connection to the target URL\n[21:43:40] [INFO] searching for forms\n[21:43:40] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:43:40 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": false,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/ids_log.php",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:41 /2026-06-23/\n\n[21:43:41] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:41] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=540dd38d4eaa64f12e01003467ed3f0f\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=540dd38d4eaa64f12e01003467ed3f0f] (Warning: blank fields detected): username=&password=&Login=Login&user_token=540dd38d4eaa64f12e01003467ed3f0f\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:41] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:41] [INFO] testing if the target URL content is stable\n[21:43:41] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:41] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:42] [INFO] skipping POST parameter 'username'\n[21:43:42] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:42] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:42] [INFO] skipping POST parameter 'password'\n[21:43:42] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:42] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:43] [INFO] skipping POST parameter 'Login'\n[21:43:43] [INFO] ignoring POST parameter 'user_token'\n[21:43:43] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:43] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:43] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:43] [INFO] skipping Cookie parameter 'security'\n[21:43:43] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:43] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:43] [INFO] skipping parameter 'User-Agent'\n[21:43:43] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:43] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:43] [INFO] skipping parameter 'Referer'\n[21:43:43] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:43] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:43 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/setup.php",
-            "stdout": "        ___\n       __H__\n ___ ___[)]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:44 /2026-06-23/\n\n[21:43:44] [INFO] testing connection to the target URL\n[21:43:44] [WARNING] there is a DBMS error found in the HTTP response body which could interfere with the results of the tests\n[21:43:44] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/setup.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: create_db=Create%20%2F%20Reset%20Database&user_token=ce7b4a081f23a9ea13257bfb20cd3115\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: create_db=Create%20%2F%20Reset%20Database&user_token=ce7b4a081f23a9ea13257bfb20cd3115]: create_db=Create / Reset Database&user_token=ce7b4a081f23a9ea13257bfb20cd3115\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:44] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/setup.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:45] [INFO] testing if the target URL content is stable\n[21:43:45] [WARNING] POST parameter 'create_db' does not appear to be dynamic\n[21:43:45] [WARNING] heuristic (basic) test shows that POST parameter 'create_db' might not be injectable\n[21:43:46] [INFO] skipping POST parameter 'create_db'\n[21:43:46] [INFO] ignoring POST parameter 'user_token'\n[21:43:46] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:46] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:46] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:46] [INFO] skipping Cookie parameter 'security'\n[21:43:46] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:46] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:47] [INFO] skipping parameter 'User-Agent'\n[21:43:47] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:47] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:48] [INFO] skipping parameter 'Referer'\n[21:43:48] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:48] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:48 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/security.php?phpids=on",
-            "stdout": "        ___\n       __H__\n ___ ___[(]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:48 /2026-06-23/\n\n[21:43:48] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:49] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=97d3241fb2d38892e5172945bca90d26\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=97d3241fb2d38892e5172945bca90d26] (Warning: blank fields detected): username=&password=&Login=Login&user_token=97d3241fb2d38892e5172945bca90d26\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:49] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:49] [INFO] testing if the target URL content is stable\n[21:43:49] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:49] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:50] [INFO] skipping POST parameter 'username'\n[21:43:50] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:50] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:50] [INFO] skipping POST parameter 'password'\n[21:43:50] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:50] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:50] [INFO] skipping POST parameter 'Login'\n[21:43:50] [INFO] ignoring POST parameter 'user_token'\n[21:43:50] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:50] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:50] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:50] [INFO] skipping Cookie parameter 'security'\n[21:43:50] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:50] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:50] [INFO] skipping parameter 'User-Agent'\n[21:43:50] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:50] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:50] [INFO] skipping parameter 'Referer'\n[21:43:50] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:50] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:50 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/logout.php",
-            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [,]     | .'| . |\n|___|_  [)]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:51 /2026-06-23/\n\n[21:43:51] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:51] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=db995fba75b65799b5226d9f66f39324\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=db995fba75b65799b5226d9f66f39324] (Warning: blank fields detected): username=&password=&Login=Login&user_token=db995fba75b65799b5226d9f66f39324\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:52] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:52] [INFO] testing if the target URL content is stable\n[21:43:52] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:52] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:52] [INFO] skipping POST parameter 'username'\n[21:43:52] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:52] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:53] [INFO] skipping POST parameter 'password'\n[21:43:53] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:53] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:53] [INFO] skipping POST parameter 'Login'\n[21:43:53] [INFO] ignoring POST parameter 'user_token'\n[21:43:53] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:53] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:53] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:53] [INFO] skipping Cookie parameter 'security'\n[21:43:53] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:53] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:53] [INFO] skipping parameter 'User-Agent'\n[21:43:53] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:53] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:53] [INFO] skipping parameter 'Referer'\n[21:43:53] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:53] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:53 /2026-06-23/\n\n",
+            "url": "http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP",
+            "stdout": "        ___\n       __H__\n ___ ___[)]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:45 /2026-06-24/\n\n[20:14:45] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:46] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/sqli_blind/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=2379993dc5ce6877c488d831fc7b6735\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=2379993dc5ce6877c488d831fc7b6735] (Warning: blank fields detected): username=&password=&Login=Login&user_token=2379993dc5ce6877c488d831fc7b6735\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:46] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:46] [CRITICAL] page not found (404)\n[20:14:46] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:46] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:46 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
             "url": "http://dvwa/vulnerabilities/xss_d/?default",
-            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [)]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:54 /2026-06-23/\n\n[21:43:54] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:55] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/xss_d/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=1304fb347ea6afd6e7ced4666fa919f8\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=1304fb347ea6afd6e7ced4666fa919f8] (Warning: blank fields detected): username=&password=&Login=Login&user_token=1304fb347ea6afd6e7ced4666fa919f8\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:55] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\n[21:43:55] [CRITICAL] page not found (404)\n[21:43:55] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[21:43:55] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:55 /2026-06-23/\n\n",
+            "stdout": "        ___\n       __H__\n ___ ___[\"]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:47 /2026-06-24/\n\n[20:14:47] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:47] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/xss_d/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=2bc0f0ab77274f9a641490baca285dfd\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=2bc0f0ab77274f9a641490baca285dfd] (Warning: blank fields detected): username=&password=&Login=Login&user_token=2bc0f0ab77274f9a641490baca285dfd\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:47] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:47] [CRITICAL] page not found (404)\n[20:14:47] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:47] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:47 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
-            "url": "http://dvwa/instructions.php?doc=changelog",
-            "stdout": "        ___\n       __H__\n ___ ___[\"]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:56 /2026-06-23/\n\n[21:43:56] [INFO] testing connection to the target URL\n[21:43:56] [INFO] searching for forms\n[21:43:56] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:43:56 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": false,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/index.php",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [.]     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:56 /2026-06-23/\n\n[21:43:56] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:43:57] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=5752f84bd67caf707965f7d1da7eb449\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=5752f84bd67caf707965f7d1da7eb449] (Warning: blank fields detected): username=&password=&Login=Login&user_token=5752f84bd67caf707965f7d1da7eb449\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:43:57] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:43:57] [INFO] testing if the target URL content is stable\n[21:43:57] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:43:57] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:43:57] [INFO] skipping POST parameter 'username'\n[21:43:57] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:43:57] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:43:58] [INFO] skipping POST parameter 'password'\n[21:43:58] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:43:58] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:43:58] [INFO] skipping POST parameter 'Login'\n[21:43:58] [INFO] ignoring POST parameter 'user_token'\n[21:43:58] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:43:58] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:43:58] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:43:58] [INFO] skipping Cookie parameter 'security'\n[21:43:58] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:43:58] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:43:58] [INFO] skipping parameter 'User-Agent'\n[21:43:58] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:43:58] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:43:58] [INFO] skipping parameter 'Referer'\n[21:43:58] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:43:58] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0943pm.csv'\n\n[*] ending @ 21:43:58 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": true,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/about.php",
-            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [.]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:43:59 /2026-06-23/\n\n[21:43:59] [INFO] testing connection to the target URL\n[21:43:59] [INFO] searching for forms\n[21:43:59] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:43:59 /2026-06-23/\n\n",
-            "stderr": "",
-            "success": false,
-            "timeout": false
-        },
-        {
-            "url": "http://dvwa/instructions.php?doc=PDF",
-            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:44:00 /2026-06-23/\n\n[21:44:00] [INFO] testing connection to the target URL\n[21:44:00] [INFO] searching for forms\n[21:44:00] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:44:00 /2026-06-23/\n\n",
+            "url": "http://dvwa/instructions.php",
+            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:48 /2026-06-24/\n\n[20:14:48] [INFO] testing connection to the target URL\n[20:14:48] [INFO] searching for forms\n[20:14:48] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 20:14:48 /2026-06-24/\n\n",
             "stderr": "",
             "success": false,
             "timeout": false
         },
         {
             "url": "http://dvwa/phpinfo.php",
-            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:44:01 /2026-06-23/\n\n[21:44:01] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[21:44:01] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=18sf5msh172qq5g9imcnglsh23; security=low\nPOST data: username=&password=&Login=Login&user_token=21634e6f1881561f4761a149178f7e76\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=21634e6f1881561f4761a149178f7e76] (Warning: blank fields detected): username=&password=&Login=Login&user_token=21634e6f1881561f4761a149178f7e76\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[21:44:01] [INFO] using '/root/.local/share/sqlmap/output/results-06232026_0944pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[21:44:01] [INFO] testing if the target URL content is stable\n[21:44:02] [WARNING] POST parameter 'username' does not appear to be dynamic\n[21:44:02] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[21:44:02] [INFO] skipping POST parameter 'username'\n[21:44:02] [WARNING] POST parameter 'password' does not appear to be dynamic\n[21:44:02] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[21:44:02] [INFO] skipping POST parameter 'password'\n[21:44:02] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[21:44:02] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[21:44:02] [INFO] skipping POST parameter 'Login'\n[21:44:02] [INFO] ignoring POST parameter 'user_token'\n[21:44:02] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[21:44:02] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[21:44:02] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[21:44:02] [INFO] skipping Cookie parameter 'security'\n[21:44:02] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[21:44:02] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[21:44:02] [INFO] skipping parameter 'User-Agent'\n[21:44:02] [WARNING] parameter 'Referer' does not appear to be dynamic\n[21:44:02] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[21:44:02] [INFO] skipping parameter 'Referer'\n[21:44:02] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[21:44:02] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06232026_0944pm.csv'\n\n[*] ending @ 21:44:02 /2026-06-23/\n\n",
+            "stdout": "        ___\n       __H__\n ___ ___[,]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [)]     | .'| . |\n|___|_  [,]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:49 /2026-06-24/\n\n[20:14:49] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:49] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=222f9fad3af74387d96e45b6a45db9f6\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=222f9fad3af74387d96e45b6a45db9f6] (Warning: blank fields detected): username=&password=&Login=Login&user_token=222f9fad3af74387d96e45b6a45db9f6\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:49] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[20:14:49] [INFO] testing if the target URL content is stable\n[20:14:50] [WARNING] POST parameter 'username' does not appear to be dynamic\n[20:14:50] [WARNING] heuristic (basic) test shows that POST parameter 'username' might not be injectable\n[20:14:50] [INFO] skipping POST parameter 'username'\n[20:14:50] [WARNING] POST parameter 'password' does not appear to be dynamic\n[20:14:50] [WARNING] heuristic (basic) test shows that POST parameter 'password' might not be injectable\n[20:14:50] [INFO] skipping POST parameter 'password'\n[20:14:50] [WARNING] POST parameter 'Login' does not appear to be dynamic\n[20:14:50] [WARNING] heuristic (basic) test shows that POST parameter 'Login' might not be injectable\n[20:14:50] [INFO] skipping POST parameter 'Login'\n[20:14:50] [INFO] ignoring POST parameter 'user_token'\n[20:14:50] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[20:14:50] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[20:14:50] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[20:14:50] [INFO] skipping Cookie parameter 'security'\n[20:14:50] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[20:14:50] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[20:14:50] [INFO] skipping parameter 'User-Agent'\n[20:14:50] [WARNING] parameter 'Referer' does not appear to be dynamic\n[20:14:51] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[20:14:51] [INFO] skipping parameter 'Referer'\n[20:14:51] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[20:14:51] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:51 /2026-06-24/\n\n",
+            "stderr": "",
+            "success": true,
+            "timeout": false
+        },
+        {
+            "url": "http://dvwa/vulnerabilities/xss_r/?name=ZAP",
+            "stdout": "        ___\n       __H__\n ___ ___[']_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [']     | .'| . |\n|___|_  [.]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:51 /2026-06-24/\n\n[20:14:51] [INFO] testing connection to the target URL\ngot a 302 redirect to 'http://dvwa/login.php'. Do you want to follow? [Y/n] Y\n[20:14:52] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/vulnerabilities/xss_r/login.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: username=&password=&Login=Login&user_token=b58da12a1ae14360afeea8867c3f9ddd\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: username=&password=&Login=Login&user_token=b58da12a1ae14360afeea8867c3f9ddd] (Warning: blank fields detected): username=&password=&Login=Login&user_token=b58da12a1ae14360afeea8867c3f9ddd\ndo you want to fill blank fields with random values? [Y/n] Y\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:52] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\n[20:14:52] [CRITICAL] page not found (404)\n[20:14:52] [WARNING] HTTP error codes detected during run:\n404 (Not Found) - 1 times\n[20:14:52] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:52 /2026-06-24/\n\n",
+            "stderr": "",
+            "success": true,
+            "timeout": false
+        },
+        {
+            "url": "http://dvwa/setup.php",
+            "stdout": "        ___\n       __H__\n ___ ___[\"]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [.]     | .'| . |\n|___|_  [']_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:53 /2026-06-24/\n\n[20:14:53] [INFO] testing connection to the target URL\n[20:14:53] [WARNING] there is a DBMS error found in the HTTP response body which could interfere with the results of the tests\n[20:14:53] [INFO] searching for forms\n[1/1] Form:\nPOST http://dvwa/setup.php\nCookie: PHPSESSID=h7n8gl2gbscaq8h4d8ijsm73t5; security=low\nPOST data: create_db=Create%20%2F%20Reset%20Database&user_token=f7a104427ec31ed058657b6e9258e481\ndo you want to test this form? [Y/n/q] \n> Y\nEdit POST data [default: create_db=Create%20%2F%20Reset%20Database&user_token=f7a104427ec31ed058657b6e9258e481]: create_db=Create / Reset Database&user_token=f7a104427ec31ed058657b6e9258e481\nPOST parameter 'user_token' appears to hold anti-CSRF token. Do you want sqlmap to automatically update it in further requests? [y/N] N\n[20:14:53] [INFO] using '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv' as the CSV results file in multiple targets mode\ngot a 302 redirect to 'http://dvwa/setup.php'. Do you want to follow? [Y/n] Y\nredirect is a result of a POST request. Do you want to resend original POST data to a new location? [Y/n] Y\n[20:14:53] [INFO] testing if the target URL content is stable\n[20:14:54] [WARNING] POST parameter 'create_db' does not appear to be dynamic\n[20:14:54] [WARNING] heuristic (basic) test shows that POST parameter 'create_db' might not be injectable\n[20:14:54] [INFO] skipping POST parameter 'create_db'\n[20:14:54] [INFO] ignoring POST parameter 'user_token'\n[20:14:54] [INFO] ignoring Cookie parameter 'PHPSESSID'\n[20:14:54] [WARNING] Cookie parameter 'security' does not appear to be dynamic\ndo you want to URL encode cookie values (implementation specific)? [Y/n] Y\n[20:14:55] [WARNING] heuristic (basic) test shows that Cookie parameter 'security' might not be injectable\n[20:14:55] [INFO] skipping Cookie parameter 'security'\n[20:14:55] [WARNING] parameter 'User-Agent' does not appear to be dynamic\n[20:14:55] [WARNING] heuristic (basic) test shows that parameter 'User-Agent' might not be injectable\n[20:14:56] [INFO] skipping parameter 'User-Agent'\n[20:14:56] [WARNING] parameter 'Referer' does not appear to be dynamic\n[20:14:56] [WARNING] heuristic (basic) test shows that parameter 'Referer' might not be injectable\n[20:14:56] [INFO] skipping parameter 'Referer'\n[20:14:56] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target\n[20:14:56] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-06242026_0814pm.csv'\n\n[*] ending @ 20:14:56 /2026-06-24/\n\n",
             "stderr": "",
             "success": true,
             "timeout": false
         },
         {
             "url": "http://dvwa/instructions.php?doc=readme",
-            "stdout": "        ___\n       __H__\n ___ ___[\"]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [(]     | .'| . |\n|___|_  [\"]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 21:44:03 /2026-06-23/\n\n[21:44:03] [INFO] testing connection to the target URL\n[21:44:03] [INFO] searching for forms\n[21:44:03] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 21:44:03 /2026-06-23/\n\n",
+            "stdout": "        ___\n       __H__\n ___ ___[.]_____ ___ ___  {1.10.6.152#dev}\n|_ -| . [\"]     | .'| . |\n|___|_  [(]_|_|_|__,|  _|\n      |_|V...       |_|   https://sqlmap.org\n\n[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n[*] starting @ 20:14:57 /2026-06-24/\n\n[20:14:57] [INFO] testing connection to the target URL\n[20:14:57] [INFO] searching for forms\n[20:14:57] [CRITICAL] there were no forms found at the given target URL\n\n[*] ending @ 20:14:57 /2026-06-24/\n\n",
             "stderr": "",
             "success": false,
             "timeout": false
         }
     ],
     "ffuf_raw": {
-        "commandline": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=1a2ho3kpmerbq7eblklsi3orq2; security=low",
-        "time": "2026-06-23T21:37:15Z",
+        "commandline": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=q66knobtfsi7cpe75pc8n22v32; security=low",
+        "time": "2026-06-24T20:10:36Z",
         "results": [
             {
                 "input": {
-                    "FFUFHASH": "c929c2560e",
+                    "FFUFHASH": "b90d212da6",
                     "FUZZ": "about.php"
                 },
-                "position": 153102,
+                "position": 77222,
                 "status": 200,
                 "length": 4910,
                 "words": 334,
@@ -1305,17 +1125,17 @@
                 "content-type": "text/html;charset=utf-8",
                 "redirectlocation": "",
                 "scraper": {},
-                "duration": 8078899,
+                "duration": 2104700,
                 "resultfile": "",
                 "url": "http://dvwa/about.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c3e430",
+                    "FFUFHASH": "b90d21cae6",
                     "FUZZ": "index.php"
                 },
-                "position": 255024,
+                "position": 117478,
                 "status": 302,
                 "length": 0,
                 "words": 1,
@@ -1323,17 +1143,17 @@
                 "content-type": "text/html; charset=UTF-8",
                 "redirectlocation": "login.php",
                 "scraper": {},
-                "duration": 7166400,
+                "duration": 8836600,
                 "resultfile": "",
                 "url": "http://dvwa/index.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c3f9d8",
+                    "FFUFHASH": "b90d21d376",
                     "FUZZ": "instructions.php"
                 },
-                "position": 260568,
+                "position": 119670,
                 "status": 200,
                 "length": 14014,
                 "words": 1484,
@@ -1341,17 +1161,17 @@
                 "content-type": "text/html;charset=utf-8",
                 "redirectlocation": "",
                 "scraper": {},
-                "duration": 5549500,
+                "duration": 3392400,
                 "resultfile": "",
                 "url": "http://dvwa/instructions.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c43cde",
+                    "FFUFHASH": "b90d21ed4a",
                     "FUZZ": "login.php"
                 },
-                "position": 277726,
+                "position": 126282,
                 "status": 200,
                 "length": 1523,
                 "words": 89,
@@ -1359,17 +1179,17 @@
                 "content-type": "text/html;charset=utf-8",
                 "redirectlocation": "",
                 "scraper": {},
-                "duration": 9052401,
+                "duration": 27312800,
                 "resultfile": "",
                 "url": "http://dvwa/login.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c441f8",
+                    "FFUFHASH": "b90d21ef58",
                     "FUZZ": "logout.php"
                 },
-                "position": 279032,
+                "position": 126808,
                 "status": 302,
                 "length": 0,
                 "words": 1,
@@ -1377,17 +1197,17 @@
                 "content-type": "text/html; charset=UTF-8",
                 "redirectlocation": "login.php",
                 "scraper": {},
-                "duration": 1277200,
+                "duration": 12753700,
                 "resultfile": "",
                 "url": "http://dvwa/logout.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c4e014",
+                    "FFUFHASH": "b90d222df2",
                     "FUZZ": "phpinfo.php"
                 },
-                "position": 319508,
+                "position": 142834,
                 "status": 302,
                 "length": 0,
                 "words": 1,
@@ -1395,17 +1215,17 @@
                 "content-type": "text/html; charset=UTF-8",
                 "redirectlocation": "login.php",
                 "scraper": {},
-                "duration": 9641000,
+                "duration": 18937900,
                 "resultfile": "",
                 "url": "http://dvwa/phpinfo.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c54aea",
+                    "FFUFHASH": "b90d2258f4",
                     "FUZZ": "security.php"
                 },
-                "position": 346858,
+                "position": 153844,
                 "status": 302,
                 "length": 0,
                 "words": 1,
@@ -1413,17 +1233,17 @@
                 "content-type": "text/html; charset=UTF-8",
                 "redirectlocation": "login.php",
                 "scraper": {},
-                "duration": 1869401,
+                "duration": 4232903,
                 "resultfile": "",
                 "url": "http://dvwa/security.php",
                 "host": "dvwa"
             },
             {
                 "input": {
-                    "FFUFHASH": "c929c552b4",
+                    "FFUFHASH": "b90d225c24",
                     "FUZZ": "setup.php"
                 },
-                "position": 348852,
+                "position": 154660,
                 "status": 200,
                 "length": 4070,
                 "words": 308,
@@ -1431,7 +1251,7 @@
                 "content-type": "text/html;charset=utf-8",
                 "redirectlocation": "",
                 "scraper": {},
-                "duration": 28264802,
+                "duration": 9521007,
                 "resultfile": "",
                 "url": "http://dvwa/setup.php",
                 "host": "dvwa"
@@ -1446,7 +1266,7 @@
             ],
             "autocalibration_strings": [],
             "colors": false,
-            "cmdline": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=1a2ho3kpmerbq7eblklsi3orq2; security=low",
+            "cmdline": "ffuf -u http://dvwa/FUZZ -w ./output/raw/temp_wordlist.txt -e .php -mc 200,302 -ic -of json -o ./output/raw/ffuf_raw.json -b PHPSESSID=q66knobtfsi7cpe75pc8n22v32; security=low",
             "configfile": "",
             "postdata": "",
             "debuglog": "",
@@ -1461,7 +1281,7 @@
             "fmode": "or",
             "follow_redirects": false,
             "headers": {
-                "Cookie": "PHPSESSID=1a2ho3kpmerbq7eblklsi3orq2; security=low"
+                "Cookie": "PHPSESSID=q66knobtfsi7cpe75pc8n22v32; security=low"
             },
             "ignorebody": false,
             "ignore_wordlist_comments": true,

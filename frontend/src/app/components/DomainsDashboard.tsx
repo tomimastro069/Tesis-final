@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Plus, Shield, ArrowRight, Server } from "lucide-react";
 import { ScanForm } from "./ScanForm";
-import type { Domain } from "../services/api";
+import { fetchScanResults } from "../../services/api";
+import { parseSecurityResults } from "../../utils/parser";
+import type { Domain } from "../../services/api";
 
 export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: Domain) => void }) {
   const [domains, setDomains] = useState<Domain[]>([]);
@@ -13,6 +15,46 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
       setDomains(JSON.parse(saved));
     }
   }, []);
+
+  // Polling para dominios en estado 'scanning'
+  useEffect(() => {
+    let interval: number;
+    const hasScanning = domains.some(d => d.status === 'scanning');
+    
+    if (hasScanning) {
+      interval = window.setInterval(async () => {
+        try {
+          const results = await fetchScanResults();
+          if (results) {
+            const parsed = parseSecurityResults(results);
+            if (parsed) {
+              setDomains(prev => {
+                let changed = false;
+                const updated = prev.map(d => {
+                  if (d.status === 'scanning') {
+                    changed = true;
+                    return { ...d, status: 'completed' as const, score: parsed.score, riskLevel: parsed.riskLevel };
+                  }
+                  return d;
+                });
+                
+                if (changed) {
+                  localStorage.setItem("securAudit_domains", JSON.stringify(updated));
+                }
+                return updated;
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error durante el polling:", error);
+        }
+      }, 10000); // Consulta cada 10 segundos
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [domains]);
 
   const handleAddDomain = (domain: Domain) => {
     const updated = [...domains, domain];

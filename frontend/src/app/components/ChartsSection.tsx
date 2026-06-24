@@ -59,10 +59,10 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
               marginBottom: "4px",
             }}
           >
-            Vulnerability Types
+            Tipos de Vulnerabilidad
           </h3>
           <p style={{ fontSize: "11px", color: "#64748b", margin: 0 }}>
-            Distribution of identified security risks by category
+            Distribución de riesgos de seguridad identificados por categoría
           </p>
         </div>
         <div style={{ height: "220px" }}>
@@ -103,7 +103,7 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
             </ResponsiveContainer>
           ) : (
              <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#64748b" }}>
-               No data available
+               No hay datos disponibles
              </div>
           )}
         </div>
@@ -121,10 +121,10 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
               marginBottom: "4px",
             }}
           >
-            Severity Breakdown
+            Desglose por Gravedad
           </h3>
           <p style={{ fontSize: "11px", color: "#64748b", margin: 0 }}>
-            Findings categorized by potential impact
+            Hallazgos categorizados por impacto potencial
           </p>
         </div>
         <div style={{ height: "220px" }}>
@@ -176,10 +176,10 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
               marginBottom: "4px",
             }}
           >
-            Remediation Timeline
+            Línea de Tiempo de Corrección
           </h3>
           <p style={{ fontSize: "11px", color: "#64748b", margin: 0 }}>
-            6-month trend of vulnerabilities vs resolved issues
+            Tendencia de 6 meses de vulnerabilidades vs problemas resueltos
           </p>
         </div>
         <div style={{ height: "220px" }}>
@@ -209,7 +209,7 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
               <Line
                 type="monotone"
                 dataKey="total"
-                name="Total Findings"
+                name="Total de Hallazgos"
                 stroke="#64748b"
                 strokeWidth={2}
                 dot={{ r: 3, fill: "#64748b", strokeWidth: 0 }}
@@ -218,7 +218,7 @@ export function ChartsSection({ typesData, severityData }: ChartsSectionProps) {
               <Line
                 type="monotone"
                 dataKey="resolved"
-                name="Resolved"
+                name="Resueltos"
                 stroke="#10b981"
                 strokeWidth={2}
                 dot={{ r: 3, fill: "#10b981", strokeWidth: 0 }}

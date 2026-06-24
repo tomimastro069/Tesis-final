@@ -8,7 +8,7 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
 
   const [formData, setFormData] = useState<ScanRequest>({
     target: "",
-    nivel: "basico",
+    nivel: "small",
     sqlmap_level: "1"
   });
 
@@ -66,8 +66,8 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
           <div>
             <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Nivel de Análisis</label>
             <select style={inputStyle} value={formData.nivel} onChange={(e) => setFormData({...formData, nivel: e.target.value})}>
-              <option value="basico">Básico</option>
-              <option value="profundo">Profundo</option>
+              <option value="small">Básico</option>
+              <option value="medium">Profundo</option>
             </select>
           </div>
           <div>

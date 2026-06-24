@@ -95,10 +95,10 @@ export default function App() {
           {/* Left: welcome */}
           <div>
             <div style={{ fontSize: "18px", fontWeight: 600, color: "#e2e8f0", letterSpacing: "-0.3px" }}>
-              {selectedDomain ? `Domain: ${selectedDomain.name}` : "Security Dashboard"}
+              {selectedDomain ? `Dominio: ${selectedDomain.target}` : "Panel de Seguridad"}
             </div>
             <div style={{ fontSize: "12px", color: "#475569", marginTop: "1px" }}>
-              {selectedDomain ? `Viewing scan results for ${selectedDomain.url}` : "Overview of your target domains"}
+              {selectedDomain ? `Viendo resultados del análisis para ${selectedDomain.target}` : "Resumen de tus dominios objetivo"}
             </div>
           </div>
 
@@ -121,7 +121,7 @@ export default function App() {
               }}
             >
               <Search size={14} />
-              Search...
+              Buscar...
             </button>
 
             {/* Scan mode status — read-only, set by backend */}
@@ -149,10 +149,10 @@ export default function App() {
                 }}
               />
               <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>
-                System:
+                Sistema:
               </span>
               <span style={{ fontSize: "12px", fontWeight: 600, color: "#10b981" }}>
-                Online
+                En línea
               </span>
             </div>
 
@@ -181,7 +181,7 @@ export default function App() {
                 }}
               >
                 <Download size={14} />
-                Download PDF
+                Descargar PDF
               </button>
             )}
           </div>
@@ -202,18 +202,18 @@ export default function App() {
                     fontSize: "14px",
                   }}
                 >
-                  ← Back to Domains
+                  ← Volver a Dominios
                 </button>
               </div>
-              <ScanReport targetUrl={selectedDomain.url} />
+              <ScanReport targetUrl={selectedDomain.target} />
             </div>
           ) : (
             <DomainsDashboard onSelectDomain={setSelectedDomain} />
           )
         ) : activeNav === "new-scan" ? (
-          <ScanForm onScanSubmitted={() => setActiveNav("dashboard")} />
+          <ScanForm onCancel={() => setActiveNav("dashboard")} onSuccess={(domain) => { setActiveNav("dashboard"); setSelectedDomain(domain); }} />
         ) : (
-          <div style={{ padding: "40px", color: "white" }}>Coming soon...</div>
+          <div style={{ padding: "40px", color: "white" }}>Próximamente...</div>
         )}
       </main>
     </div>
