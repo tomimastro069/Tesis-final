@@ -378,15 +378,26 @@ def save_vulnerable_url(url: str, tool: str, vulnerabilidad: str, severidad: str
     conn.close()
 
 
-def get_vulnerable_urls() -> set:
+def get_vulnerable_urls(tool: str = None) -> set:
     """
     Devuelve el set de URLs que fueron vulnerables en algún escaneo anterior.
     SQLMap siempre las re-testeará sin importar el caché.
+    
+    Args:
+        tool: Si se especifica (ej: "SQLMap"), solo devuelve URLs de esa herramienta.
+              Si es None, devuelve todas.
     """
     conn = get_connection()
     cursor = conn.cursor()
     
-    cursor.execute(f"SELECT DISTINCT url FROM {VULN_TABLE}")
+    if tool:
+        if _is_postgres():
+            cursor.execute(f"SELECT DISTINCT url FROM {VULN_TABLE} WHERE tool = %s", (tool,))
+        else:
+            cursor.execute(f"SELECT DISTINCT url FROM {VULN_TABLE} WHERE tool = ?", (tool,))
+    else:
+        cursor.execute(f"SELECT DISTINCT url FROM {VULN_TABLE}")
+    
     urls = {row[0] for row in cursor.fetchall()}
     
     conn.close()

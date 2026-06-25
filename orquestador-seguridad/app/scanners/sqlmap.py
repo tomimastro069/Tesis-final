@@ -11,16 +11,29 @@ SQLMAP_PATH = settings.SQLMAP_PATH
 
 def filtrar_urls_con_parametros(urls: list) -> list:
     """
-    Filtra una lista de URLs para SQLMap.
-    Ahora incluimos:
-    1. URLs con parámetros GET ('?')
-    2. Archivos dinámicos (.php) para que SQLMap busque formularios (--forms)
+    Filtra y prioriza URLs para SQLMap.
+
+    Orden de prioridad:
+    1. URLs con parámetros GET ('?') — las más probables de ser vulnerables
+    2. Páginas .php de input interactivo sin params (para --forms)
+       Solo incluye paths que sugieran formularios de usuario: login, sqli, brute, upload, etc.
+       Excluye páginas estáticas: instructions, about, setup, phpinfo, etc.
     """
-    extensiones_interesantes = [".php", ".php7", ".asp", ".aspx", ".jsp"]
-    return [
-        url for url in urls 
-        if "?" in url or any(ext in url.lower() for ext in extensiones_interesantes)
+    PATHS_INTERACTIVOS = ["sqli", "login", "brute", "upload", "csrf", "xss_r", "xss_s", "exec"]
+    PATHS_EXCLUIDOS = ["instructions", "about", "setup", "phpinfo", "logout", "config", "ids_log"]
+
+    con_params = [u for u in urls if "?" in u]
+
+    sin_params_interactivos = [
+        u for u in urls
+        if "?" not in u
+        and any(ext in u.lower() for ext in [".php", ".php7", ".asp", ".aspx", ".jsp"])
+        and any(p in u.lower() for p in PATHS_INTERACTIVOS)
+        and not any(p in u.lower() for p in PATHS_EXCLUIDOS)
     ]
+
+    # Primero las que tienen params, luego las interactivas sin params
+    return con_params + sin_params_interactivos
 
 
 def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic") -> dict:
@@ -54,22 +67,22 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     # --random-agent → usa un User-Agent aleatorio (para no ser detectado)
     # --level=2      → nivel de profundidad de pruebas (1-5, 2 es moderado)
     # --risk=2       → nivel de riesgo de los payloads (1-3, 2 es moderado)
-    # --smart        → [OPTIMIZACIÓN] Heurística previa: solo ataca parámetros que cambian el comportamiento del sitio (ahorra un 80% de tiempo).
-    # --threads=10   → [OPTIMIZACIÓN] Dispara 10 hilos concurrentes en vez de 1 (límite máximo de sqlmap).
-    # -o             → [OPTIMIZACIÓN] Activa Keep-Alive, Null connection y otros aceleradores HTTP internos.
-    # --technique=BEUQ → [OPTIMIZACIÓN RADICAL] Prohíbe inyecciones basadas en tiempo ('T'). Evita que el servidor se quede "durmiendo" a propósito.
+    # NOTA: --smart fue removido intencionalmente. En DVWA las responses básicas son
+    # idénticas ante cualquier input → la heurística previa descarta el param silenciosamente.
+    # --threads=5    → 5 hilos paralelos
+    # -o             → Activa Keep-Alive, Null connection y otros aceleradores HTTP internos.
+    # --technique=BEUST → Todas las técnicas: Boolean, Error, Union, Stacked, Time
     # Construcción base del comando
     cmd = [
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
-        "--forms",           # [TIGER] Ataca formularios POST
-        "--dbms=MySQL",      # [TIGER] Optimizado para DVWA
-        "--level=3",         # [TIGER] Nivel de profundidad 3
-        "--risk=3",          # [TIGER] Riesgo máximo
-        "--threads=5",       # [TIGER] 5 hilos paralelos
-        "--smart",
-        "--technique=BEUST", # [TIGER] Todas las técnicas: Boolean, Error, Union, Stacked, Time
+        "--forms",           # Ataca formularios POST también
+        "--dbms=MySQL",      # Optimizado para DVWA
+        "--level=3",         # Nivel de profundidad 3
+        "--risk=3",          # Riesgo máximo
+        "--threads=5",       # 5 hilos paralelos
+        "--technique=BEUST", # Todas las técnicas: Boolean, Error, Union, Stacked, Time
         "-o"
     ]
     

@@ -215,7 +215,16 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     lista_urls_spider = spider_urls.get("results", [])
     # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
-    lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
+
+    # URLs semilla garantizadas: endpoints de DVWA conocidos con parámetros SQLi.
+    # El spider no siempre los descubre con sus parámetros correctos.
+    base = target_url.rstrip("/")
+    urls_semilla_dvwa = [
+        f"{base}/vulnerabilities/sqli/?id=1&Submit=Submit",
+        f"{base}/vulnerabilities/sqli_blind/?id=1&Submit=Submit",
+    ]
+
+    lista_urls_total = list(set(lista_urls_spider + lista_urls_ffuf + urls_semilla_dvwa))
     sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090", sqlmap_level=sqlmap_level)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---

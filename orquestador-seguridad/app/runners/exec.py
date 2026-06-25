@@ -41,10 +41,13 @@ def run_command(
         }
 
     except subprocess.TimeoutExpired as e:
+        # e.stdout/e.stderr son bytes cuando capture_output=True; decodificamos para no perder output parcial
+        stdout_raw = e.stdout or b""
+        stderr_raw = e.stderr or b""
         return {
             "success": False,
-            "stdout": e.stdout or "",
-            "stderr": e.stderr or "",
+            "stdout": stdout_raw.decode("utf-8", errors="replace") if isinstance(stdout_raw, bytes) else stdout_raw,
+            "stderr": stderr_raw.decode("utf-8", errors="replace") if isinstance(stderr_raw, bytes) else stderr_raw,
             "returncode": None,
             "timeout": True,
             "error_type": "timeout"
