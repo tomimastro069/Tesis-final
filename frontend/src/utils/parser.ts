@@ -2,19 +2,22 @@ export function parseSecurityResults(rawData: any) {
   if (!rawData) return null;
 
   const alerts: any[] = [];
-  if (rawData.zap_raw && rawData.zap_raw.site) {
+  if (rawData.zap && rawData.zap.alertas) {
+    alerts.push(...rawData.zap.alertas);
+  } else if (rawData.zap_raw && rawData.zap_raw.site) {
+    // Fallback in case of old raw data format
     rawData.zap_raw.site.forEach((s: any) => {
-      if (s.alerts) {
-        alerts.push(...s.alerts);
-      }
+      if (s.alerts) alerts.push(...s.alerts);
     });
   }
 
-  let sqlVulns = [];
-  if (Array.isArray(rawData.sqlmap_raw)) {
-    sqlVulns = rawData.sqlmap_raw;
+  const sqlVulns: any[] = [];
+  if (rawData.sqlmap && rawData.sqlmap.vulnerabilidades) {
+    sqlVulns.push(...rawData.sqlmap.vulnerabilidades);
+  } else if (Array.isArray(rawData.sqlmap_raw)) {
+    sqlVulns.push(...rawData.sqlmap_raw);
   } else if (rawData.sqlmap_raw && rawData.sqlmap_raw.vulnerabilidades) {
-    sqlVulns = rawData.sqlmap_raw.vulnerabilidades;
+    sqlVulns.push(...rawData.sqlmap_raw.vulnerabilidades);
   }
 
   let critical = 0;
@@ -25,12 +28,29 @@ export function parseSecurityResults(rawData: any) {
   const vulnTypes: Record<string, number> = {};
 
   alerts.forEach(a => {
-    const risk = parseInt(a.riskcode || "0", 10);
-    if (risk === 3) high++;
-    else if (risk === 2) medium++;
-    else if (risk === 1) low++;
+    // Parse severity from new format "Medium (High)" or old format riskcode
+    let risk = "Low";
+    if (a.severidad) {
+      const sevString = a.severidad.toLowerCase();
+      if (sevString.includes("high") || sevString.includes("alta")) {
+        high++; risk = "High";
+      } else if (sevString.includes("medium") || sevString.includes("media")) {
+        medium++; risk = "Medium";
+      } else if (sevString.includes("low") || sevString.includes("baja")) {
+        low++; risk = "Low";
+      } else {
+        low++; // Default
+      }
+    } else {
+      // Old format fallback
+      const rcode = parseInt(a.riskcode || "0", 10);
+      if (rcode === 3) { high++; risk = "High"; }
+      else if (rcode === 2) { medium++; risk = "Medium"; }
+      else { low++; risk = "Low"; }
+    }
     
-    const name = a.name || "Unknown";
+    a._parsedSeverity = risk;
+    const name = a.vulnerabilidad || a.name || "Unknown";
     vulnTypes[name] = (vulnTypes[name] || 0) + 1;
   });
 
@@ -66,17 +86,19 @@ export function parseSecurityResults(rawData: any) {
       severity: "Critical",
       location: v.url,
       type: "Injection",
-      status: "Open"
+      status: "Open",
+      description: "SQL Injection found by SQLMap",
+      recommendation: "Use parameterized queries or prepared statements."
     })),
     ...alerts.map((a: any) => ({
       id: Math.random().toString(),
-      name: a.name,
-      severity: a.riskcode === "3" ? "High" : a.riskcode === "2" ? "Medium" : "Low",
-      location: a.instances?.[0]?.uri || "Various",
+      name: a.vulnerabilidad || a.name,
+      severity: a._parsedSeverity,
+      location: a.url || a.instances?.[0]?.uri || "Various",
       type: "Configuration",
       status: "Open",
-      description: a.desc?.replace(/<[^>]+>/g, '') || "",
-      recommendation: a.solution?.replace(/<[^>]+>/g, '') || ""
+      description: (a.descripcion || a.desc || "").replace(/<[^>]+>/g, ''),
+      recommendation: (a.solucion || a.solution || "").replace(/<[^>]+>/g, '')
     }))
   ];
 

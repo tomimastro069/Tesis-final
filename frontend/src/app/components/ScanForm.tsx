@@ -14,9 +14,11 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<ScanRequest>({
-    target: "",
-    nivel: "small",
-    sqlmap_level: "1"
+    target: "http://dvwa",
+    nivel: "medium",
+    sqlmap_level: "basic",
+    cookies: "",
+    clean_cache: false
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,11 +65,34 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
           <input 
             type="url" 
             required 
-            placeholder="https://ejemplo.com" 
-            style={inputStyle}
-            value={formData.target}
-            onChange={(e) => setFormData({...formData, target: e.target.value})}
+            style={{...inputStyle, opacity: 0.5, cursor: "not-allowed"}}
+            value="http://dvwa"
+            disabled
           />
+        </div>
+
+        <div>
+          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Cookie de Sesión (Opcional)</label>
+          <input 
+            type="text" 
+            placeholder="ej. PHPSESSID=123..; security=low" 
+            style={inputStyle}
+            value={formData.cookies}
+            onChange={(e) => setFormData({...formData, cookies: e.target.value})}
+          />
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+          <input 
+            type="checkbox" 
+            id="cleanCache"
+            checked={formData.clean_cache}
+            onChange={(e) => setFormData({...formData, clean_cache: e.target.checked})}
+            style={{ marginRight: "8px", width: "16px", height: "16px", accentColor: "#3b82f6" }}
+          />
+          <label htmlFor="cleanCache" style={{ fontSize: "13px", color: "#e2e8f0", cursor: "pointer" }}>
+            Limpiar la caché antes de empezar
+          </label>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
@@ -90,11 +115,9 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
                 <SelectValue placeholder="Nivel SQLMap" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">1 (Rápido)</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5 (Exhaustivo)</SelectItem>
+                <SelectItem value="basic">1 - Básico (Recomendado)</SelectItem>
+                <SelectItem value="fast_evidence">2 - Evidencia Rápida</SelectItem>
+                <SelectItem value="full_dump">3 - Extracción Completa (Lento)</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -157,8 +157,8 @@
 - **Severidad:** Medium (Medium)
 - **URL:** `http://dvwa/vulnerabilities/xss_s/`
 - **Método:** GET
-- **Descripción:** <p>The site is only served under HTTP and not HTTPS.</p>
-- **Solución:** <p>Configure your web or application server to use SSL (https).</p>
+- **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
+- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
 
 ---
 ### Missing Anti-clickjacking Header
@@ -301,8 +301,8 @@
 - **Severidad:** Low (Medium)
 - **URL:** `http://dvwa`
 - **Método:** GET
-- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
-- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
+- **Descripción:** <p>A timestamp was disclosed by the application/web server. - Unix</p>
+- **Solución:** <p>Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.</p>
 
 ---
 ### X-Content-Type-Options Header Missing
