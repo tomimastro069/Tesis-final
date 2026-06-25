@@ -73,10 +73,11 @@ export function parseSecurityResults(rawData: any) {
 
   const typesData = Object.entries(vulnTypes)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
     .map(([name, value], i) => {
-      const colors = ["#ea580c", "#dc2626", "#d97706", "#3b82f6", "#10b981"];
-      return { name, value, color: colors[i % colors.length] };
+      // Use golden angle approximation (137.5 degrees) to scatter hues beautifully
+      const hue = (i * 137.5) % 360;
+      const color = `hsl(${hue.toFixed(1)}, 75%, 55%)`;
+      return { name, value, color };
     });
 
   const allVulnerabilities = [
@@ -102,12 +103,70 @@ export function parseSecurityResults(rawData: any) {
     }))
   ];
 
+  const scanners = [];
+  if (rawData.zap || rawData.zap_raw) scanners.push("OWASP ZAP");
+  if (rawData.sqlmap || rawData.sqlmap_raw) scanners.push("SQLMap");
+
+  const urlCounts: Record<string, number> = {};
+  allVulnerabilities.forEach(v => {
+    const url = v.location || "Unknown";
+    urlCounts[url] = (urlCounts[url] || 0) + 1;
+  });
+
+  const uniqueEndpoints = Object.keys(urlCounts).filter(u => u !== "Unknown").length;
+
+  const topVulnerableUrls = Object.entries(urlCounts)
+    .filter(([url]) => url !== "Unknown" && url !== "Various")
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([url, count]) => ({ url, count }));
+
+  let injectionCount = 0;
+  let configCount = 0;
+  
+  const severityByTypeMap: Record<string, { Critical: number; High: number; Medium: number; Low: number; total: number }> = {};
+
+  allVulnerabilities.forEach(v => {
+    if (v.type === "Injection") injectionCount++;
+    else if (v.type === "Configuration") configCount++;
+    
+    if (!severityByTypeMap[v.name]) {
+      severityByTypeMap[v.name] = { Critical: 0, High: 0, Medium: 0, Low: 0, total: 0 };
+    }
+    const sev = v.severity as "Critical" | "High" | "Medium" | "Low";
+    if (severityByTypeMap[v.name][sev] !== undefined) {
+      severityByTypeMap[v.name][sev]++;
+    }
+    severityByTypeMap[v.name].total++;
+  });
+
+  const stackedSeverityByType = Object.entries(severityByTypeMap)
+    .sort((a, b) => b[1].total - a[1].total)
+    .map(([name, counts]) => ({
+      name,
+      Critical: counts.Critical,
+      High: counts.High,
+      Medium: counts.Medium,
+      Low: counts.Low,
+    }))
+    .slice(0, 8); // Top 8 types for the chart
+
   return {
     total,
     score,
     riskLevel,
     severityData,
     typesData,
-    allVulnerabilities
+    allVulnerabilities,
+    scanMetrics: {
+      scanners: scanners.join(", ") || "Desconocido",
+      uniqueEndpoints,
+      topVulnerableUrls,
+      threatNature: {
+        injection: injectionCount,
+        configuration: configCount
+      },
+      stackedSeverityByType
+    }
   };
 }

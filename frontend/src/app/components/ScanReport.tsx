@@ -10,6 +10,10 @@ import {
   TrendingDown,
   TrendingUp,
   Search,
+  Link,
+  Shield,
+  Activity,
+  Settings,
 } from "lucide-react";
 
 const glassCard = {
@@ -241,35 +245,26 @@ export function ScanReport({ domain }: { domain: Domain }) {
             Detectado en{" "}
             <span style={{ color: "#94a3b8", fontWeight: 500 }}>{domain.target}</span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {data.severityData.map((item: any) => {
-              const perc = data.total > 0 ? (item.count / data.total) * 100 : 0;
-              return (
-                <div key={item.name} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <div style={{ width: "48px", fontSize: "10px", color: "#475569", fontWeight: 500 }}>
-                    {item.name}
-                  </div>
-                  <div style={{ flex: 1, height: "4px", background: "rgba(255,255,255,0.06)", borderRadius: "4px" }}>
-                    <div
-                      style={{
-                        width: `${perc}%`,
-                        height: "100%",
-                        background: item.color,
-                        borderRadius: "4px",
-                        boxShadow: `0 0 6px ${item.color}60`,
-                      }}
-                    />
-                  </div>
-                  <div style={{ width: "24px", fontSize: "11px", fontWeight: 600, color: item.color, textAlign: "right" }}>
-                    {item.count}
-                  </div>
-                </div>
-              );
-            })}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <Link size={16} color="#94a3b8" />
+              <div>
+                <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>Endpoints Vulnerables</div>
+                <div style={{ fontSize: "14px", color: "#f8fafc", fontWeight: 600 }}>{data.scanMetrics?.uniqueEndpoints || 0}</div>
+              </div>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <Shield size={16} color="#94a3b8" />
+              <div>
+                <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>Herramientas de Análisis</div>
+                <div style={{ fontSize: "14px", color: "#f8fafc", fontWeight: 600 }}>{data.scanMetrics?.scanners || "Desconocido"}</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Card 3: Resolved Vulnerabilities (Mocked for single scan) */}
+        {/* Card 3: Threat Nature */}
         <div style={glassCard}>
           <div
             style={{
@@ -278,41 +273,60 @@ export function ScanReport({ domain }: { domain: Domain }) {
               right: 0,
               width: "120px",
               height: "120px",
-              background: "radial-gradient(circle at 70% 30%, rgba(16,185,129,0.07) 0%, transparent 70%)",
+              background: "radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 70%)",
               pointerEvents: "none",
             }}
           />
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px" }}>
             <span style={{ fontSize: "11px", fontWeight: 600, color: "#475569", letterSpacing: "0.8px" }}>
-              ELEMENTOS DE ACCIÓN
+              NATURALEZA DE LA AMENAZA
             </span>
             <div
               style={{
                 width: "36px",
                 height: "36px",
                 borderRadius: "10px",
-                background: "rgba(16, 185, 129, 0.1)",
-                border: "1px solid rgba(16, 185, 129, 0.2)",
+                background: "rgba(139, 92, 246, 0.1)",
+                border: "1px solid rgba(139, 92, 246, 0.2)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <CheckCircle2 size={18} color="#10b981" />
+              <Activity size={18} color="#8b5cf6" />
             </div>
           </div>
-          <div style={{ fontSize: "52px", fontWeight: 800, color: "#e2e8f0", lineHeight: 1, marginBottom: "6px", letterSpacing: "-2px" }}>
-            {data.severityData.find((s:any)=>s.name==="High")?.count + data.severityData.find((s:any)=>s.name==="Critical")?.count}
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "4px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ padding: "6px", background: "rgba(220, 38, 38, 0.1)", borderRadius: "6px" }}>
+                <Activity size={14} color="#ef4444" />
+              </div>
+              <div>
+                <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>Fallas de Inyección</div>
+                <div style={{ fontSize: "14px", color: "#f8fafc", fontWeight: 600 }}>{data.scanMetrics?.threatNature?.injection || 0}</div>
+              </div>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ padding: "6px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "6px" }}>
+                <Settings size={14} color="#3b82f6" />
+              </div>
+              <div>
+                <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>Fallas de Configuración</div>
+                <div style={{ fontSize: "14px", color: "#f8fafc", fontWeight: 600 }}>{data.scanMetrics?.threatNature?.configuration || 0}</div>
+              </div>
+            </div>
           </div>
-          <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
-            Requieren Acción Inmediata
-          </div>
-
         </div>
       </div>
 
       {/* Charts Row */}
-      <ChartsSection typesData={data.typesData} severityData={data.severityData} />
+      <ChartsSection 
+        typesData={data.typesData} 
+        topVulnerableUrls={data.scanMetrics?.topVulnerableUrls} 
+        stackedSeverityByType={data.scanMetrics?.stackedSeverityByType}
+      />
 
       {/* Vulnerability Table */}
       <div style={{ marginTop: "24px" }}>
