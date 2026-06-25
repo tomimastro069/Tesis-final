@@ -102,7 +102,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic") -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic", progress_callback=None) -> list:
     """
     Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
 
@@ -150,6 +150,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
     print(f"    Iniciando escaneo real en {len(urls_a_escanear)} URLs...")
 
     for i, url in enumerate(urls_a_escanear, 1):
+        if progress_callback: progress_callback((i - 1) / len(urls_a_escanear) * 100, f"Testeando: {url}")
         print(f"    [{i}/{len(urls_a_escanear)}] Testeando: {url}")
         resultado = run_sqlmap(url, timeout=timeout, cookies=cookies, proxy=proxy, sqlmap_level=sqlmap_level)
         resultados.append(resultado)
@@ -158,4 +159,5 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
         if url not in vulnerable_conocidas:
             save_tested_sqlmap_url(url)
 
+    if progress_callback: progress_callback(100, "SQLMap finalizado.")
     return resultados

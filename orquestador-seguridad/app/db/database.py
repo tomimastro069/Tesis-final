@@ -97,7 +97,8 @@ def init_db():
                 target_url TEXT NOT NULL,
                 status TEXT NOT NULL,
                 created_at TEXT NOT NULL,
-                results_raw TEXT
+                results_raw TEXT,
+                is_active BOOLEAN DEFAULT TRUE
             )
             """
         )
@@ -147,12 +148,28 @@ def init_db():
                 target_url TEXT NOT NULL,
                 status TEXT NOT NULL,
                 created_at TEXT NOT NULL,
-                results_raw TEXT
+                results_raw TEXT,
+                is_active BOOLEAN DEFAULT TRUE
             )
             """
         )
 
     conn.commit()
+
+    # Migration for existing tables
+    if _is_postgres():
+        try:
+            cursor.execute(f"ALTER TABLE {SCANS_HISTORY_TABLE} ADD COLUMN is_active BOOLEAN DEFAULT TRUE")
+            conn.commit()
+        except Exception:
+            conn.rollback()
+    else:
+        try:
+            cursor.execute(f"ALTER TABLE {SCANS_HISTORY_TABLE} ADD COLUMN is_active BOOLEAN DEFAULT TRUE")
+            conn.commit()
+        except Exception:
+            pass
+
     conn.close()
 
 def create_scan(scan_id: str, target_url: str):
@@ -161,13 +178,29 @@ def create_scan(scan_id: str, target_url: str):
     now = datetime.now().isoformat()
     if _is_postgres():
         cursor.execute(
-            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw) VALUES (%s, %s, %s, %s, %s)",
-            (scan_id, target_url, 'scanning', now, None)
+            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw, is_active) VALUES (%s, %s, %s, %s, %s, %s)",
+            (scan_id, target_url, 'scanning', now, None, True)
         )
     else:
         cursor.execute(
-            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw) VALUES (?, ?, ?, ?, ?)",
-            (scan_id, target_url, 'scanning', now, None)
+            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw, is_active) VALUES (?, ?, ?, ?, ?, ?)",
+            (scan_id, target_url, 'scanning', now, None, True)
+        )
+    conn.commit()
+    conn.close()
+
+def soft_delete_scan(scan_id: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    if _is_postgres():
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET is_active = FALSE WHERE scan_id = %s",
+            (scan_id,)
+        )
+    else:
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET is_active = 0 WHERE scan_id = ?",
+            (scan_id,)
         )
     conn.commit()
     conn.close()
@@ -224,6 +257,29 @@ def get_scan_by_id(scan_id: str) -> dict:
             "results_raw": row[4]
         }
     return None
+
+def get_all_scans() -> list[dict]:
+    conn = get_connection()
+    cursor = conn.cursor()
+    # is_active = TRUE in Postgres, 1 in SQLite
+    if _is_postgres():
+        cursor.execute(f"SELECT scan_id, target_url, status, created_at, results_raw FROM {SCANS_HISTORY_TABLE} WHERE is_active = TRUE ORDER BY created_at DESC")
+    else:
+        cursor.execute(f"SELECT scan_id, target_url, status, created_at, results_raw FROM {SCANS_HISTORY_TABLE} WHERE is_active = 1 ORDER BY created_at DESC")
+        
+    rows = cursor.fetchall()
+    conn.close()
+    
+    scans = []
+    for row in rows:
+        scans.append({
+            "scan_id": row[0],
+            "target_url": row[1],
+            "status": row[2],
+            "created_at": row[3],
+            "results_raw": row[4]
+        })
+    return scans
 
 
 def get_tested_words(target_url: str, wordlist_name: str = "default") -> set:
