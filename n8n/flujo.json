@@ -1,5 +1,4 @@
 {
-  "name": "IA - Corrección de Vulnerabilidades",
   "nodes": [
     {
       "parameters": {
@@ -8,11 +7,14 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "webhook-node",
+      "id": "903d60a2-7fc5-448c-a6fa-09c1998e189f",
       "name": "Webhook (Recibe Vuln)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [100, 300],
+      "position": [
+        -48,
+        0
+      ],
       "webhookId": "analyze-vuln"
     },
     {
@@ -20,45 +22,24 @@
         "assignments": {
           "assignments": [
             {
-              "id": "prompt-assignment",
-              "name": "prompt",
-              "value": "=Eres un experto en ciberseguridad. Analiza la siguiente vulnerabilidad y da una sugerencia corta y técnica en español para corregirla.\\n\\nNombre: {{ $json.body.vulnerability.name }}\\nTipo: {{ $json.body.vulnerability.type }}\\nSeveridad: {{ $json.body.vulnerability.severity }}\\nDescripción: {{ $json.body.vulnerability.description }}",
+              "id": "6a39d77b-bb2a-44ad-b135-2578adaeae83",
+              "name": "text",
+              "value": "=Eres un experto DevSecOps y arquitecto de software. \nAnaliza la siguiente vulnerabilidad detectada en mi aplicación web y proporciona un reporte detallado en español.\n\nEs OBLIGATORIO que uses formato Markdown para tu respuesta: usa `###` para títulos, `-` para listas, negritas `**` para resaltar palabras clave, y ``` (comillas invertidas) para los bloques de código.\n\nEstructura requerida:\n### Explicación de la Vulnerabilidad\n(Qué es y cómo se explota)\n\n### Impacto en el Sistema\n(Consecuencias si se explota con éxito)\n\n### Guía de Corrección\n(Pasos claros y detallados para solucionarlo)\n\n### Ejemplo de Código Seguro\n(Muestra un ejemplo práctico)\n\nDatos de la vulnerabilidad:\nNombre: {{ $json.body.vulnerability.name }}\nTipo: {{ $json.body.vulnerability.type }}\nSeveridad: {{ $json.body.vulnerability.severity }}\nUbicación: {{ $json.body.vulnerability.location }}\nDescripción original: {{ $json.body.vulnerability.description }}\n\nResponde ÚNICAMENTE con el análisis. No incluyas saludos ni texto antes del primer título.\n",
               "type": "string"
             }
           ]
         },
+        "includeOtherFields": "={{ false }}",
         "options": {}
       },
-      "id": "set-prompt-node",
+      "id": "a24d645a-4c21-45fb-a432-60318e1bf553",
       "name": "Preparar Prompt",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [320, 300]
-    },
-    {
-      "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "={{ $json.prompt }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "openai-node",
-      "name": "OpenAI Chat",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1,
-      "position": [540, 300],
-      "credentials": {
-        "openAiApi": {
-          "id": "",
-          "name": "OpenAi API"
-        }
-      }
+      "position": [
+        208,
+        32
+      ]
     },
     {
       "parameters": {
@@ -67,7 +48,7 @@
             {
               "id": "result-assignment",
               "name": "ai_suggestion",
-              "value": "={{ $json.message.content }}",
+              "value": "={{ $json.text }}",
               "type": "string"
             },
             {
@@ -82,11 +63,57 @@
           "dotNotation": false
         }
       },
-      "id": "format-response-node",
+      "id": "2b0174ec-9038-4c7e-943e-e2388a64e757",
       "name": "Formatear Respuesta",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [760, 300]
+      "position": [
+        800,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "={{ $json.text }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        480,
+        32
+      ],
+      "id": "348de07e-3039-4d99-ab33-d029fe5a0eba",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        512,
+        208
+      ],
+      "id": "1d60296c-7cac-4e98-8b3d-0c7707acb55f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "FFLw4DuaPSo3C6Tf",
+          "name": "Groq account"
+        }
+      }
     }
   ],
   "connections": {
@@ -105,14 +132,14 @@
       "main": [
         [
           {
-            "node": "OpenAI Chat",
+            "node": "Basic LLM Chain",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat": {
+    "Basic LLM Chain": {
       "main": [
         [
           {
@@ -122,9 +149,22 @@
           }
         ]
       ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e36fe900e4947883a2cc1a5b34846759324530e7e8002ec345b085e1097c0a1e"
   }
 }

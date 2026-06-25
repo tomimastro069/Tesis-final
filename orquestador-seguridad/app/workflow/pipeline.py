@@ -37,8 +37,12 @@ def establecer_sesion_automatica(target_url):
     También establece el nivel de seguridad a 'low'.
     """
     print(f"[*] Iniciando sesión automática en {target_url}...")
-    login_url = f"{target_url.rstrip('/')}/login.php"
-    security_url = f"{target_url.rstrip('/')}/security.php"
+    from urllib.parse import urlparse
+    parsed = urlparse(target_url)
+    base_url = f"{parsed.scheme}://{parsed.netloc}"
+    
+    login_url = f"{base_url}/login.php"
+    security_url = f"{base_url}/security.php"
     
     session = requests.Session()
     # User-Agent de navegador para evitar bloqueos
