@@ -10,6 +10,7 @@ export interface ScanRequest {
 export interface Domain {
   id: string;
   target: string;
+  scanId?: string;
   lastScan: string | null;
   score: number | null;
   riskLevel: string | null;
@@ -36,15 +37,15 @@ export async function launchScan(params: ScanRequest) {
   return response.json();
 }
 
-export async function fetchScanResults() {
+export async function fetchScanResults(scanId: string) {
   try {
-    const response = await fetch('/output/raw/resultado.json?t=' + Date.now());
+    const response = await fetch(`${API_URL}/scan/${scanId}`);
     if (!response.ok) {
       return null;
     }
     return response.json();
   } catch (error) {
-    console.error("No se pudo cargar el resultado.json", error);
+    console.error("No se pudo cargar el resultado de scanId", scanId, error);
     return null;
   }
 }

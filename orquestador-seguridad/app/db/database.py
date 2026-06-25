@@ -18,6 +18,7 @@ except ImportError:  # pragma: no cover - se resuelve por requirements en runtim
 TABLE_NAME = "ffuf_history"
 SQLMAP_TABLE = "sqlmap_history"
 VULN_TABLE = "vulnerable_urls"
+SCANS_HISTORY_TABLE = "scans_history"
 DB_ENGINE = os.getenv("DB_ENGINE", "sqlite").lower()
 DB_PATH = os.path.join(os.path.dirname(__file__), "history.db")
 
@@ -89,6 +90,17 @@ def init_db():
             )
             """
         )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SCANS_HISTORY_TABLE} (
+                scan_id TEXT PRIMARY KEY,
+                target_url TEXT NOT NULL,
+                status TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                results_raw TEXT
+            )
+            """
+        )
     else:
         cursor.execute(
             f"""
@@ -128,9 +140,90 @@ def init_db():
             )
             """
         )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SCANS_HISTORY_TABLE} (
+                scan_id TEXT PRIMARY KEY,
+                target_url TEXT NOT NULL,
+                status TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                results_raw TEXT
+            )
+            """
+        )
 
     conn.commit()
     conn.close()
+
+def create_scan(scan_id: str, target_url: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    now = datetime.now().isoformat()
+    if _is_postgres():
+        cursor.execute(
+            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw) VALUES (%s, %s, %s, %s, %s)",
+            (scan_id, target_url, 'scanning', now, None)
+        )
+    else:
+        cursor.execute(
+            f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw) VALUES (?, ?, ?, ?, ?)",
+            (scan_id, target_url, 'scanning', now, None)
+        )
+    conn.commit()
+    conn.close()
+
+def update_scan_status(scan_id: str, status: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    if _is_postgres():
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET status = %s WHERE scan_id = %s",
+            (status, scan_id)
+        )
+    else:
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET status = ? WHERE scan_id = ?",
+            (status, scan_id)
+        )
+    conn.commit()
+    conn.close()
+
+def save_scan_results(scan_id: str, results_raw: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    if _is_postgres():
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET status = %s, results_raw = %s WHERE scan_id = %s",
+            ('completed', results_raw, scan_id)
+        )
+    else:
+        cursor.execute(
+            f"UPDATE {SCANS_HISTORY_TABLE} SET status = ?, results_raw = ? WHERE scan_id = ?",
+            ('completed', results_raw, scan_id)
+        )
+    conn.commit()
+    conn.close()
+
+def get_scan_by_id(scan_id: str) -> dict:
+    conn = get_connection()
+    cursor = conn.cursor()
+    if _is_postgres():
+        cursor.execute(f"SELECT scan_id, target_url, status, created_at, results_raw FROM {SCANS_HISTORY_TABLE} WHERE scan_id = %s", (scan_id,))
+    else:
+        cursor.execute(f"SELECT scan_id, target_url, status, created_at, results_raw FROM {SCANS_HISTORY_TABLE} WHERE scan_id = ?", (scan_id,))
+    
+    row = cursor.fetchone()
+    conn.close()
+    
+    if row:
+        return {
+            "scan_id": row[0],
+            "target_url": row[1],
+            "status": row[2],
+            "created_at": row[3],
+            "results_raw": row[4]
+        }
+    return None
 
 
 def get_tested_words(target_url: str, wordlist_name: str = "default") -> set:

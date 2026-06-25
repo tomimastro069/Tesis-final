@@ -10,6 +10,13 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
+    // Para la migración a base de datos, limpiamos el caché viejo
+    const isMigrated = localStorage.getItem("securAudit_migrated_db");
+    if (!isMigrated) {
+      localStorage.removeItem("securAudit_domains");
+      localStorage.setItem("securAudit_migrated_db", "true");
+    }
+
     const saved = localStorage.getItem("securAudit_domains");
     if (saved) {
       setDomains(JSON.parse(saved));
@@ -24,23 +31,22 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
     if (hasScanning) {
       interval = window.setInterval(async () => {
         try {
-          const results = await fetchScanResults();
-          if (results) {
-            const parsed = parseSecurityResults(results);
-            if (parsed) {
-              setDomains(prev => {
-                let changed = false;
-                const updated = prev.map(d => {
-                  if (d.status === 'scanning') {
-                    changed = true;
-                    return { ...d, status: 'completed' as const, score: parsed.score, riskLevel: parsed.riskLevel };
-                  }
-                  return d;
-                });
-                
-                if (changed) {
+          const scanningDomains = domains.filter(d => d.status === 'scanning' && d.scanId);
+          for (const d of scanningDomains) {
+            const results = await fetchScanResults(d.scanId!);
+            if (results && results.status === 'completed' && results.results) {
+              const parsed = parseSecurityResults(results.results);
+              if (parsed) {
+                setDomains(prev => {
+                  const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'completed' as const, score: parsed.score, riskLevel: parsed.riskLevel } : pd);
                   localStorage.setItem("securAudit_domains", JSON.stringify(updated));
-                }
+                  return updated;
+                });
+              }
+            } else if (results && results.status === 'failed') {
+              setDomains(prev => {
+                const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'error' as const } : pd);
+                localStorage.setItem("securAudit_domains", JSON.stringify(updated));
                 return updated;
               });
             }

@@ -60,30 +60,40 @@ function ScoreRing({ score, color }: { score: number; color: string }) {
   );
 }
 
-export function ScanReport({ targetUrl }: { targetUrl: string }) {
+import { Domain } from "../../services/api";
+
+export function ScanReport({ domain }: { domain: Domain }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     async function loadData() {
+      if (!domain.scanId) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
-        const raw = await fetchScanResults();
-        // Since we only scan one domain, we just use the raw result (assuming it corresponds to targetUrl)
-        const parsed = parseSecurityResults(raw);
-        setData(parsed);
+        const result = await fetchScanResults(domain.scanId);
+        if (result && result.results) {
+          const parsed = parseSecurityResults(result.results);
+          setData(parsed);
+        } else {
+          setData(null);
+        }
       } catch (e) {
         console.error("Failed to load results", e);
+        setData(null);
       }
       setLoading(false);
     }
     loadData();
-  }, [targetUrl]);
+  }, [domain]);
 
   if (loading) {
     return (
       <div style={{ padding: "40px", color: "#94a3b8", textAlign: "center" }}>
-        Cargando reporte de análisis para {targetUrl}...
+        Cargando reporte de análisis para {domain.target}...
       </div>
     );
   }
@@ -91,7 +101,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
   if (!data) {
     return (
       <div style={{ padding: "40px", color: "#ef4444", textAlign: "center" }}>
-        Error al cargar datos. ¿Se ha completado un análisis para {targetUrl}?
+        Error al cargar datos. ¿Se ha completado un análisis para {domain.target}?
       </div>
     );
   }
@@ -106,7 +116,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
         <div>
           <h2 style={{ fontSize: "20px", color: "#f8fafc", margin: 0, marginBottom: "4px" }}>Resumen de Seguridad</h2>
-          <div style={{ fontSize: "13px", color: "#94a3b8" }}>Objetivo: {targetUrl}</div>
+          <div style={{ fontSize: "13px", color: "#94a3b8" }}>Objetivo: {domain.target}</div>
         </div>
       </div>
 
@@ -229,7 +239,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
           </div>
           <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
             Detectado en{" "}
-            <span style={{ color: "#94a3b8", fontWeight: 500 }}>{targetUrl}</span>
+            <span style={{ color: "#94a3b8", fontWeight: 500 }}>{domain.target}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {data.severityData.map((item: any) => {
@@ -306,7 +316,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
 
       {/* Vulnerability Table */}
       <div style={{ marginTop: "24px" }}>
-        <VulnerabilityTable vulnerabilities={data.allVulnerabilities} targetUrl={targetUrl} />
+        <VulnerabilityTable vulnerabilities={data.allVulnerabilities} targetUrl={domain.target} />
       </div>
 
     </div>

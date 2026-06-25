@@ -229,12 +229,7 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
         "ffuf_raw": ffuf_data          # Datos crudos de FFUF
     }
     
-    # Guardar el reporte final en resultado.json
-    ruta_final = os.path.join(OUTPUT_DIR, FINAL_REPORT_FILE)
-    with open(ruta_final, "w") as f:
-        json.dump(hallazgos_finales, f, indent=4)
-    
-    print(f"--- Ejecución finalizada. Datos crudos guardados en: {ruta_final} ---")
+    print(f"--- Ejecución finalizada. Datos crudos retornados en memoria ---")
     return hallazgos_finales
 
 

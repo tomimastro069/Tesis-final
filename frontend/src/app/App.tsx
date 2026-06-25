@@ -205,7 +205,7 @@ export default function App() {
                   ← Volver a Dominios
                 </button>
               </div>
-              <ScanReport targetUrl={selectedDomain.target} />
+              <ScanReport domain={selectedDomain} />
             </div>
           ) : (
             <DomainsDashboard onSelectDomain={setSelectedDomain} />

@@ -1,6 +1,8 @@
 import logging
 import os
 import requests
+import uuid
+import json
 from typing import Optional
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
@@ -11,6 +13,10 @@ logger = logging.getLogger("security_api")
 
 from app.workflow.pipeline import run_security_pipeline, run_parser_pipeline
 from app.reports.generator import generar_reporte
+from app.db.database import create_scan, update_scan_status, save_scan_results, get_scan_by_id, init_db
+
+# Inicializar BD
+init_db()
 
 app = FastAPI(
     title="Orquestador de Seguridad API",
@@ -53,34 +59,31 @@ class ScanRequest(BaseModel):
         }
     }
 
-def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[str], callback_url: Optional[str], clean_cache: bool = False, sqlmap_level: str = "basic"):
-    logger.info(f"Iniciando escaneo de seguridad en segundo plano para: {target} (Nivel: {nivel})")
+def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cookies: Optional[str], callback_url: Optional[str], clean_cache: bool = False, sqlmap_level: str = "basic"):
+    logger.info(f"Iniciando escaneo de seguridad en segundo plano para: {target} (ID: {scan_id})")
     try:
-        # [MEJORA] Borrado opcional de caché
         if clean_cache:
             logger.info("[*] Limpiando la caché de la base de datos antes de iniciar...")
             from app.db.database import limpiar_cache_completa
             limpiar_cache_completa()
 
-        # [MEJORA] Normalizar cookies para habilitar inicio de sesión automático si se envía vacío o "none"
         if cookies and (cookies.strip() == "" or cookies.strip().lower() == "none"):
             logger.info("[*] Cookies vacías o con valor 'none'. Se usará inicio de sesión automático.")
             cookies = None
 
-        # 1. Ejecutar el pipeline de escaneo
         resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level)
         if not resultado_escaneo:
             raise Exception("El pipeline de escaneo no retornó ningún resultado.")
 
-        # 2. Parsear los resultados unificados
         resultado_parseo = run_parser_pipeline(resultado_escaneo)
 
-        # 3. Generar los reportes en Markdown
         reporte_tecnico_path, reporte_cliente_path = generar_reporte(resultado_parseo)
 
         logger.info("[+] Escaneo finalizado y reportes generados con éxito.")
+        
+        # Guardar en DB
+        save_scan_results(scan_id, json.dumps(resultado_parseo))
 
-        # Leer el contenido de los reportes para enviarlos por el callback
         reporte_tecnico_content = "No se pudo leer el reporte técnico."
         reporte_cliente_content = "No se pudo leer el reporte del cliente."
 
@@ -94,6 +97,7 @@ def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[s
 
         payload = {
             "status": "completed",
+            "scan_id": scan_id,
             "target": target,
             "message": "Escaneo completado exitosamente y reportes generados.",
             "reporte_tecnico": reporte_tecnico_content,
@@ -102,15 +106,16 @@ def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[s
 
     except Exception as e:
         logger.error(f"[-] Error durante la ejecución del pipeline: {e}", exc_info=True)
+        update_scan_status(scan_id, 'failed')
         payload = {
             "status": "failed",
+            "scan_id": scan_id,
             "target": target,
             "message": f"Error en el pipeline de seguridad: {str(e)}",
             "reporte_tecnico": None,
             "reporte_cliente": None
         }
 
-    # Enviar callback si se especificó la URL
     if callback_url:
         logger.info(f"Enviando callback a: {callback_url}")
         try:
@@ -118,8 +123,6 @@ def ejecutar_pipeline_segundo_plano(target: str, nivel: str, cookies: Optional[s
             logger.info(f"Callback enviado. Respuesta: {r.status_code}")
         except Exception as cb_err:
             logger.error(f"[-] Falló el envío del callback a {callback_url}: {cb_err}")
-    else:
-        logger.info("No se especificó callback_url. Resultados listos localmente en /output/reports.")
 
 @app.get("/")
 def read_root():
@@ -128,18 +131,32 @@ def read_root():
         "message": "Orquestador de Seguridad listo. Accedé a /docs para la documentación interactiva."
     }
 
+@app.get("/scan/{scan_id}")
+def get_scan(scan_id: str):
+    scan_data = get_scan_by_id(scan_id)
+    if not scan_data:
+        raise HTTPException(status_code=404, detail="Scan no encontrado")
+    
+    if scan_data["results_raw"]:
+        try:
+            scan_data["results"] = json.loads(scan_data["results_raw"])
+        except:
+            scan_data["results"] = None
+        del scan_data["results_raw"]
+    
+    return scan_data
+
 @app.post("/scan", status_code=202)
 def iniciar_escaneo(request: ScanRequest, background_tasks: BackgroundTasks):
-    """
-    Inicia la tubería de escaneo de seguridad en segundo plano.
-    Retorna inmediatamente confirmando que el escaneo fue encolado.
-    """
     if request.nivel not in ["small", "medium"]:
         raise HTTPException(status_code=400, detail="El nivel debe ser 'small' o 'medium'.")
 
-    # Encolar la tarea en segundo plano
+    scan_id = str(uuid.uuid4())
+    create_scan(scan_id, request.target)
+
     background_tasks.add_task(
         ejecutar_pipeline_segundo_plano,
+        scan_id=scan_id,
         target=request.target,
         nivel=request.nivel,
         cookies=request.cookies,
@@ -150,6 +167,7 @@ def iniciar_escaneo(request: ScanRequest, background_tasks: BackgroundTasks):
 
     return {
         "message": "Escaneo lanzado! Vas a recibir una notificacion cuando termine.",
+        "scan_id": scan_id,
         "target": request.target,
         "nivel": request.nivel,
         "sqlmap_level": request.sqlmap_level

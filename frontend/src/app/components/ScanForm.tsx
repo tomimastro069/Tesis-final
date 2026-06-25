@@ -24,10 +24,11 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
     setLoading(true);
     setError(null);
     try {
-      await launchScan(formData);
+      const res = await launchScan(formData);
       const newDomain: Domain = {
         id: Date.now().toString(),
         target: formData.target,
+        scanId: res.scan_id,
         lastScan: new Date().toISOString(),
         score: null,
         riskLevel: null,
