@@ -12,18 +12,20 @@ API_KEY = settings.ZAP_API_KEY
 
 def configurar_autenticacion(cookies: str) -> None:
     """
-    Agrega una regla en el Replacer de ZAP para inyectar 
+    Agrega reglas en el Replacer de ZAP para inyectar 
     las cookies de sesión en todas las peticiones (Spider y Active Scan).
     """
-    # Remover la regla si ya existe de un escaneo previo
+    # Remover las reglas si ya existen de un escaneo previo
     url_remove = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/replacer/action/removeRule/"
     try:
         requests.get(url_remove, params={"apikey": API_KEY, "description": "OrquestadorGlobalCookie"})
+        requests.get(url_remove, params={"apikey": API_KEY, "description": "OrquestadorGlobalCookieAdd"})
     except requests.exceptions.RequestException:
         pass
 
-    url = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/replacer/action/addRule/"
-    params = {
+    # Regla 1: Reemplazar el header Cookie si ya existe en la petición
+    url_add = f"http://{ZAP_HOST}:{ZAP_PORT}/JSON/replacer/action/addRule/"
+    params_replace = {
         "apikey": API_KEY,
         "description": "OrquestadorGlobalCookie",
         "enabled": "true",
@@ -32,8 +34,25 @@ def configurar_autenticacion(cookies: str) -> None:
         "matchString": "Cookie",
         "replacement": cookies
     }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
+    try:
+        requests.get(url_add, params=params_replace).raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"    [ZAP] Error configurando regla de reemplazo: {e}")
+
+    # Regla 2: Agregar el header Cookie si NO existe en la petición (ej: primera petición del Spider)
+    params_add = {
+        "apikey": API_KEY,
+        "description": "OrquestadorGlobalCookieAdd",
+        "enabled": "true",
+        "matchType": "REQ_HEADER_ADD",
+        "matchRegex": "false",
+        "matchString": "Cookie",
+        "replacement": cookies
+    }
+    try:
+        requests.get(url_add, params=params_add).raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"    [ZAP] Error configurando regla de adición: {e}")
 
 
 def iniciar_spider(target_url: str) -> str:

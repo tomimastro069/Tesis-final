@@ -87,7 +87,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "--flush-session",   # Evitar que SQLMap recicle escaneos anteriores en su propia caché
         "--forms",           # Ataca formularios POST también
         "--dbms=MySQL",      # Optimizado para DVWA
-        "--level=3",         # Nivel de profundidad 3
+        "--level=1",         # Nivel de profundidad 1 (suficiente para parámetros GET/POST y evita testear cookies)
         "--risk=3",          # Riesgo máximo
         "--threads=5",       # 5 hilos paralelos
         "--technique=BEUST", # Todas las técnicas: Boolean, Error, Union, Stacked, Time
@@ -175,7 +175,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
                 "--flush-session",
                 "--forms",
                 "--dbms=MySQL",
-                "--level=3",
+                "--level=1",
                 "--risk=3",
                 "--threads=5",
                 "--technique=BEUST",

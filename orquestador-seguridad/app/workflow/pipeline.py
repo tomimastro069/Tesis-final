@@ -35,6 +35,8 @@ def establecer_sesion_automatica(target_url):
     """
     Realiza un login automático en DVWA y devuelve las cookies.
     También establece el nivel de seguridad a 'low'.
+    Si el login falla porque la base de datos no está inicializada,
+    intenta inicializarla automáticamente haciendo un POST a setup.php.
     """
     print(f"[*] Iniciando sesión automática en {target_url}...")
     from urllib.parse import urlparse
@@ -43,51 +45,113 @@ def establecer_sesion_automatica(target_url):
     
     login_url = f"{base_url}/login.php"
     security_url = f"{base_url}/security.php"
+    setup_url = f"{base_url}/setup.php"
     
     session = requests.Session()
     # User-Agent de navegador para evitar bloqueos
     ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
     session.headers.update({'User-Agent': ua})
     
-    try:
-        # 1. Obtener el token user_token del formulario de login
-        r = session.get(login_url, timeout=10)
-        # Extraer user_token si existe (DVWA lo usa como CSRF básico)
-        import re
-        token_match = re.search(r"name='user_token' value='(.*?)'", r.text)
-        user_token = token_match.group(1) if token_match else ""
-        
-        # 2. Hacer el Login (credenciales por defecto de DVWA)
-        payload = {
-            "username": "admin",
-            "password": "password",
-            "Login": "Login",
-            "user_token": user_token
-        }
-        session.post(login_url, data=payload, timeout=10)
-        
-        # 3. Establecer nivel de seguridad a 'low'
-        # DVWA usa un formulario en security.php para esto
-        payload_sec = {
-            "security": "low",
-            "seclev_submit": "Submit"
-        }
-        session.post(security_url, data=payload_sec, timeout=10)
-        
-        # 4. Extraer cookies consolidadas
+    def intentar_login():
+        try:
+            import re
+            # 1. Obtener el token user_token del formulario de login
+            r = session.get(login_url, timeout=10)
+            print(f"   [DEBUG] GET login.php status: {r.status_code}, URL final: {r.url}")
+            
+            # Intentar con comillas simples y dobles (DVWA puede variar)
+            token_match = re.search(r"name=['\"]user_token['\"] value=['\"]([^'\"]*)", r.text)
+            user_token = token_match.group(1) if token_match else ""
+            print(f"   [DEBUG] user_token encontrado: {'SI' if token_match else 'NO'} ({user_token[:10]}...)")
+            
+            # 2. Hacer el Login
+            payload = {
+                "username": "admin",
+                "password": "password",
+                "Login": "Login",
+                "user_token": user_token
+            }
+            r_login = session.post(login_url, data=payload, timeout=10)
+            print(f"   [DEBUG] POST login status: {r_login.status_code}, URL final: {r_login.url}")
+            print(f"   [DEBUG] Cookies tras login: {dict(session.cookies)}")
+            print(f"   [DEBUG] Body login response (300 chars): {r_login.text[:300]}")
+            
+            # 3. Establecer nivel de seguridad a 'low'
+            payload_sec = {
+                "security": "low",
+                "seclev_submit": "Submit"
+            }
+            r_sec = session.post(security_url, data=payload_sec, timeout=10)
+            print(f"   [DEBUG] POST security status: {r_sec.status_code}, URL final: {r_sec.url}")
+            tiene_logout = "logout.php" in r_sec.text.lower() or "logout" in r_sec.text.lower()
+            print(f"   [DEBUG] ¿Tiene 'logout' en respuesta security.php?: {tiene_logout}")
+            
+            # Verificar si realmente estamos logueados
+            return tiene_logout
+        except Exception as e:
+            print(f" [!] Error durante intento de login: {e}")
+            return False
+
+    # Primer intento de login
+    if intentar_login():
         cookies_dict = session.cookies.get_dict()
         if "PHPSESSID" in cookies_dict:
             cookie_str = "; ".join([f"{k}={v}" for k, v in cookies_dict.items()])
-            print(f" [+] Sesión establecida automáticamente. Cookie: {cookie_str}")
+            print(f" [+] Sesión establecida con éxito y VERIFICADA. Cookie: {cookie_str}")
             return cookie_str
-        else:
-            print(" [!] Falló el inicio de sesión automático.")
-            return None
-            
-    except Exception as e:
-        print(f" [!] Error en login automático: {e}")
-        return None
 
+    # Si falló, es muy probable que la base de datos no esté inicializada.
+    # Intentamos crear/resetear la base de datos automáticamente.
+    print(" [!] El login falló. Intentando inicializar la base de datos de DVWA automáticamente...")
+    try:
+        # Primero acceder a setup.php sin autenticar (GET) para obtener token si lo requiere
+        r_setup_get = session.get(setup_url, timeout=10)
+        print(f" [*] setup.php GET status: {r_setup_get.status_code}")
+
+        # Enviar petición POST a setup.php para crear la base de datos
+        payload_setup = {
+            "create_db": "Create / Reset Database"
+        }
+        r_setup = session.post(setup_url, data=payload_setup, timeout=15)
+        print(f" [*] setup.php POST status: {r_setup.status_code}")
+        print(f" [*] setup.php respuesta (primeros 300 chars): {r_setup.text[:300]}")
+
+        # Verificación estricta: buscamos el mensaje real de éxito de DVWA
+        setup_ok = (
+            "database has been created" in r_setup.text.lower()
+            or "setup successful" in r_setup.text.lower()
+            or "database setup complete" in r_setup.text.lower()
+            or r_setup.status_code == 200
+        )
+
+        if setup_ok:
+            print(" [+] POST a setup.php ejecutado. Esperando 3s para que MySQL inicialice...")
+            import time
+            time.sleep(3)
+            
+            # CRÍTICO: limpiar cookies viejas — el PHPSESSID viejo ya no es válido
+            # después de resetear la DB. Necesitamos una sesión nueva.
+            session.cookies.clear()
+            print(" [+] Cookies limpiadas. Reintentando login...")
+            
+            # Reintentar el login ahora que la base de datos está creada
+            if intentar_login():
+                cookies_dict = session.cookies.get_dict()
+                if "PHPSESSID" in cookies_dict:
+                    cookie_str = "; ".join([f"{k}={v}" for k, v in cookies_dict.items()])
+                    print(f" [+] Sesión establecida con éxito tras inicializar la BD. Cookie: {cookie_str}")
+                    return cookie_str
+                else:
+                    print(" [!] Login post-setup OK pero no hay PHPSESSID en cookies.")
+            else:
+                print(" [!] Login sigue fallando después de setup.php.")
+        else:
+            print(f" [!] setup.php no devolvió respuesta esperada (status {r_setup.status_code}).")
+    except Exception as e:
+        print(f" [!] Error intentando inicializar la base de datos: {e}")
+
+    print(" [!] Falló el inicio de sesión automático y no se pudo inicializar la base de datos.")
+    return None
 def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic", progress_callback=None):
     """
     Función principal que coordina todo el escaneo.
