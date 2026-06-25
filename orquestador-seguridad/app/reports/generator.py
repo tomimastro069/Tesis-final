@@ -90,6 +90,14 @@ def _generar_contenido_markdown(resultados):
             md.append(f"- **URL:** `{vuln.get('url', 'N/A')}`")
             md.append(f"- **Método:** N/A")
             md.append(f"- **Descripción:** Inyección en parámetro `{vuln.get('parametro', 'N/A')}` mediante un payload tipo `{vuln.get('tipo', 'N/A')}`: `{vuln.get('payload', 'N/A')}`")
+            
+            extra_info = vuln.get('extra_info')
+            if extra_info:
+                md.append("\n#### Información Extraída (Data Dump)")
+                md.append("```text")
+                md.append(extra_info.strip())
+                md.append("```\n")
+                
             md.append(f"- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>")
             md.append("\n---")
             
@@ -153,6 +161,13 @@ def _generar_contenido_texto(resultados):
             txt.append(f"   Tipo: {vuln.get('tipo', 'N/A')}")
             txt.append(f"   Título: {vuln.get('titulo', 'N/A')}")
             txt.append(f"   Payload: {vuln.get('payload', 'N/A')}")
+            
+            extra_info = vuln.get('extra_info')
+            if extra_info:
+                txt.append("   [!] Información extraída (Dump):")
+                for line in extra_info.strip().split("\n"):
+                    txt.append(f"       {line}")
+                    
             txt.append("-" * 50)
             
     # Spider

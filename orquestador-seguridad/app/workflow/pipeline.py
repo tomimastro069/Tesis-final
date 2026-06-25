@@ -228,7 +228,7 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
     lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
-    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090", sqlmap_level=sqlmap_level)
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy=None, sqlmap_level=sqlmap_level)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")

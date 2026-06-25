@@ -123,24 +123,15 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic", progress_callback=None) -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic") -> list:
     """
-    Ejecuta SQLMap contra TODAS las URLs que tengan parámetros.
-
-    Esta función:
-    1. Recibe la lista completa de URLs (del spider)
-    2. Filtra solo las que tienen '?'
-    3. Ejecuta SQLMap en cada una
-    4. Devuelve una lista con todos los resultados
-
-    Args:
-        urls (list): Lista de URLs (pueden tener o no parámetros).
-        timeout (int): Timeout por cada URL individual.
-
-    Returns:
-        list: Lista de dicts, uno por cada URL testeada.
-              Si no hay URLs con parámetros, devuelve lista vacía.
+    Ejecuta SQLMap en SEGUNDO PLANO contra TODAS las URLs que tengan parámetros.
+    Genera un script bash y lo lanza como proceso asíncrono para no bloquear el pipeline.
     """
+    import os
+    import stat
+    import subprocess
+    
     # Paso 1: Filtrar solo URLs con parámetros
     urls_con_params = filtrar_urls_con_parametros(urls)
 
@@ -151,7 +142,6 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
     print(f"    Se encontraron {len(urls_con_params)} URLs con parámetros.")
 
     # Paso 2: Separar URLs en: a re-testear (vulnerables conocidas) y nuevas vs cacheadas
-    resultados = []
     urls_a_escanear = []
     vulnerable_conocidas = get_vulnerable_urls()
     
@@ -168,17 +158,73 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
         print("    [SQLMAP] Escaneo omitido: todas las URLs ya fueron analizadas.")
         return []
 
-    print(f"    Iniciando escaneo real en {len(urls_a_escanear)} URLs...")
+    print(f"    Generando script para escaneo en segundo plano de {len(urls_a_escanear)} URLs...")
 
-    for i, url in enumerate(urls_a_escanear, 1):
-        if progress_callback: progress_callback((i - 1) / len(urls_a_escanear) * 100, f"Testeando: {url}")
-        print(f"    [{i}/{len(urls_a_escanear)}] Testeando: {url}")
-        resultado = run_sqlmap(url, timeout=timeout, cookies=cookies, proxy=proxy, sqlmap_level=sqlmap_level)
-        resultados.append(resultado)
+    script_path = os.path.join(settings.OUTPUT_DIR, "run_sqlmap_bg.sh")
+    log_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.log")
+    
+    with open(script_path, "w", encoding="utf-8") as f:
+        f.write("#!/bin/bash\n\n")
+        f.write(f"echo '--- Iniciando SQLMap en segundo plano ---' > {log_path}\n")
         
-        # Solo guardar en caché si no es una URL vulnerable (las vulnerables siempre se re-testean)
-        if url not in vulnerable_conocidas:
-            save_tested_sqlmap_url(url)
+        for i, url in enumerate(urls_a_escanear, 1):
+            cmd = [
+                "python3", SQLMAP_PATH,
+                "-u", f'"{url}"',
+                "--batch",
+                "--flush-session",
+                "--forms",
+                "--dbms=MySQL",
+                "--level=3",
+                "--risk=3",
+                "--threads=5",
+                "--technique=BEUST",
+                "-o"
+            ]
+            if sqlmap_level == "fast_evidence":
+                cmd.extend(["--dbs", "--current-user"])
+            elif sqlmap_level == "full_dump":
+                cmd.append("--dump")
+            
+            if proxy:
+                cmd.extend(["--proxy", proxy])
+            
+            if cookies:
+                cmd.extend(["--cookie", f'"{cookies}"'])
+            
+            ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+            cmd.extend(["--user-agent", f'"{ua}"'])
+            
+            cmd_str = " ".join(cmd)
+            f.write(f"echo '[{i}/{len(urls_a_escanear)}] Testeando: {url}' >> {log_path}\n")
+            f.write(f"{cmd_str} >> {log_path} 2>&1\n")
+            
+            # Guardamos en caché para que no se repitan en futuras corridas
+            if url not in vulnerable_conocidas:
+                save_tested_sqlmap_url(url)
+                
+        f.write(f"echo '--- Escaneo finalizado ---' >> {log_path}\n")
+        f.write(f"python3 -m app.workflow.consolidate_sqlmap >> {log_path} 2>&1\n")
 
-    if progress_callback: progress_callback(100, "SQLMap finalizado.")
-    return resultados
+    # Dar permisos de ejecución al script
+    st = os.stat(script_path)
+    os.chmod(script_path, st.st_mode | stat.S_IEXEC)
+    
+    # Ejecutar en segundo plano (detached)
+    subprocess.Popen(["bash", script_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    
+    print(f"    [+] SQLMap lanzado en segundo plano.")
+    print(f"    [+] Para ver el progreso en vivo, abrí otra consola y ejecutá:")
+    print(f"        docker exec -it security-app tail -f /app/output/raw/sqlmap_bg.log")
+
+    # Retornamos un resultado simulado para que el pipeline no falle
+    return [{
+        "url": "BACKGROUND_EXECUTION",
+        "stdout": "SQLMap ejecutándose en segundo plano. Revisar output/raw/sqlmap_bg.log",
+        "stderr": "",
+        "success": True,
+        "timeout": False
+    }]
+
+    #docker exec -it security-app 
+    #     tail -f /app/output/raw/sqlmap_bg.log
