@@ -11,9 +11,15 @@ def parsear_sqlmap(dato_dict_crudo):
             patrones_exito = [
                 "is vulnerable",
                 "is injectable",
-                "vulnerability: SQL injection",
+                "appears to be",
+                "vulnerability:",
+                "SQL injection",
                 "Payload:",
-                "Type: "
+                "Type:",
+                "database names are:",
+                "current user is:",
+                "fetched data logged to text files",
+                "available databases"
             ]
             
             if any(p.lower() in stdout.lower() for p in patrones_exito):

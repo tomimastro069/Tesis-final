@@ -15,21 +15,28 @@ def filtrar_urls_con_parametros(urls: list) -> list:
 
     Orden de prioridad:
     1. URLs con parámetros GET ('?') — las más probables de ser vulnerables
+       (excluye paths de configuración/estáticos que no son SQLi targets)
     2. Páginas .php de input interactivo sin params (para --forms)
        Solo incluye paths que sugieran formularios de usuario: login, sqli, brute, upload, etc.
        Excluye páginas estáticas: instructions, about, setup, phpinfo, etc.
     """
     PATHS_INTERACTIVOS = ["sqli", "login", "brute", "upload", "csrf", "xss_r", "xss_s", "exec"]
-    PATHS_EXCLUIDOS = ["instructions", "about", "setup", "phpinfo", "logout", "config", "ids_log"]
+    PATHS_EXCLUIDOS = [
+        "instructions", "about", "setup", "phpinfo", "logout",
+        "config", "ids_log", "security.php", "phpids","login.php"
+    ]
 
-    con_params = [u for u in urls if "?" in u]
+    def no_excluida(url: str) -> bool:
+        return not any(p in url.lower() for p in PATHS_EXCLUIDOS)
+
+    con_params = [u for u in urls if "?" in u and no_excluida(u)]
 
     sin_params_interactivos = [
         u for u in urls
         if "?" not in u
         and any(ext in u.lower() for ext in [".php", ".php7", ".asp", ".aspx", ".jsp"])
         and any(p in u.lower() for p in PATHS_INTERACTIVOS)
-        and not any(p in u.lower() for p in PATHS_EXCLUIDOS)
+        and no_excluida(u)
     ]
 
     # Primero las que tienen params, luego las interactivas sin params
@@ -77,6 +84,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
         "python3", SQLMAP_PATH,
         "-u", url,
         "--batch",
+        "--flush-session",   # Evitar que SQLMap recicle escaneos anteriores en su propia caché
         "--forms",           # Ataca formularios POST también
         "--dbms=MySQL",      # Optimizado para DVWA
         "--level=3",         # Nivel de profundidad 3
