@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Plus, Shield, ArrowRight, Server } from "lucide-react";
+import { Plus, Shield, ArrowRight, Server, Trash2 } from "lucide-react";
 import { ScanForm } from "./ScanForm";
-import { fetchScanResults } from "../../services/api";
+import { fetchScanResults, fetchScanProgress, deleteScan, fetchAllScans } from "../../services/api";
 import { parseSecurityResults } from "../../utils/parser";
 import type { Domain } from "../../services/api";
 
@@ -9,18 +9,23 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
   const [domains, setDomains] = useState<Domain[]>([]);
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    // Para la migración a base de datos, limpiamos el caché viejo
-    const isMigrated = localStorage.getItem("securAudit_migrated_db");
-    if (!isMigrated) {
-      localStorage.removeItem("securAudit_domains");
-      localStorage.setItem("securAudit_migrated_db", "true");
-    }
+  const loadDomains = async () => {
+    const data = await fetchAllScans();
+    // Parsear resultados en el frontend si es necesario para riskLevel/score
+    const processed = data.map(d => {
+      if (d.status === 'completed' && d.rawResults) {
+        const parsed = parseSecurityResults(d.rawResults);
+        if (parsed) {
+          return { ...d, score: parsed.score, riskLevel: parsed.riskLevel };
+        }
+      }
+      return d;
+    });
+    setDomains(processed);
+  };
 
-    const saved = localStorage.getItem("securAudit_domains");
-    if (saved) {
-      setDomains(JSON.parse(saved));
-    }
+  useEffect(() => {
+    loadDomains();
   }, []);
 
   // Polling para dominios en estado 'scanning'
@@ -33,20 +38,23 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
         try {
           const scanningDomains = domains.filter(d => d.status === 'scanning' && d.scanId);
           for (const d of scanningDomains) {
+            const progressInfo = await fetchScanProgress(d.scanId!);
+            if (progressInfo) {
+              setDomains(prev => prev.map(pd => pd.id === d.id ? { ...pd, progress: progressInfo.percentage, progressMessage: progressInfo.message } : pd));
+            }
+
             const results = await fetchScanResults(d.scanId!);
             if (results && results.status === 'completed' && results.results) {
               const parsed = parseSecurityResults(results.results);
               if (parsed) {
                 setDomains(prev => {
                   const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'completed' as const, score: parsed.score, riskLevel: parsed.riskLevel } : pd);
-                  localStorage.setItem("securAudit_domains", JSON.stringify(updated));
                   return updated;
                 });
               }
             } else if (results && results.status === 'failed') {
               setDomains(prev => {
                 const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'error' as const } : pd);
-                localStorage.setItem("securAudit_domains", JSON.stringify(updated));
                 return updated;
               });
             }
@@ -54,7 +62,7 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
         } catch (error) {
           console.error("Error durante el polling:", error);
         }
-      }, 10000); // Consulta cada 10 segundos
+      }, 3000); // Consulta cada 3 segundos
     }
     
     return () => {
@@ -63,10 +71,28 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
   }, [domains]);
 
   const handleAddDomain = (domain: Domain) => {
-    const updated = [...domains, domain];
+    const updated = [domain, ...domains];
     setDomains(updated);
-    localStorage.setItem("securAudit_domains", JSON.stringify(updated));
     setShowForm(false);
+  };
+
+  const handleDeleteDomain = async (e: React.MouseEvent, domain: Domain) => {
+    e.stopPropagation();
+    if (!domain.scanId) {
+      const updated = domains.filter(d => d.id !== domain.id);
+      setDomains(updated);
+      return;
+    }
+    
+    if (window.confirm("¿Estás seguro de que quieres eliminar este dominio del panel?")) {
+      try {
+        await deleteScan(domain.scanId);
+        const updated = domains.filter(d => d.id !== domain.id);
+        setDomains(updated);
+      } catch (err) {
+        alert("Error al eliminar el dominio");
+      }
+    }
   };
 
   const glassCard = {
@@ -146,10 +172,27 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
                 <div>
                   <h3 style={{ color: "#e2e8f0", fontSize: "16px", fontWeight: 600 }}>{domain.target.replace(/^https?:\/\//, '')}</h3>
                   <span style={{ fontSize: "12px", color: domain.status === 'scanning' ? '#d97706' : '#64748b' }}>
-                    {domain.status === 'scanning' ? 'Analizando...' : domain.status === 'completed' ? 'Análisis Completado' : 'Pendiente'}
+                    {domain.status === 'scanning' ? `Analizando... ${domain.progress ?? 0}%` : domain.status === 'completed' ? 'Análisis Completado' : 'Pendiente'}
                   </span>
                 </div>
               </div>
+              <button
+                onClick={(e) => handleDeleteDomain(e, domain)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#64748b",
+                  padding: "4px",
+                  borderRadius: "4px",
+                  transition: "color 0.2s, background 0.2s"
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#ef4444"; e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#64748b"; e.currentTarget.style.background = "transparent"; }}
+                title="Eliminar dominio"
+              >
+                <Trash2 size={18} />
+              </button>
             </div>
             
             <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
@@ -169,7 +212,7 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "16px" }}>
               <span style={{ fontSize: "13px", color: domain.status === 'scanning' ? "#94a3b8" : "#3b82f6", fontWeight: 500 }}>
-                {domain.status === 'scanning' ? "Análisis en progreso..." : "Ver detalles"}
+                {domain.status === 'scanning' ? (domain.progressMessage || "Análisis en progreso...") : "Ver detalles"}
               </span>
               {domain.status !== 'scanning' && <ArrowRight size={16} color="#3b82f6" />}
             </div>

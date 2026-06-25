@@ -119,8 +119,8 @@ export function Sidebar({ activeItem = "dashboard", onNavigate }: SidebarProps) 
                 background: isActive
                   ? "rgba(6, 182, 212, 0.1)"
                   : isHovered
-                  ? "rgba(255,255,255,0.04)"
-                  : "transparent",
+                    ? "rgba(255,255,255,0.04)"
+                    : "transparent",
                 color: isActive ? "#06b6d4" : isHovered ? "#94a3b8" : "#64748b",
                 transition: "all 0.15s ease",
                 textAlign: "left",
@@ -157,49 +157,6 @@ export function Sidebar({ activeItem = "dashboard", onNavigate }: SidebarProps) 
           );
         })}
       </nav>
-
-      {/* Bottom status card */}
-      <div style={{ padding: "16px 12px 20px" }}>
-        <div
-          style={{
-            padding: "12px 14px",
-            background: "rgba(6, 182, 212, 0.05)",
-            border: "1px solid rgba(6, 182, 212, 0.12)",
-            borderRadius: "10px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              marginBottom: "8px",
-            }}
-          >
-            <Zap size={13} color="#06b6d4" />
-            <span style={{ fontSize: "11px", color: "#06b6d4", fontWeight: 600 }}>
-              Scan Engine
-            </span>
-          </div>
-          <div style={{ fontSize: "11px", color: "#475569", marginBottom: "6px" }}>
-            Last scan: 2h 14m ago
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#10b981",
-                boxShadow: "0 0 6px rgba(16, 185, 129, 0.7)",
-              }}
-            />
-            <span style={{ fontSize: "11px", color: "#10b981", fontWeight: 500 }}>
-              System Active
-            </span>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -124,38 +124,6 @@ export default function App() {
               Buscar...
             </button>
 
-            {/* Scan mode status — read-only, set by backend */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "7px",
-                padding: "7px 14px",
-                background: "rgba(16, 185, 129, 0.07)",
-                border: "1px solid rgba(16, 185, 129, 0.18)",
-                borderRadius: "8px",
-                userSelect: "none",
-                cursor: "default",
-              }}
-            >
-              <div
-                style={{
-                  width: "7px",
-                  height: "7px",
-                  borderRadius: "50%",
-                  background: "#10b981",
-                  boxShadow: "0 0 6px rgba(16,185,129,0.7)",
-                  flexShrink: 0,
-                }}
-              />
-              <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 500 }}>
-                Sistema:
-              </span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "#10b981" }}>
-                En línea
-              </span>
-            </div>
-
             {/* Download PDF */}
             {selectedDomain && (
               <button

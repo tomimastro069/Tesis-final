@@ -13,10 +13,14 @@ logger = logging.getLogger("security_api")
 
 from app.workflow.pipeline import run_security_pipeline, run_parser_pipeline
 from app.reports.generator import generar_reporte
-from app.db.database import create_scan, update_scan_status, save_scan_results, get_scan_by_id, init_db
+from app.db.database import create_scan, update_scan_status, save_scan_results, get_scan_by_id, init_db, soft_delete_scan, get_all_scans
 
 # Inicializar BD
 init_db()
+
+# Almacén en memoria para el progreso de escaneos activos
+# Estructura: { scan_id: {"percentage": int, "message": str} }
+scan_progress_store = {}
 
 app = FastAPI(
     title="Orquestador de Seguridad API",
@@ -71,7 +75,13 @@ def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cooki
             logger.info("[*] Cookies vacías o con valor 'none'. Se usará inicio de sesión automático.")
             cookies = None
 
-        resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level)
+        scan_progress_store[scan_id] = {"percentage": 0, "message": "Iniciando escaneo..."}
+
+        def update_progress(percentage: int, message: str):
+            scan_progress_store[scan_id] = {"percentage": percentage, "message": message}
+            logger.info(f"Progreso [{scan_id}]: {percentage}% - {message}")
+
+        resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level, progress_callback=update_progress)
         if not resultado_escaneo:
             raise Exception("El pipeline de escaneo no retornó ningún resultado.")
 
@@ -104,6 +114,10 @@ def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cooki
             "reporte_cliente": reporte_cliente_content
         }
 
+        # Limpiar progreso en memoria tras finalizar exitosamente
+        if scan_id in scan_progress_store:
+            del scan_progress_store[scan_id]
+
     except Exception as e:
         logger.error(f"[-] Error durante la ejecución del pipeline: {e}", exc_info=True)
         update_scan_status(scan_id, 'failed')
@@ -115,6 +129,10 @@ def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cooki
             "reporte_tecnico": None,
             "reporte_cliente": None
         }
+
+        # Limpiar progreso en memoria si hubo error
+        if scan_id in scan_progress_store:
+            del scan_progress_store[scan_id]
 
     if callback_url:
         logger.info(f"Enviando callback a: {callback_url}")
@@ -131,6 +149,37 @@ def read_root():
         "message": "Orquestador de Seguridad listo. Accedé a /docs para la documentación interactiva."
     }
 
+@app.get("/scans")
+def get_scans():
+    scans = get_all_scans()
+    for s in scans:
+        if s["results_raw"]:
+            try:
+                s["results"] = json.loads(s["results_raw"])
+            except:
+                s["results"] = None
+            del s["results_raw"]
+    return scans
+
+@app.get("/scan/{scan_id}/progress")
+def get_scan_progress(scan_id: str):
+    # Consultar la memoria
+    if scan_id in scan_progress_store:
+        return scan_progress_store[scan_id]
+    
+    # Si no está en memoria, podría haber finalizado o fallado. Consultamos la BD.
+    scan_data = get_scan_by_id(scan_id)
+    if not scan_data:
+        raise HTTPException(status_code=404, detail="Scan no encontrado")
+        
+    if scan_data["status"] == "completed":
+        return {"percentage": 100, "message": "Análisis Completado"}
+    elif scan_data["status"] == "failed":
+        return {"percentage": 100, "message": "Análisis Fallido"}
+        
+    # Si está 'scanning' pero no está en memoria (quizás se reinició el backend)
+    return {"percentage": 0, "message": "Iniciando o retomando análisis..."}
+
 @app.get("/scan/{scan_id}")
 def get_scan(scan_id: str):
     scan_data = get_scan_by_id(scan_id)
@@ -145,6 +194,16 @@ def get_scan(scan_id: str):
         del scan_data["results_raw"]
     
     return scan_data
+
+@app.delete("/scan/{scan_id}")
+def delete_scan(scan_id: str):
+    scan_data = get_scan_by_id(scan_id)
+    if not scan_data:
+        raise HTTPException(status_code=404, detail="Scan no encontrado")
+    
+    from app.db.database import soft_delete_scan
+    soft_delete_scan(scan_id)
+    return {"message": "Dominio eliminado exitosamente", "scan_id": scan_id}
 
 @app.post("/scan", status_code=202)
 def iniciar_escaneo(request: ScanRequest, background_tasks: BackgroundTasks):

@@ -53,7 +53,7 @@ def iniciar_spider(target_url: str) -> str:
     return response.json().get("scan")
 
 
-def esperar_spider(scan_id: str) -> None:
+def esperar_spider(scan_id: str, progress_callback=None) -> None:
     """
     Espera hasta que el spider llegue a 100%.
     No interpreta resultados.
@@ -69,6 +69,8 @@ def esperar_spider(scan_id: str) -> None:
         response.raise_for_status()
 
         status = int(response.json().get("status", 0))
+        if progress_callback:
+            progress_callback(status)
 
         if status >= 100:
             break
@@ -133,7 +135,7 @@ def iniciar_escaneo_activo(target_url: str) -> str:
     return response.json().get("scan")
 
 
-def esperar_escaneo_activo(scan_id: str) -> None:
+def esperar_escaneo_activo(scan_id: str, progress_callback=None) -> None:
     """
     Espera hasta que el escaneo activo llegue a 100%.
     """
@@ -144,6 +146,8 @@ def esperar_escaneo_activo(scan_id: str) -> None:
         response.raise_for_status()
         status = int(response.json().get("status", 0))
         print(f"Progreso escaneo activo: {status}%")
+        if progress_callback:
+            progress_callback(status)
 
         if status >= 100:
             break

@@ -88,7 +88,7 @@ def establecer_sesion_automatica(target_url):
         print(f" [!] Error en login automático: {e}")
         return None
 
-def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic"):
+def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic", progress_callback=None):
     """
     Función principal que coordina todo el escaneo.
     
@@ -143,8 +143,12 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     
     # --- 1. ZAP SPIDER ---
     print("\n[1/4] Ejecutando ZAP Spider...")
+    if progress_callback: progress_callback(0, "Iniciando ZAP Spider...")
+    def cb_spider(local_pct, msg=""):
+        if progress_callback: progress_callback(int(local_pct * 0.20), msg or "Ejecutando ZAP Spider...")
+    
     spider_id = iniciar_spider(target_url)
-    esperar_spider(spider_id)
+    esperar_spider(spider_id, progress_callback=cb_spider)
     spider_urls = obtener_urls(spider_id)
 
     # --- 2. FFUF (antes del Active Scan para enriquecer el contexto de ZAP) ---
@@ -163,7 +167,11 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
         with open(WORDLIST_PATH, "w") as f:
             f.write("admin\nlogin\nbackup\nconfig\n.env\n")
 
+    if progress_callback: progress_callback(20, "Iniciando FFUF (Fuzzing)...")
+
     ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR, cookies=cookies)
+
+    if progress_callback: progress_callback(30, "FFUF completado.")
 
     if ffuf_raw.get("skipped"):
         print(f"  [FFUF] Escaneo omitido: todas las palabras ya fueron probadas anteriormente.")
@@ -192,8 +200,12 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
 
     # --- 4. ZAP ACTIVE SCAN (ahora ataca Spider + rutas de FFUF) ---
     print("\n[3/4] Ejecutando ZAP Active Scan...")
+    if progress_callback: progress_callback(30, "Iniciando ZAP Active Scan...")
+    def cb_ascan(local_pct, msg=""):
+        if progress_callback: progress_callback(30 + int(local_pct * 0.50), msg or "Ejecutando ZAP Active Scan...")
+        
     ascan_id = iniciar_escaneo_activo(target_url)
-    esperar_escaneo_activo(ascan_id)
+    esperar_escaneo_activo(ascan_id, progress_callback=cb_ascan)
 
     # Obtener reporte crudo de ZAP
     reporte_zap_crudo = obtener_reporte_json()
@@ -215,16 +227,7 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     lista_urls_spider = spider_urls.get("results", [])
     # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
-
-    # URLs semilla garantizadas: endpoints de DVWA conocidos con parámetros SQLi.
-    # El spider no siempre los descubre con sus parámetros correctos.
-    base = target_url.rstrip("/")
-    urls_semilla_dvwa = [
-        f"{base}/vulnerabilities/sqli/?id=1&Submit=Submit",
-        f"{base}/vulnerabilities/sqli_blind/?id=1&Submit=Submit",
-    ]
-
-    lista_urls_total = list(set(lista_urls_spider + lista_urls_ffuf + urls_semilla_dvwa))
+    lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
     sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy="http://zap:8090", sqlmap_level=sqlmap_level)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
