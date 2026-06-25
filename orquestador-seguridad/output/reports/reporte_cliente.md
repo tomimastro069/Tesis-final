@@ -1,5 +1,5 @@
 # Reporte de Seguridad para el Cliente
-**Fecha de evaluación:** 2026-06-25 00:21:44
+**Fecha de evaluación:** 2026-06-25 20:49:17
 
 ## Resumen
 Este reporte presenta una visión no técnica de los resultados de seguridad de la aplicación. Su objetivo es ayudar en la toma de decisiones para proteger los activos de la empresa.
@@ -8,9 +8,9 @@ Este reporte presenta una visión no técnica de los resultados de seguridad de 
 La superficie de ataque presenta riesgos menores o solo de carácter informativo.
 
 ## Visión General de la Evaluación
-- **Puntos de acceso analizados (URLs):** 10
-- **Áreas descubiertas no enlazadas directamente:** 1
-- **Vulnerabilidades y debilidades de seguridad encontradas:** 19
+- **Puntos de acceso analizados (URLs):** 54
+- **Áreas descubiertas no enlazadas directamente:** 0
+- **Vulnerabilidades y debilidades de seguridad encontradas:** 44
 
 ## Principales Riesgos Identificados
 No se detectaron riesgos de severidad alta o media en esta evaluación automatizada.
