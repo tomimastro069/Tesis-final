@@ -29,7 +29,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+from app.routers.n8n_router import router as n8n_router
+app.include_router(n8n_router)
 
 class ScanRequest(BaseModel):
     target: str

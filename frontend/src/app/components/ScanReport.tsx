@@ -306,7 +306,7 @@ export function ScanReport({ targetUrl }: { targetUrl: string }) {
 
       {/* Vulnerability Table */}
       <div style={{ marginTop: "24px" }}>
-        <VulnerabilityTable vulnerabilities={data.allVulnerabilities} />
+        <VulnerabilityTable vulnerabilities={data.allVulnerabilities} targetUrl={targetUrl} />
       </div>
 
     </div>

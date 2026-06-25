@@ -113,10 +113,24 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
         {domains.map((domain) => (
           <div 
             key={domain.id} 
-            style={glassCard}
-            onClick={() => onSelectDomain(domain)}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = "rgba(59,130,246,0.3)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)"; }}
+            style={{ ...glassCard, cursor: domain.status === 'scanning' ? 'wait' : 'pointer', opacity: domain.status === 'scanning' ? 0.7 : 1 }}
+            onClick={() => {
+              if (domain.status !== 'scanning') {
+                onSelectDomain(domain);
+              }
+            }}
+            onMouseEnter={(e) => { 
+              if (domain.status !== 'scanning') {
+                e.currentTarget.style.transform = "translateY(-4px)"; 
+                e.currentTarget.style.borderColor = "rgba(59,130,246,0.3)"; 
+              }
+            }}
+            onMouseLeave={(e) => { 
+              if (domain.status !== 'scanning') {
+                e.currentTarget.style.transform = "none"; 
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)"; 
+              }
+            }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -148,8 +162,10 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "16px" }}>
-              <span style={{ fontSize: "13px", color: "#3b82f6", fontWeight: 500 }}>Ver detalles</span>
-              <ArrowRight size={16} color="#3b82f6" />
+              <span style={{ fontSize: "13px", color: domain.status === 'scanning' ? "#94a3b8" : "#3b82f6", fontWeight: 500 }}>
+                {domain.status === 'scanning' ? "Análisis en progreso..." : "Ver detalles"}
+              </span>
+              {domain.status !== 'scanning' && <ArrowRight size={16} color="#3b82f6" />}
             </div>
           </div>
         ))}

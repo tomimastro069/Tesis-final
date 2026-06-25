@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { launchScan } from "../../services/api";
 import type { Domain, ScanRequest } from "../../services/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (domain: Domain) => void }) {
   const [loading, setLoading] = useState(false);
@@ -65,20 +72,30 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
             <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Nivel de Análisis</label>
-            <select style={inputStyle} value={formData.nivel} onChange={(e) => setFormData({...formData, nivel: e.target.value})}>
-              <option value="small">Básico</option>
-              <option value="medium">Profundo</option>
-            </select>
+            <Select value={formData.nivel} onValueChange={(val) => setFormData({...formData, nivel: val})}>
+              <SelectTrigger style={inputStyle}>
+                <SelectValue placeholder="Nivel de Análisis" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="small">Básico</SelectItem>
+                <SelectItem value="medium">Profundo</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Nivel SQLMap</label>
-            <select style={inputStyle} value={formData.sqlmap_level} onChange={(e) => setFormData({...formData, sqlmap_level: e.target.value})}>
-              <option value="1">1 (Rápido)</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5 (Exhaustivo)</option>
-            </select>
+            <Select value={formData.sqlmap_level} onValueChange={(val) => setFormData({...formData, sqlmap_level: val})}>
+              <SelectTrigger style={inputStyle}>
+                <SelectValue placeholder="Nivel SQLMap" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 (Rápido)</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+                <SelectItem value="5">5 (Exhaustivo)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

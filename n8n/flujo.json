@@ -1,223 +1,122 @@
 {
-  "name": "Orquestador de Seguridad",
+  "name": "IA - Corrección de Vulnerabilidades",
   "nodes": [
-    {
-      "parameters": {},
-      "id": "7a1f2b3c-0001-4d5e-8f9a-111111111111",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [240, 300]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "http://app:8000/scan",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "target",
-              "value": "http://dvwa"
-            },
-            {
-              "name": "nivel",
-              "value": "small"
-            },
-            {
-              "name": "cookies",
-              "value": "PHPSESSID=your_session_id; security=low"
-            },
-            {
-              "name": "callback_url",
-              "value": "http://security-n8n:5678/webhook/scan-completado"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "7a1f2b3c-0002-4d5e-8f9a-222222222222",
-      "name": "POST /scan",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [460, 300]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={ \"message\": \"Escaneo lanzado! Vas a recibir una notificacion cuando termine.\" }"
-      },
-      "id": "7a1f2b3c-0003-4d5e-8f9a-333333333333",
-      "name": "Respuesta OK",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [680, 300]
-    },
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "scan-completado",
-        "responseMode": "responseNode",
+        "path": "analyze-vuln",
+        "responseMode": "lastNode",
         "options": {}
       },
-      "id": "7a1f2b3c-0004-4d5e-8f9a-444444444444",
-      "name": "Webhook Scan Completado",
+      "id": "webhook-node",
+      "name": "Webhook (Recibe Vuln)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [240, 560],
-      "webhookId": "scan-completado"
+      "position": [100, 300],
+      "webhookId": "analyze-vuln"
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "field-status",
-              "name": "status",
-              "value": "={{ $json.body.status }}",
-              "type": "string"
-            },
-            {
-              "id": "field-target",
-              "name": "target",
-              "value": "={{ $json.body.target }}",
-              "type": "string"
-            },
-            {
-              "id": "field-message",
-              "name": "message",
-              "value": "={{ $json.body.message }}",
-              "type": "string"
-            },
-            {
-              "id": "field-reporte-tecnico",
-              "name": "reporte_tecnico",
-              "value": "={{ $json.body.reporte_tecnico }}",
-              "type": "string"
-            },
-            {
-              "id": "field-reporte-cliente",
-              "name": "reporte_cliente",
-              "value": "={{ $json.body.reporte_cliente }}",
+              "id": "prompt-assignment",
+              "name": "prompt",
+              "value": "=Eres un experto en ciberseguridad. Analiza la siguiente vulnerabilidad y da una sugerencia corta y técnica en español para corregirla.\\n\\nNombre: {{ $json.body.vulnerability.name }}\\nTipo: {{ $json.body.vulnerability.type }}\\nSeveridad: {{ $json.body.vulnerability.severity }}\\nDescripción: {{ $json.body.vulnerability.description }}",
               "type": "string"
             }
           ]
         },
         "options": {}
       },
-      "id": "7a1f2b3c-0005-4d5e-8f9a-555555555555",
-      "name": "Extraer Resultados",
+      "id": "set-prompt-node",
+      "name": "Preparar Prompt",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [460, 560]
+      "position": [320, 300]
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
+        "resource": "chat",
+        "operation": "create",
+        "messages": {
+          "messageValues": [
             {
-              "id": "cond-status",
-              "leftValue": "={{ $json.status }}",
-              "rightValue": "completed",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
+              "message": "={{ $json.prompt }}"
             }
-          ],
-          "combinator": "and"
+          ]
         },
         "options": {}
       },
-      "id": "7a1f2b3c-0006-4d5e-8f9a-666666666666",
-      "name": "Exitoso o Error?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [680, 560]
+      "id": "openai-node",
+      "name": "OpenAI Chat",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [540, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "",
+          "name": "OpenAi API"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "// Aca podes armar un mensaje bonito con los resultados\nconst data = $input.first().json;\n\nconst mensaje = `\u2705 Escaneo completado!\n\n\uD83C\uDFAF Target: ${data.target}\n\uD83D\uDCCB Status: ${data.status}\n\uD83D\uDCDD Mensaje: ${data.message}\n\n\uD83D\uDCC4 Reporte tecnico: ${data.reporte_tecnico || 'N/A'}\n\uD83D\uDCC4 Reporte cliente: ${data.reporte_cliente || 'N/A'}`;\n\nreturn [{ json: { mensaje, ...data } }];"
+        "assignments": {
+          "assignments": [
+            {
+              "id": "result-assignment",
+              "name": "ai_suggestion",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "id-assignment",
+              "name": "vuln_id",
+              "value": "={{ $('Webhook (Recibe Vuln)').item.json.body.vulnerability.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": false
+        }
       },
-      "id": "7a1f2b3c-0007-4d5e-8f9a-777777777777",
-      "name": "Armar Notificacion Exito",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [900, 480]
-    },
-    {
-      "parameters": {
-        "jsCode": "// Manejar el error del pipeline\nconst data = $input.first().json;\n\nconst mensaje = `\u274C Escaneo fallido!\n\n\uD83C\uDFAF Target: ${data.target}\n\uD83D\uDEA8 Error: ${data.message}`;\n\nreturn [{ json: { mensaje, ...data } }];"
-      },
-      "id": "7a1f2b3c-0008-4d5e-8f9a-888888888888",
-      "name": "Armar Notificacion Error",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [900, 640]
+      "id": "format-response-node",
+      "name": "Formatear Respuesta",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [760, 300]
     }
   ],
   "connections": {
-    "Manual Trigger": {
+    "Webhook (Recibe Vuln)": {
       "main": [
         [
           {
-            "node": "POST /scan",
+            "node": "Preparar Prompt",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "POST /scan": {
+    "Preparar Prompt": {
       "main": [
         [
           {
-            "node": "Respuesta OK",
+            "node": "OpenAI Chat",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Webhook Scan Completado": {
+    "OpenAI Chat": {
       "main": [
         [
           {
-            "node": "Extraer Resultados",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extraer Resultados": {
-      "main": [
-        [
-          {
-            "node": "Exitoso o Error?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Exitoso o Error?": {
-      "main": [
-        [
-          {
-            "node": "Armar Notificacion Exito",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Armar Notificacion Error",
+            "node": "Formatear Respuesta",
             "type": "main",
             "index": 0
           }
@@ -225,13 +124,7 @@
       ]
     }
   },
-  "pinData": {},
   "settings": {
     "executionOrder": "v1"
-  },
-  "staticData": null,
-  "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2026-04-08T22:00:00.000Z",
-  "versionId": "1"
+  }
 }
