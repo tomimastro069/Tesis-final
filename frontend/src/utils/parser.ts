@@ -32,7 +32,9 @@ export function parseSecurityResults(rawData: any) {
     let risk = "Low";
     if (a.severidad) {
       const sevString = a.severidad.toLowerCase();
-      if (sevString.includes("high") || sevString.includes("alta")) {
+      if (sevString.includes("informational") || sevString.includes("informativo") || sevString.includes("informacional")) {
+        return; // Ignore informational alerts
+      } else if (sevString.includes("high") || sevString.includes("alta")) {
         high++; risk = "High";
       } else if (sevString.includes("medium") || sevString.includes("media")) {
         medium++; risk = "Medium";
@@ -46,7 +48,8 @@ export function parseSecurityResults(rawData: any) {
       const rcode = parseInt(a.riskcode || "0", 10);
       if (rcode === 3) { high++; risk = "High"; }
       else if (rcode === 2) { medium++; risk = "Medium"; }
-      else { low++; risk = "Low"; }
+      else if (rcode === 1) { low++; risk = "Low"; }
+      else { return; } // riskcode 0 is informational, ignore
     }
     
     a._parsedSeverity = risk;
@@ -91,7 +94,7 @@ export function parseSecurityResults(rawData: any) {
       description: "SQL Injection found by SQLMap",
       recommendation: "Use parameterized queries or prepared statements."
     })),
-    ...alerts.map((a: any) => ({
+    ...alerts.filter((a: any) => a._parsedSeverity).map((a: any) => ({
       id: Math.random().toString(),
       name: a.vulnerabilidad || a.name,
       severity: a._parsedSeverity,

