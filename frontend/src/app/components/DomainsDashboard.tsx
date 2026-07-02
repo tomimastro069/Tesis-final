@@ -119,7 +119,11 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
               <div style={{ flex: 1, background: "rgba(0,0,0,0.2)", borderRadius: "8px", padding: "12px" }}>
                 <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "4px" }}>ÚLTIMO ESCANEO</div>
                 <div style={{ fontSize: "14px", fontWeight: 600, color: "#cbd5e1" }}>
-                  {domain.lastScan ? new Date(domain.lastScan).toLocaleDateString() : "-"}
+                  {(() => {
+                    if (!domain.lastScan) return "-";
+                    const hasTimezone = /Z|[+-]\d{2}:\d{2}$/.test(domain.lastScan);
+                    return new Date(hasTimezone ? domain.lastScan : domain.lastScan + "Z").toLocaleDateString();
+                  })()}
                 </div>
               </div>
             </div>

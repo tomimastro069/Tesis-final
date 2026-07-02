@@ -12,6 +12,7 @@ import 'react-resizable/css/styles.css';
 import { ScanForm } from '../../components/ScanForm';
 import { MSDOSPrompt } from '../components/MSDOSPrompt';
 import { ReportsExplorer } from '../components/ReportsExplorer';
+import AboutProject from '../components/AboutProject';
 
 function DesktopContent() {
   const { windows, openWindow } = useWindows();
@@ -41,14 +42,14 @@ function DesktopContent() {
         >
           <div key="mi-pc">
             <DesktopIcon 
-              label="Mi PC"
-              icon="https://win98icons.alexmeub.com/icons/png/computer_explorer-5.png"
+              label="Acerca del Proyecto"
+              icon="https://win98icons.alexmeub.com/icons/png/help_book_big-0.png"
               onDoubleClick={() => {
                 openWindow({
-                  id: 'reports-explorer',
-                  title: 'Explorador de Reportes',
-                  icon: 'https://win98icons.alexmeub.com/icons/png/computer_explorer-5.png',
-                  component: <ReportsExplorer />
+                  id: 'about',
+                  title: 'Acerca del Proyecto',
+                  icon: 'https://win98icons.alexmeub.com/icons/png/help_book_big-0.png',
+                  component: <AboutProject />
                 });
               }}
             />

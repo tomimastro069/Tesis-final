@@ -4,6 +4,7 @@ import { StartMenu } from '../components/StartMenu';
 import { ScanForm } from '../../components/ScanForm';
 import { MSDOSPrompt } from '../components/MSDOSPrompt';
 import { ReportsExplorer } from '../components/ReportsExplorer';
+import AboutProject from '../components/AboutProject';
 
 export function Taskbar() {
   const { windows, focusWindow, minimizeWindow, restoreWindow, openWindow } = useWindows();
@@ -57,6 +58,16 @@ export function Taskbar() {
           <StartMenu 
             onClose={() => setIsStartOpen(false)} 
             items={[
+              {
+                label: 'Acerca del Proyecto',
+                icon: 'https://win98icons.alexmeub.com/icons/png/help_book_big-0.png',
+                onClick: () => openWindow({
+                  id: 'about',
+                  title: 'Acerca del Proyecto',
+                  icon: 'https://win98icons.alexmeub.com/icons/png/help_book_big-0.png',
+                  component: <AboutProject />
+                })
+              },
               {
                 label: 'Programas',
                 icon: 'https://win98icons.alexmeub.com/icons/png/directory_program_group-1.png',

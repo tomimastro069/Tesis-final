@@ -7,7 +7,7 @@ Soporta dos motores:
 
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 
 try:
     import psycopg2
@@ -175,7 +175,7 @@ def init_db():
 def create_scan(scan_id: str, target_url: str):
     conn = get_connection()
     cursor = conn.cursor()
-    now = datetime.now().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     if _is_postgres():
         cursor.execute(
             f"INSERT INTO {SCANS_HISTORY_TABLE} (scan_id, target_url, status, created_at, results_raw, is_active) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -337,7 +337,7 @@ def save_tested_words(target_url: str, words_list: list, wordlist_name: str = "d
     # Normalizar URL
     target_url = target_url.rstrip("/")
     
-    timestamp = datetime.now().isoformat()
+    timestamp = datetime.now(timezone.utc).isoformat()
     
     rows = [(target_url, wordlist_name, word, timestamp) for word in words_list]
 
@@ -379,7 +379,7 @@ def save_tested_sqlmap_url(url: str):
     """Guarda una URL como probada en SQLMap."""
     conn = get_connection()
     cursor = conn.cursor()
-    timestamp = datetime.now().isoformat()
+    timestamp = datetime.now(timezone.utc).isoformat()
     
     if _is_postgres():
         cursor.execute(
@@ -406,7 +406,7 @@ def save_vulnerable_url(url: str, tool: str, vulnerabilidad: str, severidad: str
     """
     conn = get_connection()
     cursor = conn.cursor()
-    now = datetime.now().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     
     if _is_postgres():
         cursor.execute(

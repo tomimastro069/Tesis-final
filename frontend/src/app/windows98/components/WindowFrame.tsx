@@ -12,8 +12,8 @@ interface WindowFrameProps {
 
 export function WindowFrame({ 
   id, 
-  defaultWidth = 600, 
-  defaultHeight = 400,
+  defaultWidth = 900, 
+  defaultHeight = 600,
   defaultX = 100,
   defaultY = 100
 }: WindowFrameProps) {
