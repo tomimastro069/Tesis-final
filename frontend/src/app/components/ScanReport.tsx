@@ -89,7 +89,7 @@ export function ScanReport({ domain }: { domain: Domain }) {
     data.score >= 85 ? "#10b981" : data.score >= 65 ? "#d97706" : data.score >= 45 ? "#ea580c" : "#dc2626";
 
   return (
-    <div style={{ padding: "24px 28px", maxWidth: "1400px" }}>
+    <div className="bg-[#0f172a] text-slate-200 min-h-full" style={{ padding: "24px 28px" }}>
       {/* Header controls inside report */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
         <div>

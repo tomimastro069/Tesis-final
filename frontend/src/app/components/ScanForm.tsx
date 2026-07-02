@@ -1,15 +1,9 @@
-import { useState } from "react";
-import { launchScan } from "../../services/api";
-import type { Domain, ScanRequest } from "../../services/api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import React, { useState } from "react";
+import { useScan } from "../windows98/context/ScanContext";
+import type { ScanRequest } from "../../services/api";
 
-export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSuccess: (domain: Domain) => void }) {
+export function ScanForm({ onScanStarted }: { onScanStarted: (scanId: string) => void }) {
+  const { startScan, activeScan } = useScan();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,115 +17,139 @@ export function ScanForm({ onCancel, onSuccess }: { onCancel: () => void, onSucc
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (activeScan) {
+      setError("Ya hay un análisis activo.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const res = await launchScan(formData);
-      const newDomain: Domain = {
-        id: Date.now().toString(),
-        target: formData.target,
-        scanId: res.scan_id,
-        lastScan: new Date().toISOString(),
-        score: null,
-        riskLevel: null,
-        status: "scanning"
-      };
-      onSuccess(newDomain);
+      const scanId = await startScan(formData);
+      onScanStarted(scanId);
     } catch (err: any) {
       setError(err.message || "Error al lanzar el análisis");
+    } finally {
       setLoading(false);
     }
   };
 
-  const inputStyle = {
-    width: "100%",
-    padding: "10px 14px",
-    background: "rgba(0, 0, 0, 0.2)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: "8px",
-    color: "#e2e8f0",
-    fontSize: "14px",
-    marginBottom: "16px"
-  };
+  const isBlocked = activeScan !== null;
 
   return (
-    <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "24px", borderRadius: "16px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
-      <h3 style={{ color: "#e2e8f0", fontSize: "18px", fontWeight: 600, marginBottom: "20px" }}>Nuevo Análisis de Seguridad</h3>
-      {error && <div style={{ padding: "12px", background: "rgba(220, 38, 38, 0.1)", border: "1px solid rgba(220, 38, 38, 0.2)", borderRadius: "8px", color: "#f87171", marginBottom: "16px", fontSize: "14px" }}>{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Dominio Objetivo (URL)</label>
-          <input 
-            type="url" 
-            required 
-            style={{...inputStyle, opacity: 0.5, cursor: "not-allowed"}}
-            value="http://dvwa"
-            disabled
-          />
-        </div>
+    <div className="bg-[#c0c0c0] p-4 h-full flex flex-col font-win98 text-black select-none">
+      <div className="mb-4">
+        <h3 className="text-sm font-bold mb-1">Configuración del Análisis</h3>
+        <p className="text-[11px] text-gray-700">Configure los parámetros para el escaneo de seguridad contra el dominio objetivo.</p>
+      </div>
 
-        <div>
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Cookie de Sesión (Opcional)</label>
-          <input 
-            type="text" 
-            placeholder="ej. PHPSESSID=123..; security=low" 
-            style={inputStyle}
-            value={formData.cookies}
-            onChange={(e) => setFormData({...formData, cookies: e.target.value})}
-          />
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 text-[11px] mb-3 win98-border-inset">
+          <strong>Error:</strong> {error}
         </div>
+      )}
 
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
-          <input 
-            type="checkbox" 
-            id="cleanCache"
-            checked={formData.clean_cache}
-            onChange={(e) => setFormData({...formData, clean_cache: e.target.checked})}
-            style={{ marginRight: "8px", width: "16px", height: "16px", accentColor: "#3b82f6" }}
+      {isBlocked ? (
+        <div className="flex-1 flex flex-col justify-center items-center bg-[#c0c0c0] p-4 text-center">
+          <img 
+            src="https://win98icons.alexmeub.com/icons/png/clock-0.png" 
+            alt="Reloj" 
+            className="w-12 h-12 mb-4 animate-pulse"
           />
-          <label htmlFor="cleanCache" style={{ fontSize: "13px", color: "#e2e8f0", cursor: "pointer" }}>
-            Limpiar la caché antes de empezar
-          </label>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-          <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Nivel de Análisis</label>
-            <Select value={formData.nivel} onValueChange={(val) => setFormData({...formData, nivel: val})}>
-              <SelectTrigger style={inputStyle}>
-                <SelectValue placeholder="Nivel de Análisis" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="small">Básico</SelectItem>
-                <SelectItem value="medium">Profundo</SelectItem>
-              </SelectContent>
-            </Select>
+          <span className="font-bold text-xs">Análisis en progreso...</span>
+          <span className="text-[11px] text-gray-700 mt-1">
+            {activeScan.target} ({activeScan.progress ?? 0}%)
+          </span>
+          <div className="w-48 h-4 bg-white border border-gray-400 mt-2 win98-border-inset relative overflow-hidden">
+            <div 
+              className="h-full bg-[#000080]" 
+              style={{ width: `${activeScan.progress ?? 0}%` }}
+            />
           </div>
+          <span className="text-[10px] text-gray-600 mt-2">{activeScan.progressMessage}</span>
+          
+          <p className="text-[10px] text-gray-500 max-w-[250px] mt-4">
+            La aplicación de escaneo se encuentra bloqueada mientras se ejecuta el análisis actual. Puede ver los detalles en la terminal de MS-DOS Prompt.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-3">
+          {/* Target */}
           <div>
-            <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px", fontWeight: 500 }}>Nivel SQLMap</label>
-            <Select value={formData.sqlmap_level} onValueChange={(val) => setFormData({...formData, sqlmap_level: val})}>
-              <SelectTrigger style={inputStyle}>
-                <SelectValue placeholder="Nivel SQLMap" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="basic">1 - Básico (Recomendado)</SelectItem>
-                <SelectItem value="fast_evidence">2 - Evidencia Rápida</SelectItem>
-                <SelectItem value="full_dump">3 - Extracción Completa (Lento)</SelectItem>
-              </SelectContent>
-            </Select>
+            <label className="block text-xs font-bold mb-1">Dominio Objetivo (URL)</label>
+            <input 
+              type="url" 
+              required 
+              className="w-full bg-[#dfdfdf] px-2 py-1 text-xs border border-gray-400 cursor-not-allowed outline-none select-none win98-border-inset"
+              value="http://dvwa"
+              disabled
+            />
           </div>
-        </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "16px" }}>
-          <button type="button" onClick={onCancel} style={{ padding: "8px 16px", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#cbd5e1", borderRadius: "8px", cursor: "pointer", fontWeight: 500 }}>
-            Cancelar
-          </button>
-          <button type="submit" disabled={loading} style={{ padding: "8px 16px", background: "linear-gradient(135deg, #06b6d4, #3b82f6)", border: "none", color: "white", borderRadius: "8px", cursor: "pointer", fontWeight: 600, opacity: loading ? 0.7 : 1 }}>
-            {loading ? 'Iniciando...' : 'Comenzar Análisis'}
-          </button>
-        </div>
-      </form>
+          {/* Cookies */}
+          <div>
+            <label className="block text-xs font-bold mb-1">Cookie de Sesión (Opcional)</label>
+            <input 
+              type="text" 
+              placeholder="PHPSESSID=your_session; security=low" 
+              className="w-full bg-white px-2 py-1 text-xs border border-gray-400 outline-none win98-border-inset"
+              value={formData.cookies}
+              onChange={(e) => setFormData({...formData, cookies: e.target.value})}
+            />
+          </div>
+
+          {/* Clean Cache Checkbox */}
+          <div className="flex items-center gap-2 mt-1">
+            <input 
+              type="checkbox" 
+              id="cleanCache"
+              checked={formData.clean_cache}
+              onChange={(e) => setFormData({...formData, clean_cache: e.target.checked})}
+              className="cursor-pointer"
+            />
+            <label htmlFor="cleanCache" className="text-xs cursor-pointer select-none">
+              Limpiar la caché antes de empezar (fuerza re-escaneo)
+            </label>
+          </div>
+
+          {/* Nivel y Nivel SQLMap */}
+          <div className="grid grid-cols-2 gap-3 mt-1">
+            <div>
+              <label className="block text-xs font-bold mb-1">Nivel de Análisis</label>
+              <select 
+                value={formData.nivel} 
+                onChange={(e) => setFormData({...formData, nivel: e.target.value})}
+                className="w-full bg-white px-1 py-[2px] text-xs border border-gray-400 outline-none win98-border-inset"
+              >
+                <option value="small">Básico (Wordlist chica)</option>
+                <option value="medium">Profundo (Wordlist mediana)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold mb-1">Nivel SQLMap</label>
+              <select 
+                value={formData.sqlmap_level} 
+                onChange={(e) => setFormData({...formData, sqlmap_level: e.target.value})}
+                className="w-full bg-white px-1 py-[2px] text-xs border border-gray-400 outline-none win98-border-inset"
+              >
+                <option value="basic">1 - Básico (Recomendado)</option>
+                <option value="fast_evidence">2 - Evidencia Rápida</option>
+                <option value="full_dump">3 - Extracción Completa (Lento)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-3 mt-auto pt-4 border-t border-[#dfdfdf]">
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="bg-[#c0c0c0] px-4 py-1 text-xs font-bold win98-border active:win98-border-inset outline-none cursor-pointer"
+            >
+              {loading ? 'Iniciando...' : 'Comenzar Análisis'}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

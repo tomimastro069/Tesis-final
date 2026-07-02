@@ -51,7 +51,7 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
 
       {showForm && (
         <div style={{ marginBottom: "32px" }}>
-          <ScanForm onCancel={() => setShowForm(false)} onSuccess={(domain) => { handleAddDomain(domain); setShowForm(false); }} />
+          <ScanForm onScanStarted={(scanId: string) => setShowForm(false)} />
         </div>
       )}
 
