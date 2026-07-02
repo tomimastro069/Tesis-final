@@ -18,3 +18,24 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+@layer components {
+  /* Classic Windows 98 Outward Border (for buttons and windows) */
+  .win98-border {
+    @apply shadow-[inset_1px_1px_0_#fff,inset_-1px_-1px_0_#000,inset_2px_2px_0_#dfdfdf,inset_-2px_-2px_0_#808080];
+  }
+  
+  /* Classic Windows 98 Inward Border (for pressed buttons or inputs) */
+  .win98-border-inset {
+    @apply shadow-[inset_1px_1px_0_#000,inset_-1px_-1px_0_#fff,inset_2px_2px_0_#808080,inset_-2px_-2px_0_#dfdfdf];
+  }
+
+  /* Classic Windows 98 Deep Inset (for content areas) */
+  .win98-border-deep {
+    @apply border border-gray-500 shadow-[inset_1px_1px_#000,inset_-1px_-1px_#fff];
+  }
+
+  /* Windows 98 specific font */
+  .font-win98 {
+    font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  }
+}
