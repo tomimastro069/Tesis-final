@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChartsSection } from "./ChartsSection";
 import { VulnerabilityTable, Vulnerability } from "./VulnerabilityTable";
-import { fetchScanResults } from "../../services/api";
-import { parseSecurityResults } from "../../utils/parser";
+import { useScanReport } from "../../hooks/useScanReport";
 import {
   Download,
   AlertCircle,
@@ -67,32 +66,7 @@ function ScoreRing({ score, color }: { score: number; color: string }) {
 import { Domain } from "../../services/api";
 
 export function ScanReport({ domain }: { domain: Domain }) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      if (!domain.scanId) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const result = await fetchScanResults(domain.scanId);
-        if (result && result.results) {
-          const parsed = parseSecurityResults(result.results);
-          setData(parsed);
-        } else {
-          setData(null);
-        }
-      } catch (e) {
-        console.error("Failed to load results", e);
-        setData(null);
-      }
-      setLoading(false);
-    }
-    loadData();
-  }, [domain]);
+  const { loading, data } = useScanReport(domain);
 
   if (loading) {
     return (

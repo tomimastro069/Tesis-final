@@ -118,3 +118,14 @@ export async function fetchAllScans(): Promise<Domain[]> {
     return [];
   }
 }
+
+export async function analyzeVulnerability(vulnData: any) {
+  const res = await fetch(`${API_URL}/api/n8n/analyze`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(vulnData)
+  });
+  if (!res.ok) throw new Error("Error en la respuesta del servidor");
+  const data = await res.json();
+  return data.data?.ai_suggestion || data.data?.text || JSON.stringify(data.data);
+}

@@ -1,99 +1,13 @@
 import { useState, useEffect } from "react";
 import { Plus, Shield, ArrowRight, Server, Trash2 } from "lucide-react";
 import { ScanForm } from "./ScanForm";
-import { fetchScanResults, fetchScanProgress, deleteScan, fetchAllScans } from "../../services/api";
-import { parseSecurityResults } from "../../utils/parser";
+import { useDomains } from "../../hooks/useDomains";
 import type { Domain } from "../../services/api";
 
 export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: Domain) => void }) {
-  const [domains, setDomains] = useState<Domain[]>([]);
+  const { domains, handleAddDomain, handleDeleteDomain } = useDomains();
   const [showForm, setShowForm] = useState(false);
 
-  const loadDomains = async () => {
-    const data = await fetchAllScans();
-    // Parsear resultados en el frontend si es necesario para riskLevel/score
-    const processed = data.map(d => {
-      if (d.status === 'completed' && d.rawResults) {
-        const parsed = parseSecurityResults(d.rawResults);
-        if (parsed) {
-          return { ...d, score: parsed.score, riskLevel: parsed.riskLevel };
-        }
-      }
-      return d;
-    });
-    setDomains(processed);
-  };
-
-  useEffect(() => {
-    loadDomains();
-  }, []);
-
-  // Polling para dominios en estado 'scanning'
-  useEffect(() => {
-    let interval: number;
-    const hasScanning = domains.some(d => d.status === 'scanning');
-    
-    if (hasScanning) {
-      interval = window.setInterval(async () => {
-        try {
-          const scanningDomains = domains.filter(d => d.status === 'scanning' && d.scanId);
-          for (const d of scanningDomains) {
-            const progressInfo = await fetchScanProgress(d.scanId!);
-            if (progressInfo) {
-              setDomains(prev => prev.map(pd => pd.id === d.id ? { ...pd, progress: progressInfo.percentage, progressMessage: progressInfo.message } : pd));
-            }
-
-            const results = await fetchScanResults(d.scanId!);
-            if (results && results.status === 'completed' && results.results) {
-              const parsed = parseSecurityResults(results.results);
-              if (parsed) {
-                setDomains(prev => {
-                  const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'completed' as const, score: parsed.score, riskLevel: parsed.riskLevel } : pd);
-                  return updated;
-                });
-              }
-            } else if (results && results.status === 'failed') {
-              setDomains(prev => {
-                const updated = prev.map(pd => pd.id === d.id ? { ...pd, status: 'error' as const } : pd);
-                return updated;
-              });
-            }
-          }
-        } catch (error) {
-          console.error("Error durante el polling:", error);
-        }
-      }, 3000); // Consulta cada 3 segundos
-    }
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [domains]);
-
-  const handleAddDomain = (domain: Domain) => {
-    const updated = [domain, ...domains];
-    setDomains(updated);
-    setShowForm(false);
-  };
-
-  const handleDeleteDomain = async (e: React.MouseEvent, domain: Domain) => {
-    e.stopPropagation();
-    if (!domain.scanId) {
-      const updated = domains.filter(d => d.id !== domain.id);
-      setDomains(updated);
-      return;
-    }
-    
-    if (window.confirm("¿Estás seguro de que quieres eliminar este dominio del panel?")) {
-      try {
-        await deleteScan(domain.scanId);
-        const updated = domains.filter(d => d.id !== domain.id);
-        setDomains(updated);
-      } catch (err) {
-        alert("Error al eliminar el dominio");
-      }
-    }
-  };
 
   const glassCard = {
     background: "rgba(255, 255, 255, 0.025)",
@@ -137,7 +51,7 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
 
       {showForm && (
         <div style={{ marginBottom: "32px" }}>
-          <ScanForm onCancel={() => setShowForm(false)} onSuccess={handleAddDomain} />
+          <ScanForm onCancel={() => setShowForm(false)} onSuccess={(domain) => { handleAddDomain(domain); setShowForm(false); }} />
         </div>
       )}
 
@@ -177,7 +91,7 @@ export function DomainsDashboard({ onSelectDomain }: { onSelectDomain: (domain: 
                 </div>
               </div>
               <button
-                onClick={(e) => handleDeleteDomain(e, domain)}
+                onClick={(e) => { e.stopPropagation(); handleDeleteDomain(domain); }}
                 style={{
                   background: "transparent",
                   border: "none",
