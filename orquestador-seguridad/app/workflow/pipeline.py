@@ -14,11 +14,11 @@ from app.scanners.zap import (
     agregar_urls_a_zap,
     limpiar_sesion_zap
 )
-from app.parsers.ffuf_parser import parsear_ffuf
 from app.parsers.zap_parser import parsear_spider, parsear_zap
-from app.parsers.sqlmap_parser import parsear_sqlmap
+from app.parsers.ffuf_parser import parsear_ffuf
+from app.parsers.sqlmap_parser import parsear_sqlmap, parsear_tablas_log_sqlmap
 from app.utils.results import consolidar_resultados 
-from app.db.database import init_db, save_vulnerable_url
+from app.db.database import init_db, save_vulnerable_url, save_sqlmap_tables
 
 from app.config import settings
 
@@ -327,6 +327,21 @@ def run_parser_pipeline(resultado_escaneo):
     ffuf_parseado = parsear_ffuf(ffuf_crudo)
 
     sqlmap_parseado = parsear_sqlmap(sqlmap_crudo)
+
+    # Parsear tablas de SQLMap desde el log crudo si existe
+    try:
+        from app.config import settings
+        log_path = os.path.join(settings.OUTPUT_DIR, "raw", "sqlmap_bg.log")
+        if os.path.exists(log_path):
+            tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
+            if tablas_extraidas:
+                sqlmap_parseado["tablas_extraidas"] = tablas_extraidas
+                target_url = "URL_DESCONOCIDA"
+                if "vulnerabilidades" in sqlmap_parseado and len(sqlmap_parseado["vulnerabilidades"]) > 0:
+                    target_url = sqlmap_parseado["vulnerabilidades"][0]["url"]
+                save_sqlmap_tables(target_url, tablas_extraidas)
+    except Exception as e:
+        print(f"[!] Error al parsear o guardar tablas de SQLMap: {e}")
 
     #Consolidar los 3 resultados en una sola lista sin duplicados
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)

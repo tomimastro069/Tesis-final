@@ -101,6 +101,32 @@ def _generar_contenido_markdown(resultados):
             md.append(f"- **Solución:** <p>Use parameterized queries (prepared statements) instead of string concatenation for SQL queries. Use stored procedures. Apply least privilege to the database account.</p>")
             md.append("\n---")
             
+        tablas_extraidas = sqlmap_data.get("tablas_extraidas", {})
+        if tablas_extraidas:
+            md.append("\n### Tablas Extraídas de la Base de Datos")
+            for db_name, tables in tablas_extraidas.items():
+                md.append(f"\n#### Base de Datos: `{db_name}`")
+                for table_name, data in tables.items():
+                    md.append(f"**Tabla:** `{table_name}`")
+                    cols = data.get("columns", [])
+                    rows = data.get("rows", [])
+                    
+                    if cols:
+                        header = "| " + " | ".join(cols) + " |"
+                        separator = "| " + " | ".join(["---"] * len(cols)) + " |"
+                        md.append(header)
+                        md.append(separator)
+                        
+                        # Limitar a 10 filas para no saturar
+                        for row in rows[:10]:
+                            row_str = "| " + " | ".join(row) + " |"
+                            md.append(row_str)
+                            
+                        if len(rows) > 10:
+                            md.append(f"| ... | *(y {len(rows) - 10} filas más)* | ... |")
+                    md.append("\n")
+            md.append("\n---")
+            
     # Detalle Spider (Opcional, podría ser muy largo)
     spider_data = resultados.get("spider", {})
     urls_spider = spider_data.get("urls", [])
@@ -168,6 +194,24 @@ def _generar_contenido_texto(resultados):
                 for line in extra_info.strip().split("\n"):
                     txt.append(f"       {line}")
                     
+            txt.append("-" * 50)
+            
+        tablas_extraidas = sqlmap_data.get("tablas_extraidas", {})
+        if tablas_extraidas:
+            txt.append("\n[ TABLAS EXTRAÍDAS DE LA BASE DE DATOS ]")
+            for db_name, tables in tablas_extraidas.items():
+                txt.append(f"\n>> Base de Datos: {db_name}")
+                for table_name, data in tables.items():
+                    txt.append(f"   Tabla: {table_name}")
+                    cols = data.get("columns", [])
+                    rows = data.get("rows", [])
+                    
+                    if cols:
+                        txt.append(f"   Columnas: {', '.join(cols)}")
+                        for row in rows[:10]:
+                            txt.append(f"   - {', '.join(row)}")
+                        if len(rows) > 10:
+                            txt.append(f"   ... (y {len(rows) - 10} filas más)")
             txt.append("-" * 50)
             
     # Spider

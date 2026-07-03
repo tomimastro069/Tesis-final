@@ -184,3 +184,48 @@ Necesito ayuda con: [DESCRIBÍ ACÁ LO QUE NECESITÁS]
 ---
 
 *Última actualización: 19 de febrero de 2026*
+
+Para ver un listado limpio de qué bases de datos y qué tablas se han extraído (sin ver todo el JSON gigante de las filas y columnas), podés ejecutar este comando que filtra los duplicados:
+
+bash
+docker exec -it security-db psql -U security_user -d security_history -c "SELECT DISTINCT db_name, table_name FROM sqlmap_tables_history;"
+
+para ver la tabla completa de usuarios: 
+docker exec -it security-db psql -U security_user -d security_history -c "
+SELECT 
+  fila->>0 AS user_id,
+  fila->>1 AS username,
+  fila->>2 AS avatar,
+  fila->>3 AS password,
+  fila->>4 AS last_name,
+  fila->>5 AS first_name,
+  fila->>6 AS last_login,
+  fila->>7 AS failed_login
+FROM (
+  SELECT json_array_elements(rows_data::json) AS fila 
+  FROM (
+    SELECT rows_data 
+    FROM sqlmap_tables_history 
+    WHERE table_name = 'users' 
+    ORDER BY timestamp DESC 
+    LIMIT 1
+  ) latest
+) sub;"
+
+para ver la tabla completa guestbook:
+
+docker exec -it security-db psql -U security_user -d security_history -c "
+SELECT 
+  fila->>0 AS comment_id,
+  fila->>1 AS name,
+  fila->>2 AS comment
+FROM (
+  SELECT json_array_elements(rows_data::json) AS fila 
+  FROM (
+    SELECT rows_data 
+    FROM sqlmap_tables_history 
+    WHERE table_name = 'guestbook' 
+    ORDER BY timestamp DESC 
+    LIMIT 1
+  ) latest
+) sub;"

@@ -17,6 +17,7 @@ except ImportError:  # pragma: no cover - se resuelve por requirements en runtim
 
 TABLE_NAME = "ffuf_history"
 SQLMAP_TABLE = "sqlmap_history"
+SQLMAP_TABLES_HISTORY = "sqlmap_tables_history"
 VULN_TABLE = "vulnerable_urls"
 SCANS_HISTORY_TABLE = "scans_history"
 DB_ENGINE = os.getenv("DB_ENGINE", "sqlite").lower()
@@ -102,6 +103,19 @@ def init_db():
             )
             """
         )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SQLMAP_TABLES_HISTORY} (
+                id SERIAL PRIMARY KEY,
+                target_url TEXT NOT NULL,
+                db_name TEXT NOT NULL,
+                table_name TEXT NOT NULL,
+                columns_data TEXT NOT NULL,
+                rows_data TEXT NOT NULL,
+                timestamp TEXT NOT NULL
+            )
+            """
+        )
     else:
         cursor.execute(
             f"""
@@ -150,6 +164,19 @@ def init_db():
                 created_at TEXT NOT NULL,
                 results_raw TEXT,
                 is_active BOOLEAN DEFAULT TRUE
+            )
+            """
+        )
+        cursor.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {SQLMAP_TABLES_HISTORY} (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                target_url TEXT NOT NULL,
+                db_name TEXT NOT NULL,
+                table_name TEXT NOT NULL,
+                columns_data TEXT NOT NULL,
+                rows_data TEXT NOT NULL,
+                timestamp TEXT NOT NULL
             )
             """
         )
@@ -459,6 +486,72 @@ def get_vulnerable_urls(tool: str = None) -> set:
     conn.close()
     return urls
 
+import json
+
+def save_sqlmap_tables(target_url: str, tables_data: dict):
+    """
+    Guarda las tablas extraídas de SQLMap en la base de datos.
+    `tables_data` es el diccionario retornado por `parsear_tablas_log_sqlmap`.
+    """
+    if not tables_data:
+        return
+        
+    conn = get_connection()
+    cursor = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+    
+    rows_to_insert = []
+    for db_name, tables in tables_data.items():
+        for table_name, data in tables.items():
+            cols_json = json.dumps(data.get("columns", []))
+            rows_json = json.dumps(data.get("rows", []))
+            rows_to_insert.append((target_url, db_name, table_name, cols_json, rows_json, now))
+
+    if _is_postgres():
+        cursor.executemany(
+            f"""
+            INSERT INTO {SQLMAP_TABLES_HISTORY} (target_url, db_name, table_name, columns_data, rows_data, timestamp)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            rows_to_insert
+        )
+    else:
+        cursor.executemany(
+            f"""
+            INSERT INTO {SQLMAP_TABLES_HISTORY} (target_url, db_name, table_name, columns_data, rows_data, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            rows_to_insert
+        )
+        
+    conn.commit()
+    conn.close()
+
+def get_sqlmap_tables_history(target_url: str) -> list:
+    """
+    Recupera el historial de tablas extraídas para un target.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    if _is_postgres():
+        cursor.execute(f"SELECT db_name, table_name, columns_data, rows_data, timestamp FROM {SQLMAP_TABLES_HISTORY} WHERE target_url = %s ORDER BY timestamp DESC", (target_url,))
+    else:
+        cursor.execute(f"SELECT db_name, table_name, columns_data, rows_data, timestamp FROM {SQLMAP_TABLES_HISTORY} WHERE target_url = ? ORDER BY timestamp DESC", (target_url,))
+        
+    rows = cursor.fetchall()
+    conn.close()
+    
+    result = []
+    for row in rows:
+        result.append({
+            "db_name": row[0],
+            "table_name": row[1],
+            "columns": json.loads(row[2]),
+            "rows": json.loads(row[3]),
+            "timestamp": row[4]
+        })
+    return result
 
 def limpiar_cache_completa():
     """
@@ -468,7 +561,7 @@ def limpiar_cache_completa():
     conn = get_connection()
     cursor = conn.cursor()
     
-    tablas = [TABLE_NAME, SQLMAP_TABLE, VULN_TABLE]
+    tablas = [TABLE_NAME, SQLMAP_TABLE, VULN_TABLE, SQLMAP_TABLES_HISTORY]
     
     if _is_postgres():
         tablas_str = ", ".join(tablas)

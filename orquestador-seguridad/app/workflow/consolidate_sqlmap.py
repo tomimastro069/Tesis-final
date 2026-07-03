@@ -5,8 +5,9 @@ import traceback
 from datetime import datetime
 
 from app.config import settings
-from app.db.database import save_vulnerable_url, init_db
+from app.db.database import save_vulnerable_url, init_db, save_sqlmap_tables
 from app.reports.generator import generar_reporte
+from app.parsers.sqlmap_parser import parsear_tablas_log_sqlmap
 
 def parse_sqlmap_log_content(content: str) -> list:
     """
@@ -65,9 +66,9 @@ def parse_sqlmap_log_content(content: str) -> list:
             entries_count = db_table.group(3)
             extra_info_parts.append(f"Volcado de Tabla: {db_name}.{table_name} ({entries_count} registros)")
         
-        # Detectar tablas ASCII-art
-        # Busca patrones tipo +-------+------+ y las filas intermedias
-        tables = re.findall(r"(\+[-+]+\+\n(?:\|.*?\|\n)+\+[-+]+\+)", section_text)
+        # Detectar tablas ASCII-art de forma robusta sin truncar las filas
+        # Permite líneas con '|' y separadores '+' dentro de la misma tabla
+        tables = re.findall(r"(\+[-+]+\+\n(?:\|.*?\|\n|\+[-+]+\+\n)+\+[-+]+\+)", section_text)
         for t in tables:
             extra_info_parts.append(t)
             
@@ -87,11 +88,11 @@ def parse_sqlmap_log_content(content: str) -> list:
         if current_db_match:
             extra_info_parts.append(f"Base de datos actual: {current_db_match.group(1)}")
             
-        # Si encontramos inyecciones para esta URL, les agregamos la información extra
+        # Si encontramos inyecciones para esta URL, les agregamos la información extra solo a la primera
         if url_vulns:
             extra_info_str = "\n\n".join(extra_info_parts) if extra_info_parts else ""
-            for v in url_vulns:
-                if extra_info_str:
+            for idx, v in enumerate(url_vulns):
+                if idx == 0 and extra_info_str:
                     v["extra_info"] = extra_info_str
                 vulnerabilidades.append(v)
                 
@@ -141,6 +142,18 @@ def main():
                 "vulnerabilidades": vulnerabilidades
             }
             
+            # Integrar tablas extraídas (Parser de tablas estructuradas)
+            try:
+                tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
+                if tablas_extraidas:
+                    sqlmap_parsed["tablas_extraidas"] = tablas_extraidas
+                    target_url = "URL_DESCONOCIDA"
+                    if vulnerabilidades:
+                        target_url = vulnerabilidades[0]["url"]
+                    save_sqlmap_tables(target_url, tablas_extraidas)
+            except Exception as e:
+                print(f"[!] Error al parsear o guardar tablas en consolidación: {e}")
+                
             reporte["sqlmap"] = sqlmap_parsed
             
             # Recalcular el resumen
