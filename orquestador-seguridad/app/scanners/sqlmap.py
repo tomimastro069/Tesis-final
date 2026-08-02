@@ -167,7 +167,23 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
 
     if not urls_con_params:
         print("    No se encontraron URLs con parámetros para SQLMap.")
-        return []
+        # Igual devolvemos cache_info (todo en cero) en vez de una lista vacía: si no,
+        # el frontend no tiene forma de distinguir "no había nada para testear" de
+        # "no se guardó info de caché" y termina sin mostrar nada en el badge.
+        cache_info = {
+            "total_candidatas": 0,
+            "total_testeadas": 0,
+            "omitidas_por_cache": [],
+            "retesteadas_por_vulnerable_previa": []
+        }
+        return [{
+            "url": "BACKGROUND_EXECUTION",
+            "stdout": "No se encontraron URLs con parámetros para testear con SQLMap en este análisis.",
+            "stderr": "",
+            "success": True,
+            "timeout": False,
+            "cache_info": cache_info
+        }]
 
     # Si ya hay otra corrida de SQLMap en segundo plano activa, no lanzamos una
     # segunda: compartirían el mismo log/script y se corromperían entre sí. Mejor

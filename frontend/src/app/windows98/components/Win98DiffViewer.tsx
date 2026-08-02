@@ -200,7 +200,7 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
           <span>{fileNameFor(domainA)}</span>
           <span className="text-gray-600">— {formatDate(domainA.lastScan)}</span>
         </div>
-        <Win98CacheBadge cacheInfo={dataA.sqlmapCacheInfo} label="A" />
+        <Win98CacheBadge sqlmapCacheInfo={dataA.sqlmapCacheInfo} ffufCacheInfo={dataA.ffufCacheInfo} label="A" />
 
         <div className="flex items-center gap-2">
           <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" className="w-4 h-4" alt="B" />
@@ -208,7 +208,7 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
           <span>{fileNameFor(domainB)}</span>
           <span className="text-gray-600">— {formatDate(domainB.lastScan)}</span>
         </div>
-        <Win98CacheBadge cacheInfo={dataB.sqlmapCacheInfo} label="B" />
+        <Win98CacheBadge sqlmapCacheInfo={dataB.sqlmapCacheInfo} ffufCacheInfo={dataB.ffufCacheInfo} label="B" />
 
         <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
 
@@ -360,6 +360,15 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {diff.tableLines.length === 0 && (dataA.sqlmapLevel !== "full_dump" || dataB.sqlmapLevel !== "full_dump") && (
+        <div className="win98-border-deep bg-[#ffffe0] flex-shrink-0 px-2 py-1 text-[11px] text-gray-700">
+          Sin comparación de tablas: {dataA.sqlmapLevel !== "full_dump" && `A usó modo "${dataA.sqlmapLevel ?? "desconocido"}"`}
+          {dataA.sqlmapLevel !== "full_dump" && dataB.sqlmapLevel !== "full_dump" && " y "}
+          {dataB.sqlmapLevel !== "full_dump" && `B usó modo "${dataB.sqlmapLevel ?? "desconocido"}"`}
+          {" "}— solo el modo de extracción completa (--dump) trae tablas con columnas y filas para comparar.
         </div>
       )}
 

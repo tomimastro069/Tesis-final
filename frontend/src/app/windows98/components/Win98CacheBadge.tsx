@@ -31,7 +31,20 @@ export function Win98CacheBadge({
   ffufCacheInfo: FfufCacheInfo | null;
   label?: string;
 }) {
-  if (!sqlmapCacheInfo && !ffufCacheInfo) return null;
+  if (!sqlmapCacheInfo && !ffufCacheInfo) {
+    // Análisis viejos, guardados antes de que existiera este seguimiento de caché,
+    // no tienen esta info en absoluto (no es que no se haya usado caché: no se
+    // registró en su momento). Mostramos un aviso neutral en vez de no mostrar nada,
+    // para no dar a entender que no hubo caché cuando en realidad no lo sabemos.
+    return (
+      <div className="win98-border-deep px-2 py-1.5 flex items-center gap-2 bg-[#c0c0c0] text-black">
+        <span className="text-2xl leading-none flex-shrink-0">❔</span>
+        <span className="text-[11px] font-bold">
+          {label ? `${label}: ` : ""}Sin datos de caché para este análisis (es un análisis anterior a esta función; no se registró en su momento).
+        </span>
+      </div>
+    );
+  }
 
   const sqlmapOmitidoPorCompleto = !!sqlmapCacheInfo?.sqlmapEnCurso;
   const sqlmapUsoCache = !!sqlmapCacheInfo && (sqlmapCacheInfo.sqlmapEnCurso || sqlmapCacheInfo.omitidasPorCache.length > 0);

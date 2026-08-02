@@ -109,7 +109,7 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
 
               <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
 
-              <Win98CacheBadge cacheInfo={data.sqlmapCacheInfo} />
+              <Win98CacheBadge sqlmapCacheInfo={data.sqlmapCacheInfo} ffufCacheInfo={data.ffufCacheInfo} />
 
               <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
 
@@ -315,13 +315,30 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
           <div className="flex flex-col h-full overflow-hidden">
             <p className="text-xs mb-2 font-bold">Tablas de Base de Datos Volcadas (SQLMap --dump)</p>
             {(!data.sqlmapTables || data.sqlmapTables.length === 0) ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 win98-border-deep bg-white">
+              <div className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 win98-border-deep bg-white text-center px-6">
                 <img
                   src="https://win98icons.alexmeub.com/icons/png/directory_open_file_cabinet-2.png"
                   alt="Sin datos"
                   className="w-8 h-8 mb-2 opacity-50 grayscale"
                 />
-                <span>No se extrajeron tablas de bases de datos en este análisis.</span>
+                {data.sqlmapLevel === "basic" ? (
+                  <>
+                    <span className="font-bold">No hay tablas: el análisis usó el modo BÁSICO de SQLMap.</span>
+                    <span className="mt-1">Este modo solo detecta SI un parámetro es inyectable, no extrae nombres ni contenido de bases de datos. Es esperable que no aparezca nada acá.</span>
+                  </>
+                ) : data.sqlmapLevel === "fast_evidence" ? (
+                  <>
+                    <span className="font-bold">No hay tablas completas: el análisis usó el modo INTERMEDIO de SQLMap.</span>
+                    <span className="mt-1">Este modo solo trae nombres de bases de datos/tablas/usuario (evidencia rápida), no vuelca el contenido de las tablas. Para ver filas y columnas hace falta correr el modo de extracción completa (--dump).</span>
+                  </>
+                ) : data.sqlmapLevel === "full_dump" ? (
+                  <>
+                    <span className="font-bold">No se extrajeron tablas en este análisis.</span>
+                    <span className="mt-1">Se usó el modo de EXTRACCIÓN COMPLETA (--dump), así que si no aparece nada acá es porque SQLMap no encontró inyecciones explotables para volcar datos, no por una limitación del modo.</span>
+                  </>
+                ) : (
+                  <span>No se extrajeron tablas de bases de datos en este análisis.</span>
+                )}
               </div>
             ) : (
               <div className="flex-1 flex flex-col gap-4 overflow-auto pr-1">
