@@ -136,23 +136,42 @@ export function parseSecurityResults(rawData: any) {
     vulnerabilidadesSqlmap: resumenCrudo.vulnerabilidades_sqlmap ?? 0
   };
 
-  // Info de caché de SQLMap: URLs que NO se volvieron a testear en este análisis porque
-  // ya habían sido marcadas como "no atacables" en un escaneo anterior, y URLs que sí se
-  // re-testearon siempre por haber sido vulnerables antes. Importante para no confundir
-  // "no aparece en este análisis" con "se corrigió" al comparar dos análisis.
-  const cacheInfoCruda = rawData.sqlmap?.cache_info || rawData.sqlmap_raw?.cache_info || null;
-  const sqlmapCacheInfo = cacheInfoCruda
+  // Info de caché GENERAL del escaneo. No es algo exclusivo de SQLMap: FFUF también
+  // cachea palabras ya probadas por wordlist, y SQLMap cachea URLs ya probadas y no
+  // vulnerables. ZAP (Spider + Active Scan) no usa caché, siempre corre completo.
+  //
+  // rawData.cache_info es la ubicación nueva (top-level, { ffuf, sqlmap }). Se deja
+  // como fallback rawData.sqlmap?.cache_info por si el registro es de un análisis
+  // guardado antes de este cambio.
+  const cacheInfoGeneral = rawData.cache_info || null;
+  const sqlmapCacheCruda = cacheInfoGeneral?.sqlmap || rawData.sqlmap?.cache_info || rawData.sqlmap_raw?.cache_info || null;
+  const ffufCacheCruda = cacheInfoGeneral?.ffuf || null;
+
+  const sqlmapCacheInfo = sqlmapCacheCruda
     ? {
-        totalCandidatas: cacheInfoCruda.total_candidatas ?? 0,
-        totalTesteadas: cacheInfoCruda.total_testeadas ?? 0,
-        omitidasPorCache: cacheInfoCruda.omitidas_por_cache || [],
-        retesteadasPorVulnerablePrevia: cacheInfoCruda.retesteadas_por_vulnerable_previa || [],
+        totalCandidatas: sqlmapCacheCruda.total_candidatas ?? 0,
+        totalTesteadas: sqlmapCacheCruda.total_testeadas ?? 0,
+        omitidasPorCache: sqlmapCacheCruda.omitidas_por_cache || [],
+        retesteadasPorVulnerablePrevia: sqlmapCacheCruda.retesteadas_por_vulnerable_previa || [],
         // true si este análisis se omitió por completo porque otro escaneo ya tenía
         // SQLMap corriendo en segundo plano al mismo tiempo (evita datos corruptos
         // por dos corridas pisándose el mismo log/script).
-        sqlmapEnCurso: !!cacheInfoCruda.sqlmap_en_curso
+        sqlmapEnCurso: !!sqlmapCacheCruda.sqlmap_en_curso
       }
     : null;
+
+  const ffufCacheInfo = ffufCacheCruda
+    ? {
+        totalCandidatas: ffufCacheCruda.total_candidatas ?? 0,
+        totalTesteadas: ffufCacheCruda.total_testeadas ?? 0,
+        omitidasPorCache: ffufCacheCruda.omitidas_por_cache ?? 0
+      }
+    : null;
+
+  // Nivel de SQLMap usado en este análisis. Determina qué se puede esperar de tablas:
+  // "basic" no extrae nada, "fast_evidence" solo trae nombres de BD/tablas/usuario,
+  // "full_dump" es el único que trae las tablas completas (columnas + filas).
+  const sqlmapLevel: string | null = rawData.sqlmap_level ?? null;
 
   const scanners = [];
   if (rawData.zap || rawData.zap_raw) scanners.push("OWASP ZAP");
@@ -212,6 +231,8 @@ export function parseSecurityResults(rawData: any) {
     sqlmapTables,
     generalStats,
     sqlmapCacheInfo,
+    ffufCacheInfo,
+    sqlmapLevel,
     scanMetrics: {
       scanners: scanners.join(", ") || "Desconocido",
       uniqueEndpoints,

@@ -302,7 +302,9 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
         "spider_raw": spider_urls,
         "zap_raw": reporte_zap_crudo,  # Datos crudos de ZAP
         "sqlmap_raw": sqlmap_raw,      # Datos crudos de SQLMap
-        "ffuf_raw": ffuf_data          # Datos crudos de FFUF
+        "ffuf_raw": ffuf_data,         # Datos crudos de FFUF
+        "ffuf_cache_info": ffuf_raw.get("cache_info"),  # Info de caché de FFUF (palabras testeadas/omitidas)
+        "sqlmap_level": sqlmap_level   # Nivel de SQLMap usado (basic/fast_evidence/full_dump), para saber qué esperar de tablas
     }
     
     print(f"--- Ejecución finalizada. Datos crudos retornados en memoria ---")
@@ -328,15 +330,6 @@ def run_parser_pipeline(resultado_escaneo):
 
     sqlmap_parseado = parsear_sqlmap(sqlmap_crudo)
 
-    # Propagar la info de caché de SQLMap (qué URLs no se volvieron a testear porque ya
-    # estaban marcadas como "no atacables" y cuáles se re-testearon por ser vulnerables
-    # antes). Se calcula de forma síncrona en run_sqlmap_batch, antes de lanzar el
-    # proceso en segundo plano, así que ya está disponible acá.
-    if isinstance(sqlmap_crudo, list) and len(sqlmap_crudo) > 0 and isinstance(sqlmap_crudo[0], dict):
-        cache_info = sqlmap_crudo[0].get("cache_info")
-        if cache_info:
-            sqlmap_parseado["cache_info"] = cache_info
-
     # NOTA: acá NO se intenta leer sqlmap_bg.log ni tablas_extraidas. En este punto
     # SQLMap recién se lanzó en segundo plano (run_sqlmap_batch ya volvió) así que el
     # log todavía no tiene resultados reales, o peor, puede tener los de una corrida
@@ -347,6 +340,26 @@ def run_parser_pipeline(resultado_escaneo):
 
     #Consolidar los 3 resultados en una sola lista sin duplicados
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
+
+    # Caché general del escaneo: NO es algo específico de SQLMap. FFUF también cachea
+    # palabras ya probadas por wordlist, y SQLMap cachea URLs ya probadas y no
+    # vulnerables. ZAP (Spider + Active Scan) no usa caché: siempre corre completo.
+    # Se calcula todo de forma síncrona (antes de lanzar SQLMap en segundo plano), así
+    # que ya está disponible acá.
+    sqlmap_cache_info = None
+    if isinstance(sqlmap_crudo, list) and len(sqlmap_crudo) > 0 and isinstance(sqlmap_crudo[0], dict):
+        sqlmap_cache_info = sqlmap_crudo[0].get("cache_info")
+
+    resultados_unificados["cache_info"] = {
+        "ffuf": resultado_escaneo.get("ffuf_cache_info"),
+        "sqlmap": sqlmap_cache_info
+    }
+
+    # Nivel de SQLMap usado en este análisis (basic/fast_evidence/full_dump). El
+    # frontend lo necesita para explicar por qué no hay tablas: puede ser que no se
+    # haya testeado nada nuevo (caché), o que el nivel elegido directamente no
+    # extraiga tablas (solo "full_dump" hace --dump).
+    resultados_unificados["sqlmap_level"] = resultado_escaneo.get("sqlmap_level")
 
     # --- Marcar URLs vulnerables para re-testeo automático ---
     # ZAP: guardar cada alerta encontrada

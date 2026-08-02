@@ -43,17 +43,27 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
     
     # Obtener palabras ya probadas para este target CON ESTA WORDLIST específica
     tested_words = get_tested_words(target_url, wordlist_name)
-    
+
     # Filtrar palabras no probadas
     untested_words = all_words - tested_words
-    
+    omitidas_por_cache = all_words - untested_words
+
+    # Info de caché: se calcula siempre, para que el frontend sepa cuánto de la
+    # wordlist realmente se probó en este análisis vs. cuánto vino de caché.
+    cache_info = {
+        "total_candidatas": len(all_words),
+        "total_testeadas": len(untested_words),
+        "omitidas_por_cache": len(omitidas_por_cache)
+    }
+
     # Si no hay palabras nuevas, omitir escaneo
     if not untested_words:
         return {
             "output_file": None,
             "stdout": "",
             "stderr": "Todas las palabras ya fueron probadas",
-            "skipped": True
+            "skipped": True,
+            "cache_info": cache_info
         }
     
     # Crear wordlist temporal con palabras no probadas
@@ -101,5 +111,6 @@ def run_ffuf(target_url: str, wordlist_path: str, output_dir: str, cookies: str 
         "output_file": output_file,
         "stdout": result.get("stdout"),
         "stderr": result.get("stderr"),
-        "skipped": False
+        "skipped": False,
+        "cache_info": cache_info
     }
