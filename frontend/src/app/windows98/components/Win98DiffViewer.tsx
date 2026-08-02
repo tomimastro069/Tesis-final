@@ -248,37 +248,71 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
         ))}
       </div>
 
-      {/* Panel de diff estilo terminal / git diff */}
-      <div className="flex-1 bg-white win98-border-deep overflow-auto font-mono text-[11px] leading-tight">
-        <div className="bg-[#000080] text-white px-2 py-1 sticky top-0">
-          <div>--- a/{fileNameFor(domainA)}</div>
-          <div>+++ b/{fileNameFor(domainB)}</div>
-        </div>
+      {/* Listado de URLs/vulnerabilidades, mismo estilo que el reporte individual, con las diferencias marcadas */}
+      <div className="flex-1 bg-white m-[2px] border-2 border-l-[#808080] border-t-[#808080] border-r-white border-b-white overflow-auto block text-xs">
+        <table className="w-full text-left border-collapse whitespace-nowrap">
+          <thead className="sticky top-0 bg-[#c0c0c0] z-10">
+            <tr className="text-black">
+              <th className="font-normal py-1 px-2 border-r border-[#808080] win98-border w-14 text-center">Estado</th>
+              <th className="font-normal py-1 px-2 border-r border-[#808080] win98-border">Name</th>
+              <th className="font-normal py-1 px-2 border-r border-[#808080] win98-border">Severity</th>
+              <th className="font-normal py-1 px-2 border-r border-[#808080] win98-border">Type</th>
+              <th className="font-normal py-1 px-2 win98-border">Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibleLines.map((line) => {
+              const isAdded = line.status === "added";
+              const isCached = !!line.cacheAmbiguous;
+              const isRemoved = line.status === "removed" && !isCached;
+              const rowBg = isCached
+                ? "bg-[#ffffc0] text-[#806000]"
+                : isAdded
+                ? "bg-[#d6ffd6] text-[#004d00]"
+                : isRemoved
+                ? "bg-[#ffd6d6] text-[#800000]"
+                : "bg-white text-gray-700";
+              const badge = isCached ? "⚠" : isAdded ? "+" : isRemoved ? "-" : "=";
+              const badgeTitle = isCached
+                ? "Sin confirmar: no se volvió a testear por caché"
+                : isAdded
+                ? "Nueva en B"
+                : isRemoved
+                ? "Corregida (ya no aparece en B)"
+                : "Sin cambios entre A y B";
 
-        {visibleLines.length === 0 && (
-          <div className="p-3 text-gray-500">No hay diferencias que mostrar para este filtro.</div>
-        )}
-
-        {visibleLines.map((line) => {
-          const prefix = line.cacheAmbiguous ? "?" : line.status === "added" ? "+" : line.status === "removed" ? "-" : " ";
-          const bg = line.cacheAmbiguous
-            ? "bg-[#ffffc0] text-[#806000]"
-            : line.status === "added"
-            ? "bg-[#d6ffd6] text-[#004d00]"
-            : line.status === "removed"
-            ? "bg-[#ffd6d6] text-[#800000]"
-            : "bg-white text-gray-700";
-          return (
-            <div key={line.key} className={`px-2 py-[1px] whitespace-nowrap ${bg}`}>
-              <span className="select-none mr-2 font-bold">{prefix}</span>
-              <span>
-                [{line.vuln.type}] {line.vuln.name} — <span className="font-bold underline decoration-dotted">{line.vuln.location}</span>
-                {line.count > 1 ? ` (x${line.count})` : ""}
-                {line.cacheAmbiguous ? " (no re-testeada en B por caché — sin confirmar)" : ""}
-              </span>
-            </div>
-          );
-        })}
+              return (
+                <tr key={line.key} className={`${rowBg} hover:bg-[#000080] hover:text-white`}>
+                  <td className="py-1 px-2 border-r border-dotted border-gray-300 text-center font-bold" title={badgeTitle}>
+                    {badge}
+                  </td>
+                  <td className="py-1 px-2 border-r border-dotted border-gray-300">
+                    <div className="flex items-center gap-1 overflow-hidden text-ellipsis max-w-[220px]">
+                      <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" className="w-4 h-4 flex-shrink-0" alt="icon" />
+                      <span>
+                        {line.vuln.name}
+                        {line.count > 1 ? ` (x${line.count})` : ""}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-1 px-2 border-r border-dotted border-gray-300">{line.vuln.severity}</td>
+                  <td className="py-1 px-2 border-r border-dotted border-gray-300 truncate max-w-[140px]">{line.vuln.type}</td>
+                  <td className="py-1 px-2 font-bold truncate max-w-[260px]" title={line.vuln.location}>
+                    {line.vuln.location}
+                    {isCached && <span className="ml-1 font-normal italic whitespace-normal">(no re-testeada en B — caché)</span>}
+                  </td>
+                </tr>
+              );
+            })}
+            {visibleLines.length === 0 && (
+              <tr>
+                <td colSpan={5} className="py-4 text-center text-gray-500 hover:bg-transparent hover:text-gray-500">
+                  No hay diferencias que mostrar para este filtro.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Diff de tablas de base de datos volcadas por SQLMap */}
