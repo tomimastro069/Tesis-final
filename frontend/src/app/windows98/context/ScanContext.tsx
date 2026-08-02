@@ -11,6 +11,7 @@ interface ScanContextType {
   loadDomains: () => Promise<void>;
   startScan: (params: ScanRequest) => Promise<string>;
   deleteDomain: (domain: Domain) => Promise<boolean>;
+  cancelActiveScan: () => Promise<void>;
   clearTerminalLogs: () => void;
   addLogLine: (line: string) => void;
 }
@@ -196,6 +197,30 @@ export function ScanProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Cancela/descarta el escaneo activo desde el frontend. Útil cuando el backend se
+  // reinició o se colgó mientras un escaneo estaba en curso: el registro queda con
+  // status 'scanning' en la base de datos para siempre y bloquea nuevos escaneos
+  // ("Ya hay un escaneo en progreso"). Esto lo saca de la lista activa para desbloquear
+  // la app, aunque el proceso de SQLMap en el servidor pueda seguir corriendo solo.
+  const cancelActiveScan = useCallback(async () => {
+    if (!activeScan) return;
+
+    addLogLine("C:\\> Cancelando análisis por el usuario...");
+
+    try {
+      if (activeScan.scanId) {
+        await deleteScan(activeScan.scanId);
+      }
+    } catch (err) {
+      console.error("Error al cancelar el escaneo activo:", err);
+      addLogLine("[-] No se pudo notificar la cancelación al backend, se descarta igual localmente.");
+    } finally {
+      setDomains((prev: Domain[]) => prev.filter((d: Domain) => d.scanId !== activeScan.scanId));
+      setActiveScan(null);
+      addLogLine("C:\\> Análisis cancelado. Ya podés iniciar uno nuevo.");
+    }
+  }, [activeScan, addLogLine]);
+
   const clearTerminalLogs = useCallback(() => {
     setTerminalLogs([]);
   }, []);
@@ -209,6 +234,7 @@ export function ScanProvider({ children }: { children: React.ReactNode }) {
       loadDomains,
       startScan,
       deleteDomain,
+      cancelActiveScan,
       clearTerminalLogs,
       addLogLine
     }}>
