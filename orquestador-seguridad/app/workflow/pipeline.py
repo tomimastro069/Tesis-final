@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import requests
 from app.scanners.ffuf import run_ffuf
 from app.scanners.sqlmap import run_sqlmap_batch
@@ -271,51 +272,66 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     esperar_spider(spider_id, progress_callback=cb_spider)
     spider_urls = obtener_urls(spider_id)
 
-    # --- [AUTO-RECUPERACIÓN] Detectar DVWA "bloqueado" tras un login que parecía OK ---
+    # --- [AUTO-RECUPERACIÓN] Detectar DVWA "bloqueado" ---
     # Si el Spider solo encontró un puñado de URLs y ninguna es de /vulnerabilities/,
     # es casi seguro que DVWA quedó en un estado roto (ver resetear_base_datos_dvwa).
-    # En vez de que el usuario tenga que ir manualmente a dvwa/setup.php después de
-    # (casi) cada análisis, lo detectamos acá y nos auto-recuperamos: reseteamos la
-    # base de datos, re-logueamos y reintentamos el Spider UNA vez.
-    if cookies:
-        urls_encontradas = spider_urls.get("results", [])
-        llego_a_vulnerabilities = any("/vulnerabilities/" in u for u in urls_encontradas)
+    # OJO: esto se chequea SIEMPRE, tenga o no tenga cookies en este punto — si el
+    # login inicial ya había fallado del todo (cookies quedó en None), el patrón de
+    # Spider degenerado es el mismo síntoma y necesita la misma recuperación. Antes
+    # esto estaba condicionado a "if cookies:", lo cual dejaba pasar justo el caso
+    # más roto (login inicial totalmente fallido) sin auto-recuperarse.
+    urls_encontradas = spider_urls.get("results", [])
+    llego_a_vulnerabilities = any("/vulnerabilities/" in u for u in urls_encontradas)
 
-        if not llego_a_vulnerabilities and len(urls_encontradas) <= 15:
-            print(f"\n[⚠] El Spider solo encontró {len(urls_encontradas)} URL(s) y ninguna es de /vulnerabilities/.")
-            print("[⚠] DVWA parece estar en un estado roto (login 'exitoso' pero sesión inválida). Auto-recuperando...")
-            if progress_callback: progress_callback(15, "DVWA bloqueado: reseteando base de datos y reintentando...")
+    if not llego_a_vulnerabilities and len(urls_encontradas) <= 15:
+        print(f"\n[⚠] El Spider solo encontró {len(urls_encontradas)} URL(s) y ninguna es de /vulnerabilities/.")
+        print(f"[⚠] Cookies antes de la recuperación: {'presentes' if cookies else 'AUSENTES (el login inicial ya había fallado)'}")
+        print("[⚠] DVWA parece estar en un estado roto. Auto-recuperando (reset de base de datos + reintento)...")
+        if progress_callback: progress_callback(15, "DVWA bloqueado: reseteando base de datos y reintentando...")
 
-            resetear_base_datos_dvwa(target_url)
+        resetear_base_datos_dvwa(target_url)
 
+        # Reintentar el login varias veces con espera entre intentos: después de un
+        # reset de la base de datos, MySQL puede tardar más de los 3s que ya espera
+        # establecer_sesion_automatica antes de aceptar conexiones (sobre todo bajo
+        # Docker con recursos limitados).
+        nuevas_cookies = None
+        for intento in range(1, 4):
             nuevas_cookies = establecer_sesion_automatica(target_url)
             if nuevas_cookies:
-                cookies = nuevas_cookies
-                print(f"    [+] Sesión re-establecida tras el reset. Nueva Cookie: {cookies}")
-                configurar_autenticacion(cookies)
+                break
+            print(f"    [!] Login post-reset falló (intento {intento}/3).")
+            if intento < 3:
+                print("        Esperando 5s antes de reintentar...")
+                time.sleep(5)
 
-                # Re-cebar sesión (mismo priming que al inicio del pipeline)
-                try:
-                    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-                    test_url = f"{target_url.rstrip('/')}/vulnerabilities/sqli/"
-                    requests.get(test_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
-                except Exception as e:
-                    print(f"    [!] Advertencia en re-priming: {e}")
+        if nuevas_cookies:
+            cookies = nuevas_cookies
+            print(f"    [+] Sesión re-establecida tras el reset. Nueva Cookie: {cookies}")
+            configurar_autenticacion(cookies)
 
-                print("    [*] Reintentando ZAP Spider...")
-                limpiar_sesion_zap()
-                configurar_autenticacion(cookies)
-                spider_id = iniciar_spider(target_url)
-                esperar_spider(spider_id, progress_callback=cb_spider)
-                spider_urls = obtener_urls(spider_id)
+            # Re-cebar sesión (mismo priming que al inicio del pipeline)
+            try:
+                ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+                test_url = f"{target_url.rstrip('/')}/vulnerabilities/sqli/"
+                requests.get(test_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
+            except Exception as e:
+                print(f"    [!] Advertencia en re-priming: {e}")
 
-                urls_encontradas = spider_urls.get("results", [])
-                if any("/vulnerabilities/" in u for u in urls_encontradas):
-                    print(f"    [✓] Recuperación exitosa: el Spider ya encuentra páginas de DVWA ({len(urls_encontradas)} URL(s)).")
-                else:
-                    print(f"    [!] El Spider sigue sin encontrar /vulnerabilities/ después del reset ({len(urls_encontradas)} URL(s)). Puede necesitar revisión manual.")
+            print("    [*] Reintentando ZAP Spider...")
+            limpiar_sesion_zap()
+            configurar_autenticacion(cookies)
+            spider_id = iniciar_spider(target_url)
+            esperar_spider(spider_id, progress_callback=cb_spider)
+            spider_urls = obtener_urls(spider_id)
+
+            urls_encontradas = spider_urls.get("results", [])
+            if any("/vulnerabilities/" in u for u in urls_encontradas):
+                print(f"    [✓] Recuperación exitosa: el Spider ya encuentra páginas de DVWA ({len(urls_encontradas)} URL(s)).")
             else:
-                print("    [!] No se pudo re-establecer sesión después del reset forzado de la base de datos.")
+                print(f"    [!] El Spider sigue sin encontrar /vulnerabilities/ después del reset ({len(urls_encontradas)} URL(s)). Puede necesitar revisión manual (¿MySQL caído? ¿credenciales de DVWA cambiadas?).")
+        else:
+            print("    [!] El login sigue fallando después de 3 intentos post-reset. El problema puede ser más profundo que la base de datos (ej: contenedor de MySQL caído) y necesita revisión manual.")
 
     # --- 2. FFUF (antes del Active Scan para enriquecer el contexto de ZAP) ---
     print("\n[2/4] Ejecutando FFUF...")
