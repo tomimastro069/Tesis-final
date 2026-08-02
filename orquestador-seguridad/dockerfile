@@ -11,12 +11,13 @@ RUN apt update && apt install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalamos ffuf (binario oficial)
-RUN wget https://github.com/ffuf/ffuf/releases/latest/download/ffuf_2.1.0_linux_amd64.tar.gz \
-    && tar -xzf ffuf_2.1.0_linux_amd64.tar.gz \
+ARG FFUF_VERSION=2.2.1
+
+RUN wget https://github.com/ffuf/ffuf/releases/download/v${FFUF_VERSION}/ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
+    && tar -xzf ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
     && mv ffuf /usr/local/bin/ffuf \
     && chmod +x /usr/local/bin/ffuf \
-    && rm ffuf_2.1.0_linux_amd64.tar.gz
+    && rm ffuf_${FFUF_VERSION}_linux_amd64.tar.gz
 
 # Instalamos SQLMap (clonamos el repo oficial)
 RUN apt update && apt install -y git \
