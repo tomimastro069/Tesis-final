@@ -1,0 +1,313 @@
+import React, { useMemo, useState } from "react";
+import { useScanReport } from "../../../hooks/useScanReport";
+import type { Domain } from "../../../services/api";
+
+interface Props {
+  /** Análisis más antiguo (línea base, equivalente a "a/" en un diff de git) */
+  domainA: Domain;
+  /** Análisis más reciente (equivalente a "b/" en un diff de git) */
+  domainB: Domain;
+}
+
+type LineStatus = "added" | "removed" | "context";
+
+interface DiffLine {
+  key: string;
+  status: LineStatus;
+  vuln: any;
+  count: number;
+}
+
+interface TableDiffLine {
+  key: string;
+  status: LineStatus;
+  table: { database: string; table: string; columns: string[]; rows: string[][] };
+  rowCount: number;
+  rowsDelta: number;
+}
+
+function keyOf(v: any) {
+  return `${v.type}||${v.name}||${v.location}`;
+}
+
+function keyOfTable(t: any) {
+  return `${t.database}::${t.table}`;
+}
+
+function shortTarget(domain: Domain) {
+  return domain.target.replace(/^https?:\/\//, "");
+}
+
+function fileNameFor(domain: Domain) {
+  return `Analisis_${shortTarget(domain)}_${domain.id.slice(0, 5)}.doc`;
+}
+
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return "Desconocida";
+  const hasTz = /Z|[+-]\d{2}:\d{2}$/.test(dateStr);
+  const d = new Date(hasTz ? dateStr : dateStr + "Z");
+  return d.toLocaleString();
+}
+
+export function Win98DiffViewer({ domainA, domainB }: Props) {
+  const { loading: loadingA, data: dataA } = useScanReport(domainA);
+  const { loading: loadingB, data: dataB } = useScanReport(domainB);
+  const [filter, setFilter] = useState<"all" | "added" | "removed">("all");
+
+  const loading = loadingA || loadingB;
+
+  const diff = useMemo(() => {
+    if (!dataA || !dataB) return null;
+
+    const countMap = (list: any[]) => {
+      const map = new Map<string, { count: number; sample: any }>();
+      (list || []).forEach((v: any) => {
+        const k = keyOf(v);
+        const existing = map.get(k);
+        if (existing) existing.count++;
+        else map.set(k, { count: 1, sample: v });
+      });
+      return map;
+    };
+
+    const mapA = countMap(dataA.allVulnerabilities);
+    const mapB = countMap(dataB.allVulnerabilities);
+    const allKeys = new Set<string>([...mapA.keys(), ...mapB.keys()]);
+
+    const lines: DiffLine[] = [];
+
+    allKeys.forEach((k) => {
+      const inA = mapA.get(k);
+      const inB = mapB.get(k);
+      const countA = inA?.count || 0;
+      const countB = inB?.count || 0;
+      const sample = (inB || inA)!.sample;
+
+      if (countA > 0 && countB > 0) {
+        lines.push({ key: `${k}::ctx`, status: "context", vuln: sample, count: Math.min(countA, countB) });
+        if (countB > countA) {
+          lines.push({ key: `${k}::add`, status: "added", vuln: sample, count: countB - countA });
+        } else if (countA > countB) {
+          lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA - countB });
+        }
+      } else if (countB > 0) {
+        lines.push({ key: `${k}::add`, status: "added", vuln: sample, count: countB });
+      } else if (countA > 0) {
+        lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA });
+      }
+    });
+
+    const order: Record<LineStatus, number> = { removed: 0, added: 1, context: 2 };
+    lines.sort((a, b) => order[a.status] - order[b.status] || a.vuln.name.localeCompare(b.vuln.name));
+
+    const added = lines.filter((l) => l.status === "added").reduce((s, l) => s + l.count, 0);
+    const removed = lines.filter((l) => l.status === "removed").reduce((s, l) => s + l.count, 0);
+    const unchanged = lines.filter((l) => l.status === "context").reduce((s, l) => s + l.count, 0);
+
+    // Diff de tablas de base de datos volcadas por SQLMap
+    const tablesA = new Map<string, any>((dataA.sqlmapTables || []).map((t: any) => [keyOfTable(t), t]));
+    const tablesB = new Map<string, any>((dataB.sqlmapTables || []).map((t: any) => [keyOfTable(t), t]));
+    const tableKeys = new Set<string>([...tablesA.keys(), ...tablesB.keys()]);
+
+    const tableLines: TableDiffLine[] = [];
+    tableKeys.forEach((k) => {
+      const a = tablesA.get(k);
+      const b = tablesB.get(k);
+      if (a && b) {
+        tableLines.push({
+          key: k,
+          status: "context",
+          table: b,
+          rowCount: b.rows.length,
+          rowsDelta: b.rows.length - a.rows.length
+        });
+      } else if (b) {
+        tableLines.push({ key: k, status: "added", table: b, rowCount: b.rows.length, rowsDelta: b.rows.length });
+      } else if (a) {
+        tableLines.push({ key: k, status: "removed", table: a, rowCount: a.rows.length, rowsDelta: -a.rows.length });
+      }
+    });
+    tableLines.sort(
+      (a, b) => order[a.status] - order[b.status] || `${a.table.database}.${a.table.table}`.localeCompare(`${b.table.database}.${b.table.table}`)
+    );
+
+    return {
+      lines,
+      added,
+      removed,
+      unchanged,
+      scoreDelta: (dataB.score ?? 0) - (dataA.score ?? 0),
+      tableLines
+    };
+  }, [dataA, dataB]);
+
+  if (loading) {
+    return (
+      <div className="bg-[#c0c0c0] h-full p-4 font-win98 text-black flex items-center justify-center text-xs">
+        Comparando análisis de {shortTarget(domainA)} y {shortTarget(domainB)}...
+      </div>
+    );
+  }
+
+  if (!dataA || !dataB || !diff) {
+    return (
+      <div className="bg-[#c0c0c0] h-full p-4 font-win98 text-black flex items-center justify-center text-xs">
+        Error al cargar uno de los dos análisis para comparar.
+      </div>
+    );
+  }
+
+  const visibleLines = diff.lines.filter((l) => {
+    if (filter === "all") return true;
+    return l.status === filter;
+  });
+
+  const severityRows = ["Critical", "High", "Medium", "Low"].map((name) => {
+    const a = dataA.severityData.find((s: any) => s.name === name)?.count ?? 0;
+    const b = dataB.severityData.find((s: any) => s.name === name)?.count ?? 0;
+    return { name, a, b, delta: b - a };
+  });
+
+  return (
+    <div className="bg-[#c0c0c0] h-full font-win98 text-black p-2 select-none flex flex-col gap-2 overflow-hidden">
+      {/* Cabecera estilo "WinDiff" con los dos archivos comparados */}
+      <div className="win98-border bg-[#c0c0c0] p-2 flex flex-col gap-1 flex-shrink-0 text-xs">
+        <div className="flex items-center gap-2">
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" className="w-4 h-4" alt="A" />
+          <span className="font-bold">Base (A):</span>
+          <span>{fileNameFor(domainA)}</span>
+          <span className="text-gray-600">— {formatDate(domainA.lastScan)}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" className="w-4 h-4" alt="B" />
+          <span className="font-bold">Comparado (B):</span>
+          <span>{fileNameFor(domainB)}</span>
+          <span className="text-gray-600">— {formatDate(domainB.lastScan)}</span>
+        </div>
+
+        <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
+
+        <div className="flex items-center gap-4 flex-wrap">
+          <span>
+            Puntaje: <span className="font-bold">{dataA.score}</span> → <span className="font-bold">{dataB.score}</span>{" "}
+            <span className={diff.scoreDelta > 0 ? "text-[#006400] font-bold" : diff.scoreDelta < 0 ? "text-[#800000] font-bold" : ""}>
+              ({diff.scoreDelta > 0 ? "+" : ""}{diff.scoreDelta})
+            </span>
+          </span>
+          <span className="text-[#006400] font-bold">+{diff.added} nuevas</span>
+          <span className="text-[#800000] font-bold">-{diff.removed} corregidas</span>
+          <span className="text-gray-600">{diff.unchanged} sin cambios</span>
+        </div>
+      </div>
+
+      {/* Filtros tipo pestañas */}
+      <div className="flex gap-1 flex-shrink-0">
+        {[
+          { id: "all", label: "Todo" },
+          { id: "added", label: "+ Nuevas" },
+          { id: "removed", label: "- Corregidas" }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setFilter(tab.id as any)}
+            className={`px-3 py-0.5 text-xs win98-border ${
+              filter === tab.id ? "win98-border-inset bg-white" : "bg-[#c0c0c0]"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Panel de diff estilo terminal / git diff */}
+      <div className="flex-1 bg-white win98-border-deep overflow-auto font-mono text-[11px] leading-tight">
+        <div className="bg-[#000080] text-white px-2 py-1 sticky top-0">
+          <div>--- a/{fileNameFor(domainA)}</div>
+          <div>+++ b/{fileNameFor(domainB)}</div>
+        </div>
+
+        {visibleLines.length === 0 && (
+          <div className="p-3 text-gray-500">No hay diferencias que mostrar para este filtro.</div>
+        )}
+
+        {visibleLines.map((line) => {
+          const prefix = line.status === "added" ? "+" : line.status === "removed" ? "-" : " ";
+          const bg =
+            line.status === "added"
+              ? "bg-[#d6ffd6] text-[#004d00]"
+              : line.status === "removed"
+              ? "bg-[#ffd6d6] text-[#800000]"
+              : "bg-white text-gray-700";
+          return (
+            <div key={line.key} className={`px-2 py-[1px] whitespace-nowrap ${bg}`}>
+              <span className="select-none mr-2 font-bold">{prefix}</span>
+              <span>
+                [{line.vuln.type}] {line.vuln.name} — <span className="font-bold underline decoration-dotted">{line.vuln.location}</span>
+                {line.count > 1 ? ` (x${line.count})` : ""}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Diff de tablas de base de datos volcadas por SQLMap */}
+      {diff.tableLines.length > 0 && (
+        <div className="win98-border-deep bg-white flex-shrink-0 max-h-40 overflow-auto font-mono text-[11px] leading-tight">
+          <div className="bg-[#000080] text-white px-2 py-1 sticky top-0 font-sans font-bold">
+            Tablas de Base de Datos (SQLMap --dump)
+          </div>
+          {diff.tableLines.map((tl) => {
+            const prefix = tl.status === "added" ? "+" : tl.status === "removed" ? "-" : " ";
+            const bg =
+              tl.status === "added"
+                ? "bg-[#d6ffd6] text-[#004d00]"
+                : tl.status === "removed"
+                ? "bg-[#ffd6d6] text-[#800000]"
+                : "bg-white text-gray-700";
+            const deltaLabel =
+              tl.status === "context"
+                ? tl.rowsDelta === 0
+                  ? "(sin cambios en filas)"
+                  : `(${tl.rowsDelta > 0 ? "+" : ""}${tl.rowsDelta} fila(s))`
+                : "";
+            return (
+              <div key={tl.key} className={`px-2 py-[1px] whitespace-nowrap ${bg}`}>
+                <span className="select-none mr-2 font-bold">{prefix}</span>
+                <span>
+                  [<span className="font-bold underline decoration-dotted">{tl.table.database}.{tl.table.table}</span>]{" "}
+                  {tl.table.columns.length} columna(s), {tl.rowCount} fila(s) {deltaLabel}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Tabla resumen de severidades, estilo diffstat */}
+      <div className="win98-border bg-[#c0c0c0] p-2 flex-shrink-0 text-xs">
+        <p className="font-bold mb-1">Resumen de severidad (A → B)</p>
+        <div className="grid grid-cols-4 gap-2">
+          {severityRows.map((row) => (
+            <div key={row.name} className="bg-white win98-border-deep px-2 py-1 flex flex-col items-center">
+              <span className="text-gray-600">{row.name}</span>
+              <span>
+                {row.a} → {row.b}{" "}
+                <span
+                  className={
+                    row.delta > 0
+                      ? "text-[#800000] font-bold"
+                      : row.delta < 0
+                      ? "text-[#006400] font-bold"
+                      : "text-gray-500"
+                  }
+                >
+                  ({row.delta > 0 ? "+" : ""}{row.delta})
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

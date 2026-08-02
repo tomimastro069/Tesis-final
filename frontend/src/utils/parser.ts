@@ -106,6 +106,26 @@ export function parseSecurityResults(rawData: any) {
     }))
   ];
 
+  // Tablas de base de datos volcadas por SQLMap (--dump), si las hubo
+  const sqlmapTables: Array<{ database: string; table: string; columns: string[]; rows: string[][] }> = [];
+  const tablasExtraidas =
+    rawData.sqlmap?.tablas_extraidas ||
+    rawData.sqlmap_raw?.tablas_extraidas ||
+    null;
+
+  if (tablasExtraidas) {
+    Object.entries(tablasExtraidas).forEach(([dbName, tables]: [string, any]) => {
+      Object.entries(tables || {}).forEach(([tableName, tableData]: [string, any]) => {
+        sqlmapTables.push({
+          database: dbName,
+          table: tableName,
+          columns: tableData?.columns || [],
+          rows: tableData?.rows || []
+        });
+      });
+    });
+  }
+
   const scanners = [];
   if (rawData.zap || rawData.zap_raw) scanners.push("OWASP ZAP");
   if (rawData.sqlmap || rawData.sqlmap_raw) scanners.push("SQLMap");
@@ -161,6 +181,7 @@ export function parseSecurityResults(rawData: any) {
     severityData,
     typesData,
     allVulnerabilities,
+    sqlmapTables,
     scanMetrics: {
       scanners: scanners.join(", ") || "Desconocido",
       uniqueEndpoints,

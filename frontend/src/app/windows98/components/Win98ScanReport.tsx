@@ -55,7 +55,8 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
       { id: "general", label: "General" },
       { id: "vulnerabilities", label: "Device Manager" },
       { id: "performance", label: "Performance" },
-      { id: "tools", label: "Hardware Profiles" }
+      { id: "tools", label: "Hardware Profiles" },
+      { id: "database", label: "ODBC Data Sources" }
     ];
 
     return (
@@ -274,6 +275,54 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === "database" && (
+          <div className="flex flex-col h-full overflow-hidden">
+            <p className="text-xs mb-2 font-bold">Tablas de Base de Datos Volcadas (SQLMap --dump)</p>
+            {(!data.sqlmapTables || data.sqlmapTables.length === 0) ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 win98-border-deep bg-white">
+                <img
+                  src="https://win98icons.alexmeub.com/icons/png/directory_open_file_cabinet-2.png"
+                  alt="Sin datos"
+                  className="w-8 h-8 mb-2 opacity-50 grayscale"
+                />
+                <span>No se extrajeron tablas de bases de datos en este análisis.</span>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col gap-4 overflow-auto pr-1">
+                {data.sqlmapTables.map((t: any) => (
+                  <div key={`${t.database}.${t.table}`} className="win98-border-deep bg-white flex flex-col">
+                    <div className="bg-[#000080] text-white text-xs font-bold px-2 py-1 flex items-center gap-2">
+                      <img src="https://win98icons.alexmeub.com/icons/png/briefcase-2.png" className="w-4 h-4" alt="db" />
+                      <span>{t.database}.{t.table}</span>
+                      <span className="ml-auto font-normal">{t.rows.length} fila(s) · {t.columns.length} columna(s)</span>
+                    </div>
+                    <div className="overflow-auto max-h-56">
+                      <table className="w-full text-[10px] text-left border-collapse whitespace-nowrap">
+                        <thead className="sticky top-0 bg-[#c0c0c0]">
+                          <tr>
+                            {t.columns.map((c: string) => (
+                              <th key={c} className="font-bold px-2 py-1 border-r border-b border-[#808080]">{c}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {t.rows.map((row: string[], rIdx: number) => (
+                            <tr key={rIdx} className="hover:bg-[#000080] hover:text-white">
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className="px-2 py-0.5 border-r border-dotted border-gray-300">{cell}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

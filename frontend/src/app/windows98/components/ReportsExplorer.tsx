@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useScan } from "../context/ScanContext";
 import { useWindows } from "../context/WindowsContext";
 import { Win98ScanReport } from "./Win98ScanReport";
+import { Win98DiffViewer } from "./Win98DiffViewer";
 import type { Domain } from "../../../services/api";
 
 export function ReportsExplorer() {
   const { domains, deleteDomain } = useScan();
   const { openWindow } = useWindows();
+  const [selected, setSelected] = useState<string[]>([]);
 
   // Filtrar solo los que están completados o error
   const completedScans = domains.filter(d => d.status === "completed" || d.status === "error");
@@ -20,6 +22,37 @@ export function ReportsExplorer() {
     });
   };
 
+  // Selección de hasta 2 análisis para comparar (estilo control de versiones)
+  const toggleSelect = (id: string) => {
+    setSelected(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 2) return [prev[1], id]; // conserva el más reciente + el nuevo
+      return [...prev, id];
+    });
+  };
+
+  const canCompare = selected.length === 2;
+
+  const handleCompare = () => {
+    if (!canCompare) return;
+    const [idA, idB] = selected;
+    const domA = completedScans.find(d => d.id === idA);
+    const domB = completedScans.find(d => d.id === idB);
+    if (!domA || !domB) return;
+
+    const timeA = domA.lastScan ? new Date(domA.lastScan).getTime() : 0;
+    const timeB = domB.lastScan ? new Date(domB.lastScan).getTime() : 0;
+    const [older, newer] = timeA <= timeB ? [domA, domB] : [domB, domA];
+
+    openWindow({
+      id: `diff-${older.id}-${newer.id}`,
+      title: `WinDiff - ${older.target.replace(/^https?:\/\//, "")} vs ${newer.target.replace(/^https?:\/\//, "")}`,
+      icon: "https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png",
+      component: <Win98DiffViewer domainA={older} domainB={newer} />
+    });
+    setSelected([]);
+  };
+
   return (
     <div className="bg-[#c0c0c0] h-full flex flex-col font-win98 text-black select-none">
       {/* Barra de Menú Estilo Win98 */}
@@ -28,7 +61,12 @@ export function ReportsExplorer() {
         <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Edición</span>
         <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Ver</span>
         <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Favoritos</span>
-        <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Herramientas</span>
+        <span
+          className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer"
+          title="Seleccione 2 análisis con un clic y use el botón 'Comparar Análisis' de la barra inferior"
+        >
+          Herramientas
+        </span>
         <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">Ayuda</span>
       </div>
 
@@ -49,7 +87,8 @@ export function ReportsExplorer() {
         <table className="w-full text-xs text-left whitespace-nowrap border-collapse">
           <thead className="sticky top-0 bg-[#c0c0c0] z-10 shadow-[0_1px_0_#000]">
             <tr>
-              <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[40%]">Nombre</th>
+              <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[5%]"></th>
+              <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[35%]">Nombre</th>
               <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[20%]">Fecha de escaneo</th>
               <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[15%]">Riesgo</th>
               <th className="font-normal px-2 py-0.5 win98-border active:win98-border-inset cursor-default w-[10%]">Puntos</th>
@@ -80,12 +119,25 @@ export function ReportsExplorer() {
               };
               const riskStr = scan.riskLevel ? (riskTranslations[scan.riskLevel] || scan.riskLevel) : (isError ? "Fallido" : "-");
 
+              const isSelected = selected.includes(scan.id);
+
               return (
-                <tr 
-                  key={scan.id} 
+                <tr
+                  key={scan.id}
+                  onClick={() => !isError && toggleSelect(scan.id)}
                   onDoubleClick={() => !isError && handleOpenReport(scan)}
-                  className="hover:bg-[#000080] hover:text-white cursor-pointer group"
+                  className={`hover:bg-[#000080] hover:text-white cursor-pointer group ${isSelected ? "bg-[#000080] text-white" : ""}`}
                 >
+                  <td className="px-1 py-0.5 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      disabled={isError}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={() => toggleSelect(scan.id)}
+                      title="Seleccionar para comparar"
+                    />
+                  </td>
                   <td className="px-1 py-0.5 border-r border-transparent flex items-center gap-2">
                     <img src={fileIcon} alt="Icon" className="w-4 h-4" />
                     <span>{fileName}</span>
@@ -100,7 +152,7 @@ export function ReportsExplorer() {
             
             {completedScans.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-500 hover:bg-transparent hover:text-gray-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500 hover:bg-transparent hover:text-gray-500">
                   <div className="flex flex-col items-center justify-center">
                     <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_cabinet-2.png" alt="Vacío" className="w-8 h-8 mb-2 opacity-50 grayscale" />
                     <span>0 archivos encontrados.</span>
@@ -113,9 +165,24 @@ export function ReportsExplorer() {
       </div>
 
       {/* Barra de Estado (Status Bar) */}
-      <div className="bg-[#c0c0c0] border-t border-[#dfdfdf] px-2 py-[2px] flex justify-between text-[11px] text-gray-700 select-none shadow-[inset_0_1px_0_#fff]">
-        <span>{completedScans.length} objeto(s)</span>
-        <span>My Computer</span>
+      <div className="bg-[#c0c0c0] border-t border-[#dfdfdf] px-2 py-[2px] flex items-center justify-between text-[11px] text-gray-700 select-none shadow-[inset_0_1px_0_#fff]">
+        <span>
+          {completedScans.length} objeto(s)
+          {selected.length > 0 ? ` — ${selected.length} seleccionado(s) para comparar` : ""}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCompare}
+            disabled={!canCompare}
+            title={canCompare ? "Comparar los 2 análisis seleccionados" : "Seleccione 2 análisis con un clic para habilitar la comparación"}
+            className={`px-2 py-[1px] win98-border text-[11px] bg-[#c0c0c0] ${
+              canCompare ? "active:win98-border-inset cursor-pointer text-black" : "text-gray-500 cursor-default"
+            }`}
+          >
+            Comparar Análisis
+          </button>
+          <span>My Computer</span>
+        </div>
       </div>
     </div>
   );
