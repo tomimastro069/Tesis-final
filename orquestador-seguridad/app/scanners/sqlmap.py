@@ -123,7 +123,7 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
-def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic") -> list:
+def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic", scan_id: str = None) -> list:
     """
     Ejecuta SQLMap en SEGUNDO PLANO contra TODAS las URLs que tengan parámetros.
     Genera un script bash y lo lanza como proceso asíncrono para no bloquear el pipeline.
@@ -204,7 +204,8 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
                 save_tested_sqlmap_url(url)
                 
         f.write(f"echo '--- Escaneo finalizado ---' >> {log_path}\n")
-        f.write(f"python3 -m app.workflow.consolidate_sqlmap >> {log_path} 2>&1\n")
+        scan_id_arg = f' "{scan_id}"' if scan_id else ""
+        f.write(f"python3 -m app.workflow.consolidate_sqlmap{scan_id_arg} >> {log_path} 2>&1\n")
 
     # Dar permisos de ejecución al script
     st = os.stat(script_path)

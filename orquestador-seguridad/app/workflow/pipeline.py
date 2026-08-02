@@ -152,7 +152,7 @@ def establecer_sesion_automatica(target_url):
 
     print(" [!] Falló el inicio de sesión automático y no se pudo inicializar la base de datos.")
     return None
-def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic", progress_callback=None):
+def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic", progress_callback=None, scan_id=None):
     """
     Función principal que coordina todo el escaneo.
     
@@ -292,7 +292,7 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     # Combinar todas las rutas (SQLMap filtrará internamente por ? o .php)
     lista_urls_ffuf   = [r.get("url", "") for r in rutas_ffuf_nuevas]
     lista_urls_total  = list(set(lista_urls_spider + lista_urls_ffuf))  # sin duplicados
-    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy=None, sqlmap_level=sqlmap_level)
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies, proxy=None, sqlmap_level=sqlmap_level, scan_id=scan_id)
     
     # --- 4. CONSOLIDACIÓN Y REPORTE FINAL ---
     print("\nGenerando paquete de datos crudos...")
@@ -331,7 +331,8 @@ def run_parser_pipeline(resultado_escaneo):
     # Parsear tablas de SQLMap desde el log crudo si existe
     try:
         from app.config import settings
-        log_path = os.path.join(settings.OUTPUT_DIR, "raw", "sqlmap_bg.log")
+        # settings.OUTPUT_DIR ya apunta a ".../output/raw", no agregar "raw" de nuevo
+        log_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.log")
         if os.path.exists(log_path):
             tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
             if tablas_extraidas:

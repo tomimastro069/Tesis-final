@@ -81,7 +81,7 @@ def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cooki
             scan_progress_store[scan_id] = {"percentage": percentage, "message": message}
             logger.info(f"Progreso [{scan_id}]: {percentage}% - {message}")
 
-        resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level, progress_callback=update_progress)
+        resultado_escaneo = run_security_pipeline(target, nivel, cookies, sqlmap_level=sqlmap_level, progress_callback=update_progress, scan_id=scan_id)
         if not resultado_escaneo:
             raise Exception("El pipeline de escaneo no retornó ningún resultado.")
 

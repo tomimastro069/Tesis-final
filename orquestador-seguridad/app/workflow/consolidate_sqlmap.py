@@ -1,11 +1,12 @@
 import os
 import re
+import sys
 import json
 import traceback
 from datetime import datetime
 
 from app.config import settings
-from app.db.database import save_vulnerable_url, init_db, save_sqlmap_tables
+from app.db.database import save_vulnerable_url, init_db, save_sqlmap_tables, get_scan_by_id, save_scan_results
 from app.reports.generator import generar_reporte
 from app.parsers.sqlmap_parser import parsear_tablas_log_sqlmap
 
@@ -102,7 +103,14 @@ def main():
     print("=" * 60)
     print("INICIANDO CONSOLIDACIÓN ASÍNCRONA DE SQLMAP")
     print("=" * 60)
-    
+
+    # scan_id del escaneo al que pertenece este SQLMap en segundo plano (si se pasó como argumento)
+    scan_id = sys.argv[1] if len(sys.argv) > 1 else None
+    if scan_id:
+        print(f"[*] scan_id recibido: {scan_id}")
+    else:
+        print("[!] No se recibió scan_id: solo se actualizarán los archivos en disco, no la base de datos del escaneo.")
+
     init_db()
     
     log_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.log")
@@ -118,7 +126,7 @@ def main():
         
     vulnerabilidades = parse_sqlmap_log_content(log_content)
     print(f"[+] Se parsearon {len(vulnerabilidades)} vulnerabilidades de SQLMap.")
-    
+
     # 1. Guardar hallazgos en la Base de Datos
     for v in vulnerabilidades:
         print(f"    - Guardando vuln: SQL Injection en {v['url']} (param: {v['parametro']})")
@@ -128,37 +136,66 @@ def main():
             vulnerabilidad=f"SQL Injection ({v['titulo']})",
             severidad="High"
         )
-        
-    # 2. Actualizar resultado_unificado.json
+
+    # Formatear al formato que espera el consolidado
+    sqlmap_parsed = {
+        "herramienta": "SQLMAP",
+        "vulnerabilidades": vulnerabilidades
+    }
+
+    # Integrar tablas extraídas (Parser de tablas estructuradas)
+    try:
+        tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
+        if tablas_extraidas:
+            sqlmap_parsed["tablas_extraidas"] = tablas_extraidas
+            target_url = "URL_DESCONOCIDA"
+            if vulnerabilidades:
+                target_url = vulnerabilidades[0]["url"]
+            save_sqlmap_tables(target_url, tablas_extraidas)
+    except Exception as e:
+        print(f"[!] Error al parsear o guardar tablas en consolidación: {e}")
+
+    # 2. Actualizar la base de datos del escaneo (lo que realmente lee el frontend).
+    # Sin esto, los hallazgos y tablas de SQLMap quedan solo en el disco y nunca
+    # llegan a la app, porque SQLMap corre en segundo plano y el escaneo ya se
+    # había guardado como "completado" antes de que terminara.
+    db_results = None
+    if scan_id:
+        try:
+            scan_row = get_scan_by_id(scan_id)
+            if scan_row and scan_row.get("results_raw"):
+                db_results = json.loads(scan_row["results_raw"])
+            else:
+                print(f"[!] No se encontraron resultados previos en la base de datos para scan_id={scan_id}.")
+                db_results = {"resumen": {}}
+
+            db_results["sqlmap"] = sqlmap_parsed
+
+            # Recalcular el conteo de vulnerabilidades de SQLMap en el resumen
+            resumen = db_results.get("resumen", {}) or {}
+            resumen["vulnerabilidades_sqlmap"] = len(vulnerabilidades)
+            db_results["resumen"] = resumen
+
+            save_scan_results(scan_id, json.dumps(db_results, ensure_ascii=False))
+            print(f"[✓] Base de datos actualizada para scan_id={scan_id} con hallazgos y tablas de SQLMap.")
+        except Exception as e:
+            print(f"[!] Error al actualizar la base de datos para scan_id={scan_id}: {e}")
+            traceback.print_exc()
+    else:
+        print("[!] No se recibió scan_id: se omite la actualización de la base de datos.")
+
+    # 3. Actualizar resultado_unificado.json (archivo de referencia en disco, opcional)
     if os.path.exists(unificado_path):
         print(f"[*] Actualizando reporte consolidado: {unificado_path}")
         try:
             with open(unificado_path, "r", encoding="utf-8") as f:
                 reporte = json.load(f)
-                
-            # Formatear al formato que espera el consolidado
-            sqlmap_parsed = {
-                "herramienta": "SQLMAP",
-                "vulnerabilidades": vulnerabilidades
-            }
-            
-            # Integrar tablas extraídas (Parser de tablas estructuradas)
-            try:
-                tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
-                if tablas_extraidas:
-                    sqlmap_parsed["tablas_extraidas"] = tablas_extraidas
-                    target_url = "URL_DESCONOCIDA"
-                    if vulnerabilidades:
-                        target_url = vulnerabilidades[0]["url"]
-                    save_sqlmap_tables(target_url, tablas_extraidas)
-            except Exception as e:
-                print(f"[!] Error al parsear o guardar tablas en consolidación: {e}")
-                
+
             reporte["sqlmap"] = sqlmap_parsed
-            
+
             # Recalcular el resumen
             todas_las_urls = set()
-            
+
             # URLs del spider
             for item in reporte.get("spider", {}).get("urls", []):
                 todas_las_urls.add(item["url"])
@@ -171,26 +208,36 @@ def main():
             # URLs de SQLMap reales
             for item in vulnerabilidades:
                 todas_las_urls.add(item["url"])
-                
+
             reporte["resumen"]["total_urls_unicas"] = len(todas_las_urls)
             reporte["resumen"]["vulnerabilidades_sqlmap"] = len(vulnerabilidades)
-            
+
             # Escribir de vuelta el archivo consolidado
             with open(unificado_path, "w", encoding="utf-8") as f:
                 json.dump(reporte, f, indent=4, ensure_ascii=False)
-                
+
             print("[✓] resultado_unificado.json actualizado con éxito.")
-            
-            # 3. Regenerar reportes MD y TXT
+
+            # 4. Regenerar reportes MD y TXT
             print("[*] Regenerando reportes en formato Markdown y Texto...")
             generar_reporte(reporte)
             print("[✓] Reportes de seguridad regenerados.")
-            
+
         except Exception as e:
             print(f"[-] ERROR al actualizar reportes: {e}")
             traceback.print_exc()
     else:
-        print(f"[-] ADVERTENCIA: No se encontró el archivo {unificado_path}. No se actualizaron reportes.")
+        print(f"[!] No se encontró el archivo {unificado_path}. Se omite la actualización de ese archivo de referencia (no afecta a la app).")
+        # Aun sin el archivo de referencia, regeneramos los reportes MD/TXT con lo que
+        # tengamos disponible (los resultados recién guardados en la base de datos).
+        if db_results:
+            try:
+                print("[*] Regenerando reportes en formato Markdown y Texto a partir de la base de datos...")
+                generar_reporte(db_results)
+                print("[✓] Reportes de seguridad regenerados.")
+            except Exception as e:
+                print(f"[-] ERROR al regenerar reportes desde la base de datos: {e}")
+                traceback.print_exc()
 
 if __name__ == "__main__":
     main()
