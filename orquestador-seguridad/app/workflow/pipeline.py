@@ -152,6 +152,62 @@ def establecer_sesion_automatica(target_url):
 
     print(" [!] Falló el inicio de sesión automático y no se pudo inicializar la base de datos.")
     return None
+
+
+def resetear_base_datos_dvwa(target_url) -> bool:
+    """
+    Fuerza un reset de la base de datos de DVWA vía setup.php (create_db), sin
+    esperar a que el login "falle" primero.
+
+    Por qué hace falta: a veces DVWA queda en un estado roto (típicamente después
+    de reiniciar el contenedor/volumen) donde el login SIGUE pareciendo exitoso
+    (las credenciales son siempre correctas porque están automatizadas, y la UI
+    muestra el link de "Logout" igual) pero las páginas protegidas no responden
+    bien porque las tablas de la base de datos no existen o quedaron corruptas.
+    En ese estado el Spider de ZAP solo logra descubrir un puñado de URLs
+    (login.php, logout.php, setup.php, index.php) y nunca llega a
+    /vulnerabilities/*, aunque técnicamente "estemos logueados".
+
+    Se usa como auto-recuperación cuando se detecta ese patrón (ver
+    run_security_pipeline), en vez de requerir que el usuario entre manualmente a
+    dvwa/setup.php después de cada análisis.
+    """
+    from urllib.parse import urlparse
+    import time
+
+    parsed = urlparse(target_url)
+    base_url = f"{parsed.scheme}://{parsed.netloc}"
+    setup_url = f"{base_url}/setup.php"
+
+    session = requests.Session()
+    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+    session.headers.update({'User-Agent': ua})
+
+    try:
+        r_get = session.get(setup_url, timeout=10)
+        print(f"    [DB-RESET] GET setup.php status: {r_get.status_code}")
+
+        r_post = session.post(setup_url, data={"create_db": "Create / Reset Database"}, timeout=15)
+        print(f"    [DB-RESET] POST setup.php (create_db) status: {r_post.status_code}")
+
+        ok = (
+            "database has been created" in r_post.text.lower()
+            or "setup successful" in r_post.text.lower()
+            or "database setup complete" in r_post.text.lower()
+            or r_post.status_code == 200
+        )
+        if ok:
+            print("    [DB-RESET] Base de datos de DVWA reseteada. Esperando 3s para que MySQL inicialice...")
+            time.sleep(3)
+            return True
+        else:
+            print(f"    [DB-RESET] setup.php no devolvió la respuesta esperada (status {r_post.status_code}).")
+            return False
+    except Exception as e:
+        print(f"    [DB-RESET] Error al forzar el reset de la base de datos: {e}")
+        return False
+
+
 def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level="basic", progress_callback=None, scan_id=None):
     """
     Función principal que coordina todo el escaneo.
@@ -214,6 +270,52 @@ def run_security_pipeline(target_url, nivel="medium", cookies=None, sqlmap_level
     spider_id = iniciar_spider(target_url)
     esperar_spider(spider_id, progress_callback=cb_spider)
     spider_urls = obtener_urls(spider_id)
+
+    # --- [AUTO-RECUPERACIÓN] Detectar DVWA "bloqueado" tras un login que parecía OK ---
+    # Si el Spider solo encontró un puñado de URLs y ninguna es de /vulnerabilities/,
+    # es casi seguro que DVWA quedó en un estado roto (ver resetear_base_datos_dvwa).
+    # En vez de que el usuario tenga que ir manualmente a dvwa/setup.php después de
+    # (casi) cada análisis, lo detectamos acá y nos auto-recuperamos: reseteamos la
+    # base de datos, re-logueamos y reintentamos el Spider UNA vez.
+    if cookies:
+        urls_encontradas = spider_urls.get("results", [])
+        llego_a_vulnerabilities = any("/vulnerabilities/" in u for u in urls_encontradas)
+
+        if not llego_a_vulnerabilities and len(urls_encontradas) <= 15:
+            print(f"\n[⚠] El Spider solo encontró {len(urls_encontradas)} URL(s) y ninguna es de /vulnerabilities/.")
+            print("[⚠] DVWA parece estar en un estado roto (login 'exitoso' pero sesión inválida). Auto-recuperando...")
+            if progress_callback: progress_callback(15, "DVWA bloqueado: reseteando base de datos y reintentando...")
+
+            resetear_base_datos_dvwa(target_url)
+
+            nuevas_cookies = establecer_sesion_automatica(target_url)
+            if nuevas_cookies:
+                cookies = nuevas_cookies
+                print(f"    [+] Sesión re-establecida tras el reset. Nueva Cookie: {cookies}")
+                configurar_autenticacion(cookies)
+
+                # Re-cebar sesión (mismo priming que al inicio del pipeline)
+                try:
+                    ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+                    test_url = f"{target_url.rstrip('/')}/vulnerabilities/sqli/"
+                    requests.get(test_url, headers={'Cookie': cookies, 'User-Agent': ua}, timeout=10)
+                except Exception as e:
+                    print(f"    [!] Advertencia en re-priming: {e}")
+
+                print("    [*] Reintentando ZAP Spider...")
+                limpiar_sesion_zap()
+                configurar_autenticacion(cookies)
+                spider_id = iniciar_spider(target_url)
+                esperar_spider(spider_id, progress_callback=cb_spider)
+                spider_urls = obtener_urls(spider_id)
+
+                urls_encontradas = spider_urls.get("results", [])
+                if any("/vulnerabilities/" in u for u in urls_encontradas):
+                    print(f"    [✓] Recuperación exitosa: el Spider ya encuentra páginas de DVWA ({len(urls_encontradas)} URL(s)).")
+                else:
+                    print(f"    [!] El Spider sigue sin encontrar /vulnerabilities/ después del reset ({len(urls_encontradas)} URL(s)). Puede necesitar revisión manual.")
+            else:
+                print("    [!] No se pudo re-establecer sesión después del reset forzado de la base de datos.")
 
     # --- 2. FFUF (antes del Active Scan para enriquecer el contexto de ZAP) ---
     print("\n[2/4] Ejecutando FFUF...")
