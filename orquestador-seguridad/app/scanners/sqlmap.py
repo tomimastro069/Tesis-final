@@ -143,20 +143,40 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
 
     # Paso 2: Separar URLs en: a re-testear (vulnerables conocidas) y nuevas vs cacheadas
     urls_a_escanear = []
+    urls_omitidas_por_cache = []
+    urls_retesteadas_por_vulnerable = []
     vulnerable_conocidas = get_vulnerable_urls()
-    
+
     for url in urls_con_params:
         if url in vulnerable_conocidas:
             print(f"    [⚠ RETEST] {url} fue vulnerable antes → re-testeando siempre")
             urls_a_escanear.append(url)
+            urls_retesteadas_por_vulnerable.append(url)
         elif is_url_tested_in_sqlmap(url):
             print(f"    [CACHE] Omitiendo {url} (ya analizada y sin vulnerabilidades previas)")
+            urls_omitidas_por_cache.append(url)
         else:
             urls_a_escanear.append(url)
 
+    # Info de caché: se calcula siempre, se necesita para que el frontend sepa qué URLs
+    # no se volvieron a probar en este análisis (aunque el escaneo termine vacío o completo).
+    cache_info = {
+        "total_candidatas": len(urls_con_params),
+        "total_testeadas": len(urls_a_escanear),
+        "omitidas_por_cache": urls_omitidas_por_cache,
+        "retesteadas_por_vulnerable_previa": urls_retesteadas_por_vulnerable
+    }
+
     if not urls_a_escanear:
         print("    [SQLMAP] Escaneo omitido: todas las URLs ya fueron analizadas.")
-        return []
+        return [{
+            "url": "BACKGROUND_EXECUTION",
+            "stdout": "Todas las URLs candidatas ya habían sido analizadas antes (caché) y no eran vulnerables. No se relanzó SQLMap.",
+            "stderr": "",
+            "success": True,
+            "timeout": False,
+            "cache_info": cache_info
+        }]
 
     print(f"    Generando script para escaneo en segundo plano de {len(urls_a_escanear)} URLs...")
 
@@ -218,13 +238,17 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
     print(f"    [+] Para ver el progreso en vivo, abrí otra consola y ejecutá:")
     print(f"        docker exec -it security-app tail -f /app/output/raw/sqlmap_bg.log")
 
-    # Retornamos un resultado simulado para que el pipeline no falle
+    # Retornamos un resultado simulado para que el pipeline no falle, incluyendo
+    # la info de caché (qué URLs no se volvieron a probar y cuáles se re-testearon
+    # por haber sido vulnerables antes), para que el comparador de análisis pueda
+    # advertir al usuario en vez de mostrar "corregida" cuando en realidad no se probó.
     return [{
         "url": "BACKGROUND_EXECUTION",
         "stdout": "SQLMap ejecutándose en segundo plano. Revisar output/raw/sqlmap_bg.log",
         "stderr": "",
         "success": True,
-        "timeout": False
+        "timeout": False,
+        "cache_info": cache_info
     }]
 
     #docker exec -it security-app 

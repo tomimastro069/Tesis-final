@@ -109,6 +109,41 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
               <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
 
               <div>
+                <p className="font-bold">Estadísticas Generales:</p>
+                <div className="ml-4 win98-border-deep bg-white p-2 mt-1 w-72">
+                  <div className="flex justify-between py-0.5">
+                    <span>Total de URLs únicas analizadas:</span>
+                    <span className="font-bold">{data.generalStats.totalUrlsUnicas}</span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <span>URLs descubiertas por Spider:</span>
+                    <span className="font-bold">{data.generalStats.urlsSpider}</span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <span>Alertas identificadas por ZAP:</span>
+                    <span className="font-bold">{data.generalStats.alertasZap}</span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <span>Rutas descubiertas por FFUF:</span>
+                    <span className="font-bold">{data.generalStats.rutasFfuf}</span>
+                  </div>
+                  <div className="flex justify-between py-0.5">
+                    <span>Vulnerabilidades detectadas por SQLMap:</span>
+                    <span className="font-bold">{data.generalStats.vulnerabilidadesSqlmap}</span>
+                  </div>
+                </div>
+                {data.sqlmapCacheInfo && data.sqlmapCacheInfo.omitidasPorCache.length > 0 && (
+                  <div className="ml-4 mt-2 w-72 bg-[#ffffc0] win98-border-deep px-2 py-1 text-[10px] text-[#806000]">
+                    ⚠ {data.sqlmapCacheInfo.omitidasPorCache.length} de {data.sqlmapCacheInfo.totalCandidatas} URL(s) candidatas
+                    no fueron re-testeadas por SQLMap en este análisis (ya estaban marcadas como no vulnerables en un
+                    escaneo anterior). Si necesitás confirmarlas, relanzá el escaneo con "Limpiar caché".
+                  </div>
+                )}
+              </div>
+
+              <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
+
+              <div>
                 <p>Overall Score:</p>
                 <div className="ml-4">
                   <p className="text-sm font-bold">{data.score}/100 (Risk: {GRADE})</p>

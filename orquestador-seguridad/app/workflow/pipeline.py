@@ -328,6 +328,15 @@ def run_parser_pipeline(resultado_escaneo):
 
     sqlmap_parseado = parsear_sqlmap(sqlmap_crudo)
 
+    # Propagar la info de caché de SQLMap (qué URLs no se volvieron a testear porque ya
+    # estaban marcadas como "no atacables" y cuáles se re-testearon por ser vulnerables
+    # antes). Se calcula de forma síncrona en run_sqlmap_batch, antes de lanzar el
+    # proceso en segundo plano, así que ya está disponible acá.
+    if isinstance(sqlmap_crudo, list) and len(sqlmap_crudo) > 0 and isinstance(sqlmap_crudo[0], dict):
+        cache_info = sqlmap_crudo[0].get("cache_info")
+        if cache_info:
+            sqlmap_parseado["cache_info"] = cache_info
+
     # Parsear tablas de SQLMap desde el log crudo si existe
     try:
         from app.config import settings

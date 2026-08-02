@@ -16,6 +16,10 @@ interface DiffLine {
   status: LineStatus;
   vuln: any;
   count: number;
+  /** true si esta línea "removed" corresponde a una URL que SQLMap NO volvió a
+   * testear en B por caché (ya estaba marcada como no vulnerable antes). En ese
+   * caso no se puede asegurar que la vulnerabilidad haya sido corregida. */
+  cacheAmbiguous?: boolean;
 }
 
 interface TableDiffLine {
@@ -52,7 +56,7 @@ function formatDate(dateStr: string | null) {
 export function Win98DiffViewer({ domainA, domainB }: Props) {
   const { loading: loadingA, data: dataA } = useScanReport(domainA);
   const { loading: loadingB, data: dataB } = useScanReport(domainB);
-  const [filter, setFilter] = useState<"all" | "added" | "removed">("all");
+  const [filter, setFilter] = useState<"all" | "added" | "removed" | "cached">("all");
 
   const loading = loadingA || loadingB;
 
@@ -74,6 +78,12 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
     const mapB = countMap(dataB.allVulnerabilities);
     const allKeys = new Set<string>([...mapA.keys(), ...mapB.keys()]);
 
+    // URLs que SQLMap NO volvió a testear en el análisis B por estar cacheadas
+    // (ya evaluadas antes como no vulnerables). Si una vulnerabilidad de SQLMap
+    // "desaparece" en B pero su URL está acá, no sabemos si se corrigió o
+    // simplemente no se volvió a probar.
+    const omitidasEnB = new Set<string>(dataB.sqlmapCacheInfo?.omitidasPorCache || []);
+
     const lines: DiffLine[] = [];
 
     allKeys.forEach((k) => {
@@ -82,18 +92,19 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
       const countA = inA?.count || 0;
       const countB = inB?.count || 0;
       const sample = (inB || inA)!.sample;
+      const esCacheAmbigua = sample.type === "Injection" && omitidasEnB.has(sample.location);
 
       if (countA > 0 && countB > 0) {
         lines.push({ key: `${k}::ctx`, status: "context", vuln: sample, count: Math.min(countA, countB) });
         if (countB > countA) {
           lines.push({ key: `${k}::add`, status: "added", vuln: sample, count: countB - countA });
         } else if (countA > countB) {
-          lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA - countB });
+          lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA - countB, cacheAmbiguous: esCacheAmbigua });
         }
       } else if (countB > 0) {
         lines.push({ key: `${k}::add`, status: "added", vuln: sample, count: countB });
       } else if (countA > 0) {
-        lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA });
+        lines.push({ key: `${k}::rem`, status: "removed", vuln: sample, count: countA, cacheAmbiguous: esCacheAmbigua });
       }
     });
 
@@ -101,8 +112,11 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
     lines.sort((a, b) => order[a.status] - order[b.status] || a.vuln.name.localeCompare(b.vuln.name));
 
     const added = lines.filter((l) => l.status === "added").reduce((s, l) => s + l.count, 0);
-    const removed = lines.filter((l) => l.status === "removed").reduce((s, l) => s + l.count, 0);
+    const removed = lines.filter((l) => l.status === "removed" && !l.cacheAmbiguous).reduce((s, l) => s + l.count, 0);
     const unchanged = lines.filter((l) => l.status === "context").reduce((s, l) => s + l.count, 0);
+    const cacheAmbiguousCount = lines
+      .filter((l) => l.status === "removed" && l.cacheAmbiguous)
+      .reduce((s, l) => s + l.count, 0);
 
     // Diff de tablas de base de datos volcadas por SQLMap
     const tablesA = new Map<string, any>((dataA.sqlmapTables || []).map((t: any) => [keyOfTable(t), t]));
@@ -136,6 +150,7 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
       added,
       removed,
       unchanged,
+      cacheAmbiguousCount,
       scoreDelta: (dataB.score ?? 0) - (dataA.score ?? 0),
       tableLines
     };
@@ -159,6 +174,8 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
 
   const visibleLines = diff.lines.filter((l) => {
     if (filter === "all") return true;
+    if (filter === "cached") return l.status === "removed" && l.cacheAmbiguous;
+    if (filter === "removed") return l.status === "removed" && !l.cacheAmbiguous;
     return l.status === filter;
   });
 
@@ -197,7 +214,18 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
           <span className="text-[#006400] font-bold">+{diff.added} nuevas</span>
           <span className="text-[#800000] font-bold">-{diff.removed} corregidas</span>
           <span className="text-gray-600">{diff.unchanged} sin cambios</span>
+          {diff.cacheAmbiguousCount > 0 && (
+            <span className="text-[#806000] font-bold">⚠ {diff.cacheAmbiguousCount} sin confirmar (caché)</span>
+          )}
         </div>
+
+        {diff.cacheAmbiguousCount > 0 && (
+          <div className="mt-1 bg-[#ffffc0] win98-border-deep px-2 py-1 text-[11px]">
+            ⚠ {diff.cacheAmbiguousCount} hallazgo(s) de SQLMap no aparecen en B, pero su URL no fue re-testeada
+            en este análisis (SQLMap la había marcado antes como no vulnerable y la omitió por caché). No asumas
+            que están corregidos: mirá la pestaña "⚠ Sin confirmar" o relanzá el escaneo con "Limpiar caché" para confirmarlo.
+          </div>
+        )}
       </div>
 
       {/* Filtros tipo pestañas */}
@@ -205,7 +233,8 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
         {[
           { id: "all", label: "Todo" },
           { id: "added", label: "+ Nuevas" },
-          { id: "removed", label: "- Corregidas" }
+          { id: "removed", label: "- Corregidas" },
+          ...(diff.cacheAmbiguousCount > 0 ? [{ id: "cached", label: "⚠ Sin confirmar" }] : [])
         ].map((tab) => (
           <button
             key={tab.id}
@@ -231,19 +260,21 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
         )}
 
         {visibleLines.map((line) => {
-          const prefix = line.status === "added" ? "+" : line.status === "removed" ? "-" : " ";
-          const bg =
-            line.status === "added"
-              ? "bg-[#d6ffd6] text-[#004d00]"
-              : line.status === "removed"
-              ? "bg-[#ffd6d6] text-[#800000]"
-              : "bg-white text-gray-700";
+          const prefix = line.cacheAmbiguous ? "?" : line.status === "added" ? "+" : line.status === "removed" ? "-" : " ";
+          const bg = line.cacheAmbiguous
+            ? "bg-[#ffffc0] text-[#806000]"
+            : line.status === "added"
+            ? "bg-[#d6ffd6] text-[#004d00]"
+            : line.status === "removed"
+            ? "bg-[#ffd6d6] text-[#800000]"
+            : "bg-white text-gray-700";
           return (
             <div key={line.key} className={`px-2 py-[1px] whitespace-nowrap ${bg}`}>
               <span className="select-none mr-2 font-bold">{prefix}</span>
               <span>
                 [{line.vuln.type}] {line.vuln.name} — <span className="font-bold underline decoration-dotted">{line.vuln.location}</span>
                 {line.count > 1 ? ` (x${line.count})` : ""}
+                {line.cacheAmbiguous ? " (no re-testeada en B por caché — sin confirmar)" : ""}
               </span>
             </div>
           );
@@ -280,6 +311,21 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Info de caché de SQLMap del análisis B: qué URLs no se volvieron a testear */}
+      {dataB.sqlmapCacheInfo && dataB.sqlmapCacheInfo.omitidasPorCache.length > 0 && (
+        <div className="win98-border-deep bg-white flex-shrink-0 max-h-32 overflow-auto font-mono text-[11px] leading-tight">
+          <div className="bg-[#806000] text-white px-2 py-1 sticky top-0 font-sans font-bold">
+            ⚠ URLs omitidas por caché en B ({dataB.sqlmapCacheInfo.omitidasPorCache.length} de {dataB.sqlmapCacheInfo.totalCandidatas} candidatas — no se re-testearon con SQLMap)
+          </div>
+          {dataB.sqlmapCacheInfo.omitidasPorCache.map((url: string) => (
+            <div key={url} className="px-2 py-[1px] whitespace-nowrap bg-[#ffffc0] text-[#806000]">
+              <span className="select-none mr-2 font-bold">?</span>
+              <span className="font-bold underline decoration-dotted">{url}</span>
+            </div>
+          ))}
         </div>
       )}
 

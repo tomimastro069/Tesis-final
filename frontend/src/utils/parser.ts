@@ -126,6 +126,30 @@ export function parseSecurityResults(rawData: any) {
     });
   }
 
+  // Estadísticas generales del escaneo (calculadas por el backend al consolidar los resultados)
+  const resumenCrudo = rawData.resumen || {};
+  const generalStats = {
+    totalUrlsUnicas: resumenCrudo.total_urls_unicas ?? 0,
+    urlsSpider: resumenCrudo.urls_spider ?? 0,
+    alertasZap: resumenCrudo.alertas_zap ?? 0,
+    rutasFfuf: resumenCrudo.rutas_ffuf ?? 0,
+    vulnerabilidadesSqlmap: resumenCrudo.vulnerabilidades_sqlmap ?? 0
+  };
+
+  // Info de caché de SQLMap: URLs que NO se volvieron a testear en este análisis porque
+  // ya habían sido marcadas como "no atacables" en un escaneo anterior, y URLs que sí se
+  // re-testearon siempre por haber sido vulnerables antes. Importante para no confundir
+  // "no aparece en este análisis" con "se corrigió" al comparar dos análisis.
+  const cacheInfoCruda = rawData.sqlmap?.cache_info || rawData.sqlmap_raw?.cache_info || null;
+  const sqlmapCacheInfo = cacheInfoCruda
+    ? {
+        totalCandidatas: cacheInfoCruda.total_candidatas ?? 0,
+        totalTesteadas: cacheInfoCruda.total_testeadas ?? 0,
+        omitidasPorCache: cacheInfoCruda.omitidas_por_cache || [],
+        retesteadasPorVulnerablePrevia: cacheInfoCruda.retesteadas_por_vulnerable_previa || []
+      }
+    : null;
+
   const scanners = [];
   if (rawData.zap || rawData.zap_raw) scanners.push("OWASP ZAP");
   if (rawData.sqlmap || rawData.sqlmap_raw) scanners.push("SQLMap");
@@ -182,6 +206,8 @@ export function parseSecurityResults(rawData: any) {
     typesData,
     allVulnerabilities,
     sqlmapTables,
+    generalStats,
+    sqlmapCacheInfo,
     scanMetrics: {
       scanners: scanners.join(", ") || "Desconocido",
       uniqueEndpoints,

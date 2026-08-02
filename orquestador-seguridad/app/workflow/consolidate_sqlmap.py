@@ -169,6 +169,13 @@ def main():
                 print(f"[!] No se encontraron resultados previos en la base de datos para scan_id={scan_id}.")
                 db_results = {"resumen": {}}
 
+            # Conservar la info de caché (qué URLs se omitieron/re-testearon) que ya se
+            # había guardado al inicio del escaneo, porque este script solo re-parsea el
+            # log y no la recalcula.
+            cache_info_previo = (db_results.get("sqlmap") or {}).get("cache_info")
+            if cache_info_previo:
+                sqlmap_parsed["cache_info"] = cache_info_previo
+
             db_results["sqlmap"] = sqlmap_parsed
 
             # Recalcular el conteo de vulnerabilidades de SQLMap en el resumen
