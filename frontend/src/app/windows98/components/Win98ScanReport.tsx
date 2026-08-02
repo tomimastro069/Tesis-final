@@ -132,11 +132,43 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
                     <span className="font-bold">{data.generalStats.vulnerabilidadesSqlmap}</span>
                   </div>
                 </div>
-                {data.sqlmapCacheInfo && data.sqlmapCacheInfo.omitidasPorCache.length > 0 && (
-                  <div className="ml-4 mt-2 w-72 bg-[#ffffc0] win98-border-deep px-2 py-1 text-[10px] text-[#806000]">
-                    ⚠ {data.sqlmapCacheInfo.omitidasPorCache.length} de {data.sqlmapCacheInfo.totalCandidatas} URL(s) candidatas
-                    no fueron re-testeadas por SQLMap en este análisis (ya estaban marcadas como no vulnerables en un
-                    escaneo anterior). Si necesitás confirmarlas, relanzá el escaneo con "Limpiar caché".
+                {data.sqlmapCacheInfo && data.sqlmapCacheInfo.sqlmapEnCurso && (
+                  <div className="ml-4 mt-2 w-72 win98-border-deep px-2 py-1 text-[10px] bg-[#ffd6d6] text-[#800000]">
+                    <p className="font-bold mb-0.5">⚠ SQLMap NO corrió en este análisis:</p>
+                    <p>
+                      Había otro análisis usando SQLMap en segundo plano al mismo tiempo, así que este se omitió por
+                      completo para no corromper los resultados de ambos. Los datos de SQLMap acá (0 vulnerabilidades,
+                      sin tablas) no son reales para este escaneo — relanzalo cuando el otro termine para confirmar.
+                    </p>
+                  </div>
+                )}
+                {data.sqlmapCacheInfo && !data.sqlmapCacheInfo.sqlmapEnCurso && (
+                  <div
+                    className={`ml-4 mt-2 w-72 win98-border-deep px-2 py-1 text-[10px] ${
+                      data.sqlmapCacheInfo.omitidasPorCache.length > 0
+                        ? "bg-[#ffffc0] text-[#806000]"
+                        : "bg-white text-gray-600"
+                    }`}
+                  >
+                    <p className="font-bold mb-0.5">
+                      {data.sqlmapCacheInfo.omitidasPorCache.length > 0 ? "⚠ Se usó caché en SQLMap:" : "Caché de SQLMap:"}
+                    </p>
+                    <p>
+                      {data.sqlmapCacheInfo.totalTesteadas} de {data.sqlmapCacheInfo.totalCandidatas} URL(s) candidatas
+                      re-testeadas con SQLMap en este análisis.
+                    </p>
+                    {data.sqlmapCacheInfo.omitidasPorCache.length > 0 && (
+                      <p className="mt-1">
+                        {data.sqlmapCacheInfo.omitidasPorCache.length} omitida(s) por caché (ya estaban marcadas como no
+                        vulnerables antes). Si necesitás confirmarlas, relanzá el escaneo con "Limpiar caché".
+                      </p>
+                    )}
+                    {data.sqlmapCacheInfo.retesteadasPorVulnerablePrevia.length > 0 && (
+                      <p className="mt-1">
+                        {data.sqlmapCacheInfo.retesteadasPorVulnerablePrevia.length} re-testeada(s) siempre por haber sido
+                        vulnerable(s) en un análisis anterior.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

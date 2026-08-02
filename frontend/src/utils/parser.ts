@@ -146,7 +146,11 @@ export function parseSecurityResults(rawData: any) {
         totalCandidatas: cacheInfoCruda.total_candidatas ?? 0,
         totalTesteadas: cacheInfoCruda.total_testeadas ?? 0,
         omitidasPorCache: cacheInfoCruda.omitidas_por_cache || [],
-        retesteadasPorVulnerablePrevia: cacheInfoCruda.retesteadas_por_vulnerable_previa || []
+        retesteadasPorVulnerablePrevia: cacheInfoCruda.retesteadas_por_vulnerable_previa || [],
+        // true si este análisis se omitió por completo porque otro escaneo ya tenía
+        // SQLMap corriendo en segundo plano al mismo tiempo (evita datos corruptos
+        // por dos corridas pisándose el mismo log/script).
+        sqlmapEnCurso: !!cacheInfoCruda.sqlmap_en_curso
       }
     : null;
 

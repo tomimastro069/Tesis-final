@@ -123,6 +123,34 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     }
 
 
+def _sqlmap_bg_en_curso(lock_path: str) -> bool:
+    """
+    Revisa si ya hay una corrida de SQLMap en segundo plano activa (lockfile con un
+    PID que sigue vivo). run_sqlmap_bg.sh y sqlmap_bg.log son archivos únicos y
+    globales (no separados por scan_id): si dos escaneos se solapan, el segundo
+    pisaría el log/script del primero a mitad de camino y corromperia los
+    resultados de AMBOS análisis. Evitamos eso acá en vez de arriesgar datos falsos.
+    """
+    import os
+
+    if not os.path.exists(lock_path):
+        return False
+
+    try:
+        with open(lock_path, "r", encoding="utf-8") as f:
+            pid = int(f.read().strip())
+        os.kill(pid, 0)  # No mata al proceso, solo chequea si existe
+        return True
+    except ProcessLookupError:
+        # El PID ya no existe: lockfile viejo/huérfano de una corrida anterior que
+        # no se limpió (por ejemplo, si el contenedor se reinició a mitad de camino).
+        return False
+    except (ValueError, OSError):
+        # Lockfile corrupto o sin permisos para verificar: por las dudas, no
+        # asumimos que está libre.
+        return True
+
+
 def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = None, proxy: str = None, sqlmap_level: str = "basic", scan_id: str = None) -> list:
     """
     Ejecuta SQLMap en SEGUNDO PLANO contra TODAS las URLs que tengan parámetros.
@@ -131,13 +159,36 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
     import os
     import stat
     import subprocess
-    
+
+    lock_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.lock")
+
     # Paso 1: Filtrar solo URLs con parámetros
     urls_con_params = filtrar_urls_con_parametros(urls)
 
     if not urls_con_params:
         print("    No se encontraron URLs con parámetros para SQLMap.")
         return []
+
+    # Si ya hay otra corrida de SQLMap en segundo plano activa, no lanzamos una
+    # segunda: compartirían el mismo log/script y se corromperían entre sí. Mejor
+    # devolver explícitamente "no se testeó nada" que arriesgar datos mezclados.
+    if _sqlmap_bg_en_curso(lock_path):
+        print("    [!] Ya hay una corrida de SQLMap en segundo plano activa (de otro análisis). Se omite esta corrida para no corromper los resultados de ambas.")
+        cache_info = {
+            "total_candidatas": len(urls_con_params),
+            "total_testeadas": 0,
+            "omitidas_por_cache": [],
+            "retesteadas_por_vulnerable_previa": [],
+            "sqlmap_en_curso": True
+        }
+        return [{
+            "url": "BACKGROUND_EXECUTION",
+            "stdout": "Se omitió SQLMap: ya había otro análisis corriendo SQLMap en segundo plano al mismo tiempo. Ningún resultado de SQLMap de este análisis es real; esperá a que termine el otro análisis y volvé a escanear si necesitás confirmar SQL Injection.",
+            "stderr": "",
+            "success": True,
+            "timeout": False,
+            "cache_info": cache_info
+        }]
 
     print(f"    Se encontraron {len(urls_con_params)} URLs con parámetros.")
 
@@ -226,14 +277,19 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
         f.write(f"echo '--- Escaneo finalizado ---' >> {log_path}\n")
         scan_id_arg = f' "{scan_id}"' if scan_id else ""
         f.write(f"python3 -m app.workflow.consolidate_sqlmap{scan_id_arg} >> {log_path} 2>&1\n")
+        # Liberar el lock siempre al final, incluso si algo de arriba falló.
+        f.write(f"rm -f {lock_path}\n")
 
     # Dar permisos de ejecución al script
     st = os.stat(script_path)
     os.chmod(script_path, st.st_mode | stat.S_IEXEC)
-    
-    # Ejecutar en segundo plano (detached)
-    subprocess.Popen(["bash", script_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
-    
+
+    # Ejecutar en segundo plano (detached) y guardar su PID en el lockfile para que
+    # ningún otro análisis lo pise mientras esté corriendo.
+    proc = subprocess.Popen(["bash", script_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    with open(lock_path, "w", encoding="utf-8") as f:
+        f.write(str(proc.pid))
+
     print(f"    [+] SQLMap lanzado en segundo plano.")
     print(f"    [+] Para ver el progreso en vivo, abrí otra consola y ejecutá:")
     print(f"        docker exec -it security-app tail -f /app/output/raw/sqlmap_bg.log")

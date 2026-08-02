@@ -83,6 +83,10 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
     // "desaparece" en B pero su URL está acá, no sabemos si se corrigió o
     // simplemente no se volvió a probar.
     const omitidasEnB = new Set<string>(dataB.sqlmapCacheInfo?.omitidasPorCache || []);
+    // Si SQLMap se omitió por completo en B (otro análisis lo estaba usando al mismo
+    // tiempo), TODAS las vulnerabilidades de SQLMap de A quedan sin confirmar en B,
+    // no solo las que estaban en la lista de omitidas.
+    const sqlmapNoCorrioEnB = !!dataB.sqlmapCacheInfo?.sqlmapEnCurso;
 
     const lines: DiffLine[] = [];
 
@@ -92,7 +96,7 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
       const countA = inA?.count || 0;
       const countB = inB?.count || 0;
       const sample = (inB || inA)!.sample;
-      const esCacheAmbigua = sample.type === "Injection" && omitidasEnB.has(sample.location);
+      const esCacheAmbigua = sample.type === "Injection" && (sqlmapNoCorrioEnB || omitidasEnB.has(sample.location));
 
       if (countA > 0 && countB > 0) {
         lines.push({ key: `${k}::ctx`, status: "context", vuln: sample, count: Math.min(countA, countB) });
@@ -219,7 +223,14 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
           )}
         </div>
 
-        {diff.cacheAmbiguousCount > 0 && (
+        {dataB.sqlmapCacheInfo?.sqlmapEnCurso && (
+          <div className="mt-1 bg-[#ffd6d6] win98-border-deep px-2 py-1 text-[11px] text-[#800000] font-bold">
+            ⚠ SQLMap no corrió en el análisis B: había otro análisis usándolo al mismo tiempo, así que se omitió por
+            completo. Ningún hallazgo de SQLMap de B es real — relanzá ese análisis antes de confiar en esta comparación.
+          </div>
+        )}
+
+        {!dataB.sqlmapCacheInfo?.sqlmapEnCurso && diff.cacheAmbiguousCount > 0 && (
           <div className="mt-1 bg-[#ffffc0] win98-border-deep px-2 py-1 text-[11px]">
             ⚠ {diff.cacheAmbiguousCount} hallazgo(s) de SQLMap no aparecen en B, pero su URL no fue re-testeada
             en este análisis (SQLMap la había marcado antes como no vulnerable y la omitió por caché). No asumas

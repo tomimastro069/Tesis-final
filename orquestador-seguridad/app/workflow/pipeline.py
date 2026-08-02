@@ -16,9 +16,9 @@ from app.scanners.zap import (
 )
 from app.parsers.zap_parser import parsear_spider, parsear_zap
 from app.parsers.ffuf_parser import parsear_ffuf
-from app.parsers.sqlmap_parser import parsear_sqlmap, parsear_tablas_log_sqlmap
-from app.utils.results import consolidar_resultados 
-from app.db.database import init_db, save_vulnerable_url, save_sqlmap_tables
+from app.parsers.sqlmap_parser import parsear_sqlmap
+from app.utils.results import consolidar_resultados
+from app.db.database import init_db, save_vulnerable_url
 
 from app.config import settings
 
@@ -337,21 +337,13 @@ def run_parser_pipeline(resultado_escaneo):
         if cache_info:
             sqlmap_parseado["cache_info"] = cache_info
 
-    # Parsear tablas de SQLMap desde el log crudo si existe
-    try:
-        from app.config import settings
-        # settings.OUTPUT_DIR ya apunta a ".../output/raw", no agregar "raw" de nuevo
-        log_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.log")
-        if os.path.exists(log_path):
-            tablas_extraidas = parsear_tablas_log_sqlmap(log_path)
-            if tablas_extraidas:
-                sqlmap_parseado["tablas_extraidas"] = tablas_extraidas
-                target_url = "URL_DESCONOCIDA"
-                if "vulnerabilidades" in sqlmap_parseado and len(sqlmap_parseado["vulnerabilidades"]) > 0:
-                    target_url = sqlmap_parseado["vulnerabilidades"][0]["url"]
-                save_sqlmap_tables(target_url, tablas_extraidas)
-    except Exception as e:
-        print(f"[!] Error al parsear o guardar tablas de SQLMap: {e}")
+    # NOTA: acá NO se intenta leer sqlmap_bg.log ni tablas_extraidas. En este punto
+    # SQLMap recién se lanzó en segundo plano (run_sqlmap_batch ya volvió) así que el
+    # log todavía no tiene resultados reales, o peor, puede tener los de una corrida
+    # anterior (es un archivo único, no por scan_id). Los hallazgos y tablas reales de
+    # SQLMap se completan después, de forma asíncrona, en consolidate_sqlmap.py cuando
+    # el proceso en segundo plano termina, y ese es el que actualiza la base de datos
+    # y regenera reporte_seguridad.md con la información correcta de esta corrida.
 
     #Consolidar los 3 resultados en una sola lista sin duplicados
     resultados_unificados = consolidar_resultados(spider_parseado, zap_parseado, ffuf_parseado, sqlmap_parseado)
