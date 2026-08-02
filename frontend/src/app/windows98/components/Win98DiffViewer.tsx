@@ -199,12 +199,42 @@ export function Win98DiffViewer({ domainA, domainB }: Props) {
           <span>{fileNameFor(domainA)}</span>
           <span className="text-gray-600">— {formatDate(domainA.lastScan)}</span>
         </div>
+        {(() => {
+          const c = dataA.sqlmapCacheInfo;
+          if (!c) return null;
+          const label = c.sqlmapEnCurso
+            ? "⚠ SQLMap omitido por completo (otro análisis lo estaba usando)"
+            : c.omitidasPorCache.length > 0
+            ? `⚠ ${c.omitidasPorCache.length} URL(s) omitida(s) por caché`
+            : "sin URLs omitidas por caché";
+          const cls = c.sqlmapEnCurso || c.omitidasPorCache.length > 0 ? "text-[#806000]" : "text-gray-500";
+          return (
+            <div className={`ml-6 text-[10px] ${cls}`}>
+              SQLMap: {c.totalTesteadas}/{c.totalCandidatas} URL(s) testeadas — {label}
+            </div>
+          );
+        })()}
         <div className="flex items-center gap-2">
           <img src="https://win98icons.alexmeub.com/icons/png/notepad-1.png" className="w-4 h-4" alt="B" />
           <span className="font-bold">Comparado (B):</span>
           <span>{fileNameFor(domainB)}</span>
           <span className="text-gray-600">— {formatDate(domainB.lastScan)}</span>
         </div>
+        {(() => {
+          const c = dataB.sqlmapCacheInfo;
+          if (!c) return null;
+          const label = c.sqlmapEnCurso
+            ? "⚠ SQLMap omitido por completo (otro análisis lo estaba usando)"
+            : c.omitidasPorCache.length > 0
+            ? `⚠ ${c.omitidasPorCache.length} URL(s) omitida(s) por caché`
+            : "sin URLs omitidas por caché";
+          const cls = c.sqlmapEnCurso || c.omitidasPorCache.length > 0 ? "text-[#806000]" : "text-gray-500";
+          return (
+            <div className={`ml-6 text-[10px] ${cls}`}>
+              SQLMap: {c.totalTesteadas}/{c.totalCandidatas} URL(s) testeadas — {label}
+            </div>
+          );
+        })()}
 
         <div className="w-full h-[1px] border-t border-gray-500 border-b border-white my-1"></div>
 
