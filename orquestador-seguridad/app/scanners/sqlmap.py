@@ -96,18 +96,18 @@ def run_sqlmap(url: str, timeout: int = settings.SQLMAP_TIMEOUT, cookies: str = 
     
     # Agregar banderas de enumeración según el nivel solicitado
     if sqlmap_level == "fast_evidence":
-        cmd.extend(["--dbs", "--current-user"])
+        cmd.extend(["--dbs", "--tables", "--current-user"])
     elif sqlmap_level == "full_dump":
         cmd.append("--dump")
-    
+
     # Agregar Proxy solo si se define
     if proxy:
         cmd.extend(["--proxy", proxy])
-    
+
     # Agregar Cookies si existen
     if cookies:
         cmd.extend(["--cookie", cookies])
-    
+
     # Usar un User-Agent fijo y real para no romper la sesión de DVWA
     ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
     cmd.extend(["--user-agent", ua])
@@ -269,7 +269,7 @@ def run_sqlmap_batch(urls: list, timeout: int = settings.SQLMAP_TIMEOUT, cookies
                 "-o"
             ]
             if sqlmap_level == "fast_evidence":
-                cmd.extend(["--dbs", "--current-user"])
+                cmd.extend(["--dbs", "--tables", "--current-user"])
             elif sqlmap_level == "full_dump":
                 cmd.append("--dump")
             

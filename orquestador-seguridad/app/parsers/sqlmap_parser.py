@@ -68,7 +68,27 @@ def parsear_tablas_log_sqlmap(log_path):
                 databases[current_db][current_table] = {"columns": [], "rows": []}
             state = "EXPECTING_HEADER_SEPARATOR"
             continue
-            
+
+        # "[N tables]" precede al listado de nombres de tabla cuando SQLMap corrió
+        # con --tables pero sin --dump (nivel "fast_evidence"): no hay columnas ni
+        # filas, cada renglón de la caja ASCII es directamente un nombre de tabla.
+        if re.match(r"^\[\d+ tables?\]$", line) and current_db:
+            state = "EXPECTING_TABLE_NAMES_SEPARATOR"
+            continue
+
+        if state == "EXPECTING_TABLE_NAMES_SEPARATOR" and line.startswith("+"):
+            state = "EXPECTING_TABLE_NAMES"
+            continue
+
+        if state == "EXPECTING_TABLE_NAMES":
+            if line.startswith("|"):
+                nombre_tabla = line.strip("|").strip()
+                if current_db and nombre_tabla and nombre_tabla not in databases[current_db]:
+                    databases[current_db][nombre_tabla] = {"columns": [], "rows": []}
+            elif line.startswith("+"):
+                state = "SEARCHING"
+            continue
+
         if state == "EXPECTING_HEADER_SEPARATOR" and line.startswith("+"):
             state = "EXPECTING_HEADERS"
             continue
