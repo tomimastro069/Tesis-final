@@ -22,7 +22,15 @@ def parsear_zap(dato_dict_crudo):
                             "severidad": alerta.get("riskdesc", "No clasificado"),
                             "metodo": instancia.get("method", "N/A"),
                             "descripcion": alerta.get("desc", "N/A"),
-                            "solucion": alerta.get("solution", "No hay solución disponible")
+                            "solucion": alerta.get("solution", "No hay solución disponible"),
+                            # Prueba real del hallazgo (solo la traen las reglas de Active Scan,
+                            # las pasivas como headers faltantes suelen dejarlas vacías):
+                            # "param": el parámetro atacado, "attack": el payload exacto que
+                            # ZAP inyectó, "evidence": el fragmento de la respuesta que confirma
+                            # que el payload funcionó (ej. reflejado tal cual en el HTML).
+                            "parametro": instancia.get("param", ""),
+                            "payload_ataque": instancia.get("attack", ""),
+                            "evidencia": instancia.get("evidence", "")
                         })
         
         # Extraer info base del primer sitio (si existe)

@@ -1,3 +1,5 @@
+import { getVulnKnowledge } from "./vulnKnowledgeBase";
+
 export function parseSecurityResults(rawData: any) {
   if (!rawData) return null;
 
@@ -84,26 +86,47 @@ export function parseSecurityResults(rawData: any) {
     });
 
   const allVulnerabilities = [
-    ...sqlVulns.map((v: any) => ({
-      id: Math.random().toString(),
-      name: `SQL Injection in ${v.parametro || 'unknown'}`,
-      severity: "Critical",
-      location: v.url,
-      type: "Injection",
-      status: "Open",
-      description: "SQL Injection found by SQLMap",
-      recommendation: "Use parameterized queries or prepared statements."
-    })),
-    ...alerts.filter((a: any) => a._parsedSeverity).map((a: any) => ({
-      id: Math.random().toString(),
-      name: a.vulnerabilidad || a.name,
-      severity: a._parsedSeverity,
-      location: a.url || a.instances?.[0]?.uri || "Various",
-      type: "Configuration",
-      status: "Open",
-      description: (a.descripcion || a.desc || "").replace(/<[^>]+>/g, ''),
-      recommendation: (a.solucion || a.solution || "").replace(/<[^>]+>/g, '')
-    }))
+    ...sqlVulns.map((v: any) => {
+      const name = `SQL Injection in ${v.parametro || 'unknown'}`;
+      const knowledge = getVulnKnowledge("SQL Injection", "Injection");
+      return {
+        id: Math.random().toString(),
+        name,
+        severity: "Critical",
+        location: v.url,
+        type: "Injection",
+        status: "Open",
+        description: "SQL Injection found by SQLMap",
+        recommendation: "Use parameterized queries or prepared statements.",
+        queEs: knowledge.queEs,
+        peligroReal: knowledge.peligroReal,
+        comoMitigar: knowledge.comoMitigar,
+      };
+    }),
+    ...alerts.filter((a: any) => a._parsedSeverity).map((a: any) => {
+      const name = a.vulnerabilidad || a.name;
+      const method = a.metodo || a.method;
+      const knowledge = getVulnKnowledge(name, "Configuration", method);
+      return {
+        id: Math.random().toString(),
+        name,
+        severity: a._parsedSeverity,
+        location: a.url || a.instances?.[0]?.uri || "Various",
+        type: "Configuration",
+        status: "Open",
+        method: method && method !== "N/A" ? method : undefined,
+        description: (a.descripcion || a.desc || "").replace(/<[^>]+>/g, ''),
+        recommendation: (a.solucion || a.solution || "").replace(/<[^>]+>/g, ''),
+        queEs: knowledge.queEs,
+        peligroReal: knowledge.peligroReal,
+        comoMitigar: knowledge.comoMitigar,
+        // Prueba real capturada por el Active Scan de ZAP (vacío en reglas
+        // pasivas, como headers faltantes, que no envían ningún payload).
+        attackParam: a.parametro || undefined,
+        attackPayload: a.payload_ataque || undefined,
+        attackEvidence: a.evidencia || undefined,
+      };
+    })
   ];
 
   // Tablas de base de datos volcadas por SQLMap (--dump), si las hubo
