@@ -6,10 +6,10 @@ import { Win98VulnerabilityDetails } from "./Win98VulnerabilityDetails";
 import { Win98CacheBadge } from "./Win98CacheBadge";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-export function Win98ScanReport({ domain }: { domain: Domain }) {
+export function Win98ScanReport({ domain, windowId }: { domain: Domain; windowId: string }) {
   const { loading, data } = useScanReport(domain);
   const [activeTab, setActiveTab] = useState("general");
-  const { openWindow } = useWindows();
+  const { openWindow, closeWindow } = useWindows();
 
   const [filterSeverity, setFilterSeverity] = useState("all");
   const [filterType, setFilterType] = useState("all");
@@ -379,8 +379,7 @@ export function Win98ScanReport({ domain }: { domain: Domain }) {
       </div>
 
       <div className="flex justify-end gap-2 mt-4 flex-shrink-0">
-        <button className="px-6 py-1 win98-border active:win98-border-inset text-xs bg-[#c0c0c0]">OK</button>
-        <button className="px-6 py-1 win98-border active:win98-border-inset text-xs bg-[#c0c0c0]">Cancel</button>
+        <button onClick={() => closeWindow(windowId)} className="px-6 py-1 win98-border active:win98-border-inset text-xs bg-[#c0c0c0]">Volver</button>
       </div>
     </div>
   );

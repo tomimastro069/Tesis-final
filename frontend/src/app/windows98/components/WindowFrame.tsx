@@ -68,7 +68,7 @@ export function WindowFrame({
       bounds="parent"
       dragHandleClassName="win-title-bar"
       onMouseDown={() => focusWindow(id)}
-      style={{ zIndex }}
+      style={{ zIndex, pointerEvents: 'auto' }}
     >
       <div className="w-full h-full flex flex-col bg-[#c0c0c0] win98-border font-win98 pointer-events-auto overflow-hidden">
         {/* Title Bar */}

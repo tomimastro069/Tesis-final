@@ -14,11 +14,12 @@ export function ReportsExplorer() {
   const completedScans = domains.filter(d => d.status === "completed" || d.status === "error");
 
   const handleOpenReport = (domain: Domain) => {
+    const windowId = `report-${domain.scanId}`;
     openWindow({
-      id: `report-${domain.scanId}`,
+      id: windowId,
       title: `System Properties - ${domain.target.replace(/^https?:\/\//, "")}`,
       icon: "https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png",
-      component: <Win98ScanReport domain={domain} />
+      component: <Win98ScanReport domain={domain} windowId={windowId} />
     });
   };
 
