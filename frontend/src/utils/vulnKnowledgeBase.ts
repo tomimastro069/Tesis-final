@@ -180,33 +180,51 @@ function normalizeName(name: string): string {
   return (name || "").trim();
 }
 
-// Alertas donde el método HTTP (GET/POST/PUT/DELETE) de la instancia
-// encontrada cambia el análisis real de riesgo: no es el mismo peligro un
-// formulario de solo lectura (GET) que uno que modifica datos (POST/PUT/DELETE).
+// Alertas donde el método HTTP (GET/POST/PUT/DELETE) cambia el análisis real
+// de riesgo: no es el mismo peligro un formulario de solo lectura (GET) que
+// uno que modifica datos (POST/PUT/DELETE).
 const STATE_CHANGING_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
 
-function applyMethodContext(name: string, base: VulnKnowledge, method?: string): VulnKnowledge {
+// El campo "metodo" que manda ZAP por instancia es el método con el que se
+// PIDIÓ la página (normalmente GET, porque así se navega a cualquier URL).
+// Eso NO es lo mismo que el método del <form> vulnerable que hay adentro de
+// esa página, que puede perfectamente ser POST. Cuando la evidencia capturada
+// es justamente el tag <form ...>, ahí sí tenemos el método real del
+// formulario, y ese dato es más preciso que el método de la página contenedora.
+function extractFormMethodFromEvidence(evidence?: string): string | undefined {
+  if (!evidence) return undefined;
+  const match = evidence.match(/<form[^>]*\bmethod\s*=\s*["']?(get|post|put|delete|patch)["']?/i);
+  return match ? match[1].toUpperCase() : undefined;
+}
+
+function applyMethodContext(name: string, base: VulnKnowledge, pageMethod?: string, evidence?: string): VulnKnowledge {
   const n = name.toLowerCase();
-  const m = (method || "").trim().toUpperCase();
 
   if (n === "absence of anti-csrf tokens") {
+    const formMethod = extractFormMethodFromEvidence(evidence);
+    const m = (formMethod || pageMethod || "").trim().toUpperCase();
     if (!m || m === "N/A") return base;
+
+    const origen = formMethod
+      ? "según el propio <form> capturado como evidencia"
+      : "según el método con que se accedió a la página (dato menos preciso, porque el formulario en sí podría usar otro método distinto)";
+
     if (STATE_CHANGING_METHODS.has(m)) {
       return {
         ...base,
-        peligroReal: `${base.peligroReal} En este caso puntual el formulario envía los datos por ${m}, lo que normalmente indica que SÍ ejecuta una acción real en el servidor (guardar, cambiar o borrar algo). Por eso acá la falta de token CSRF es un riesgo concreto, no solo teórico.`,
+        peligroReal: `${base.peligroReal} En este caso puntual, ${origen}, el formulario envía los datos por ${m}, lo que normalmente indica que SÍ ejecuta una acción real en el servidor (guardar, cambiar o borrar algo). Por eso acá la falta de token CSRF es un riesgo concreto, no solo teórico.`,
       };
     }
     return {
       ...base,
-      peligroReal: `${base.peligroReal} En este caso puntual el formulario envía los datos por GET, que por convención suele usarse solo para leer/filtrar información y no para modificar datos. Si efectivamente esa página no cambia nada en el servidor, el riesgo real acá es bajo — aunque conviene confirmarlo a mano, porque un GET que sí modifica datos sería además una mala práctica aparte del CSRF.`,
+      peligroReal: `${base.peligroReal} En este caso puntual, ${origen}, el formulario envía los datos por GET, que por convención suele usarse solo para leer/filtrar información y no para modificar datos. Si efectivamente esa página no cambia nada en el servidor, el riesgo real acá es bajo — aunque conviene confirmarlo a mano, porque un GET que sí modifica datos sería además una mala práctica aparte del CSRF.`,
     };
   }
 
   return base;
 }
 
-export function getVulnKnowledge(name: string, type?: string, method?: string): VulnKnowledge {
+export function getVulnKnowledge(name: string, type?: string, method?: string, evidence?: string): VulnKnowledge {
   const n = normalizeName(name);
 
   let base: VulnKnowledge;
@@ -217,5 +235,5 @@ export function getVulnKnowledge(name: string, type?: string, method?: string): 
     base = partial ? partial.data : (type === "Injection" ? GENERIC_INJECTION : GENERIC_CONFIG);
   }
 
-  return applyMethodContext(n, base, method);
+  return applyMethodContext(n, base, method, evidence);
 }

@@ -106,7 +106,8 @@ export function parseSecurityResults(rawData: any) {
     ...alerts.filter((a: any) => a._parsedSeverity).map((a: any) => {
       const name = a.vulnerabilidad || a.name;
       const method = a.metodo || a.method;
-      const knowledge = getVulnKnowledge(name, "Configuration", method);
+      const evidence = a.evidencia || a.evidence;
+      const knowledge = getVulnKnowledge(name, "Configuration", method, evidence);
       return {
         id: Math.random().toString(),
         name,

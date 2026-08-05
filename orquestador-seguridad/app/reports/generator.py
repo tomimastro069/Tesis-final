@@ -1,6 +1,7 @@
 import os
 import datetime
 from app.config import settings
+from app.reports.vuln_knowledge import get_vuln_knowledge
 
 def generar_reporte(resultados, formato="markdown", output_dir=settings.REPORTS_DIR):
     """
@@ -57,13 +58,30 @@ def _generar_contenido_markdown(resultados):
     if zap_data and zap_data.get("alertas"):
         md.append("## Detalles Técnicos: Alertas de ZAP")
         for alerta in zap_data.get("alertas", []):
+            nombre_vuln = alerta.get('vulnerabilidad', 'Vulnerabilidad Desconocida')
             req_method = alerta.get("metodo", "N/A")
-            md.append(f"### {alerta.get('vulnerabilidad', 'Vulnerabilidad Desconocida')}")
+            parametro = alerta.get("parametro", "")
+            payload = alerta.get("payload_ataque", "")
+            evidencia = alerta.get("evidencia", "")
+            conocimiento = get_vuln_knowledge(nombre_vuln, "Configuration", req_method, evidencia)
+
+            md.append(f"### {nombre_vuln}")
             md.append(f"- **Severidad:** {alerta.get('severidad', 'N/A')}")
             md.append(f"- **URL:** `{alerta.get('url', 'N/A')}`")
             md.append(f"- **Método:** {req_method}")
-            md.append(f"- **Descripción:** {alerta.get('descripcion', 'N/A')}")
-            md.append(f"- **Solución:** {alerta.get('solucion', 'N/A')}")
+
+            # Prueba real capturada por el Active Scan (vacío en reglas pasivas,
+            # como cabeceras faltantes, que no envían ningún payload).
+            if parametro:
+                md.append(f"- **Parámetro atacado:** `{parametro}`")
+            if payload:
+                md.append(f"- **Payload enviado:**\n```\n{payload}\n```")
+            if evidencia:
+                md.append(f"- **Evidencia en la respuesta:**\n```\n{evidencia}\n```")
+
+            md.append(f"- **¿Qué es esta vulnerabilidad?** {conocimiento['que_es']}")
+            md.append(f"- **¿Cuál es el peligro real?** {conocimiento['peligro_real']}")
+            md.append(f"- **Cómo mitigarlo:** {conocimiento['como_mitigar']}")
             md.append("\n---")
     
     # Detalle FFUF
@@ -162,12 +180,26 @@ def _generar_contenido_texto(resultados):
     if zap_data and zap_data.get("alertas"):
         txt.append("\n[ DETALLES TÉCNICOS: ZAP ]")
         for alerta in zap_data.get("alertas", []):
-            txt.append(f"\n>> {alerta.get('vulnerabilidad', 'Vulnerabilidad Desconocida')}")
+            nombre_vuln = alerta.get('vulnerabilidad', 'Vulnerabilidad Desconocida')
+            req_method = alerta.get("metodo", "N/A")
+            parametro = alerta.get("parametro", "")
+            payload = alerta.get("payload_ataque", "")
+            evidencia = alerta.get("evidencia", "")
+            conocimiento = get_vuln_knowledge(nombre_vuln, "Configuration", req_method, evidencia)
+
+            txt.append(f"\n>> {nombre_vuln}")
             txt.append(f"   Severidad: {alerta.get('severidad', 'N/A')}")
             txt.append(f"   URL: {alerta.get('url', 'N/A')}")
-            txt.append(f"   Método: {alerta.get('metodo', 'N/A')}")
-            txt.append(f"   Descripción: {alerta.get('descripcion', 'N/A')}")
-            txt.append(f"   Solución: {alerta.get('solucion', 'N/A')}")
+            txt.append(f"   Método: {req_method}")
+            if parametro:
+                txt.append(f"   Parámetro atacado: {parametro}")
+            if payload:
+                txt.append(f"   Payload enviado: {payload}")
+            if evidencia:
+                txt.append(f"   Evidencia en la respuesta: {evidencia}")
+            txt.append(f"   ¿Qué es esta vulnerabilidad?: {conocimiento['que_es']}")
+            txt.append(f"   ¿Cuál es el peligro real?: {conocimiento['peligro_real']}")
+            txt.append(f"   Cómo mitigarlo: {conocimiento['como_mitigar']}")
             txt.append("-" * 50)
             
     # Detalle FFUF
