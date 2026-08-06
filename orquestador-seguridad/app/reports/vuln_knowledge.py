@@ -236,6 +236,27 @@ def _aplicar_contexto_metodo(nombre, base, metodo_pagina=None, evidencia=None):
     return base
 
 
+# ZAP separa "riesgo" (qué tan grave sería si es real) de "confianza" (qué tan
+# seguro está el scanner de que el hallazgo es real, no un falso positivo).
+# Un hallazgo de riesgo Alto con confianza Baja necesita verificación manual
+# antes de darlo por cierto; uno Confirmado ya fue validado activamente por ZAP.
+_INTERPRETACION_CONFIANZA = {
+    "confirmed": "Confirmado: ZAP validó este hallazgo de forma activa (no es una sospecha), la certeza es alta.",
+    "high": "Confianza alta: es muy probable que el hallazgo sea real.",
+    "medium": "Confianza media: probablemente sea real, pero conviene revisarlo antes de darlo por cierto.",
+    "low": "Confianza baja: hay una probabilidad considerable de que sea un falso positivo — se recomienda verificar manualmente antes de actuar sobre este hallazgo.",
+    "false positive": "El propio scanner lo marca como posible falso positivo: no debería tratarse como un hallazgo confirmado.",
+}
+
+
+def interpretar_confianza(confianza):
+    """Traduce el nivel de confianza de ZAP a una nota en español que explica qué implica ese nivel."""
+    if not confianza:
+        return None
+    clave = confianza.strip().lower()
+    return _INTERPRETACION_CONFIANZA.get(clave)
+
+
 def get_vuln_knowledge(nombre, tipo=None, metodo=None, evidencia=None):
     """
     Devuelve un dict {"que_es", "peligro_real", "como_mitigar"} en español

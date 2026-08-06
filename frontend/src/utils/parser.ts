@@ -1,4 +1,4 @@
-import { getVulnKnowledge } from "./vulnKnowledgeBase";
+import { getVulnKnowledge, interpretConfidence } from "./vulnKnowledgeBase";
 
 export function parseSecurityResults(rawData: any) {
   if (!rawData) return null;
@@ -116,6 +116,8 @@ export function parseSecurityResults(rawData: any) {
         type: "Configuration",
         status: "Open",
         method: method && method !== "N/A" ? method : undefined,
+        confidence: a.confianza && a.confianza !== "N/A" ? a.confianza : undefined,
+        confidenceNote: interpretConfidence(a.confianza),
         description: (a.descripcion || a.desc || "").replace(/<[^>]+>/g, ''),
         recommendation: (a.solucion || a.solution || "").replace(/<[^>]+>/g, ''),
         queEs: knowledge.queEs,

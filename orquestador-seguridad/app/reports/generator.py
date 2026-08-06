@@ -1,7 +1,7 @@
 import os
 import datetime
 from app.config import settings
-from app.reports.vuln_knowledge import get_vuln_knowledge
+from app.reports.vuln_knowledge import get_vuln_knowledge, interpretar_confianza
 
 def generar_reporte(resultados, formato="markdown", output_dir=settings.REPORTS_DIR):
     """
@@ -65,8 +65,12 @@ def _generar_contenido_markdown(resultados):
             evidencia = alerta.get("evidencia", "")
             conocimiento = get_vuln_knowledge(nombre_vuln, "Configuration", req_method, evidencia)
 
+            confianza = alerta.get("confianza", "N/A")
+            nota_confianza = interpretar_confianza(confianza)
+
             md.append(f"### {nombre_vuln}")
             md.append(f"- **Severidad:** {alerta.get('severidad', 'N/A')}")
+            md.append(f"- **Confianza del hallazgo:** {confianza}" + (f" — {nota_confianza}" if nota_confianza else ""))
             md.append(f"- **URL:** `{alerta.get('url', 'N/A')}`")
             md.append(f"- **Método:** {req_method}")
 
@@ -187,8 +191,12 @@ def _generar_contenido_texto(resultados):
             evidencia = alerta.get("evidencia", "")
             conocimiento = get_vuln_knowledge(nombre_vuln, "Configuration", req_method, evidencia)
 
+            confianza = alerta.get("confianza", "N/A")
+            nota_confianza = interpretar_confianza(confianza)
+
             txt.append(f"\n>> {nombre_vuln}")
             txt.append(f"   Severidad: {alerta.get('severidad', 'N/A')}")
+            txt.append(f"   Confianza del hallazgo: {confianza}" + (f" — {nota_confianza}" if nota_confianza else ""))
             txt.append(f"   URL: {alerta.get('url', 'N/A')}")
             txt.append(f"   Método: {req_method}")
             if parametro:

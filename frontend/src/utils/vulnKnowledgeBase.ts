@@ -224,6 +224,23 @@ function applyMethodContext(name: string, base: VulnKnowledge, pageMethod?: stri
   return base;
 }
 
+// ZAP separa "riesgo" (qué tan grave sería si es real) de "confianza" (qué tan
+// seguro está el scanner de que el hallazgo es real, no un falso positivo).
+// Un hallazgo de riesgo Alto con confianza Baja necesita verificación manual
+// antes de darlo por cierto; uno Confirmado ya fue validado activamente por ZAP.
+const CONFIDENCE_NOTES: Record<string, string> = {
+  confirmed: "Confirmado: ZAP validó este hallazgo de forma activa (no es una sospecha), la certeza es alta.",
+  high: "Confianza alta: es muy probable que el hallazgo sea real.",
+  medium: "Confianza media: probablemente sea real, pero conviene revisarlo antes de darlo por cierto.",
+  low: "Confianza baja: hay una probabilidad considerable de que sea un falso positivo — se recomienda verificar manualmente antes de actuar sobre este hallazgo.",
+  "false positive": "El propio scanner lo marca como posible falso positivo: no debería tratarse como un hallazgo confirmado.",
+};
+
+export function interpretConfidence(confidence?: string): string | undefined {
+  if (!confidence) return undefined;
+  return CONFIDENCE_NOTES[confidence.trim().toLowerCase()];
+}
+
 export function getVulnKnowledge(name: string, type?: string, method?: string, evidence?: string): VulnKnowledge {
   const n = normalizeName(name);
 

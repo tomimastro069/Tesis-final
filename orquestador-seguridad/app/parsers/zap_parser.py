@@ -1,3 +1,21 @@
+import re
+
+# ZAP manda el riesgo y la confianza juntos en "riskdesc", con formato
+# "Riesgo (Confianza)" (ej: "Medium (Low)"). Antes guardábamos ese texto
+# combinado tal cual en "severidad", lo que rompía cualquier comparación que
+# buscara el riesgo real: un hallazgo "Low (High)" contiene la palabra "high"
+# aunque su riesgo real sea bajo. Acá los separamos en el origen para que
+# nadie más tenga que re-parsear el texto combinado.
+_RISKDESC_RE = re.compile(r"^\s*([A-Za-z ]+?)\s*\(([A-Za-z ]+)\)\s*$")
+
+
+def _separar_riesgo_confianza(riskdesc: str):
+    match = _RISKDESC_RE.match(riskdesc or "")
+    if match:
+        return match.group(1).strip(), match.group(2).strip()
+    return riskdesc or "No clasificado", "N/A"
+
+
 def parsear_zap(dato_dict_crudo):
     #Intentamos ejecutar el parseo
     try:
@@ -16,10 +34,12 @@ def parsear_zap(dato_dict_crudo):
 
                     if clave not in vistas:
                         vistas.add(clave)
+                        riesgo, confianza = _separar_riesgo_confianza(alerta.get("riskdesc", ""))
                         alertas_parseadas.append({
                             "url": url,
                             "vulnerabilidad": alerta.get("alert", "Vulnerabilidad sin nombre"),
-                            "severidad": alerta.get("riskdesc", "No clasificado"),
+                            "severidad": riesgo,
+                            "confianza": confianza,
                             "metodo": instancia.get("method", "N/A"),
                             "descripcion": alerta.get("desc", "N/A"),
                             "solucion": alerta.get("solution", "No hay solución disponible"),
