@@ -10,3 +10,4 @@ n8n/data/*
 !n8n/data/.gitkeep
 orquestador-seguridad/output/raw/ffuf_raw.json
 orquestador-seguridad/output/raw/temp_wordlist.txt
+orquestador-seguridad/app/__pycache__/__init__.cpython-313.pyc
