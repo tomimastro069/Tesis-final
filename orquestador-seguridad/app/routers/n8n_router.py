@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional, Any, Dict
 import requests
 import logging
+import os
 
 logger = logging.getLogger("security_api.n8n")
 
@@ -11,8 +12,8 @@ router = APIRouter(
     tags=["n8n"]
 )
 
-# N8N Mock URL - Actualizado para usar la red interna de Docker y el entorno de test de n8n
-N8N_WEBHOOK_URL = "http://n8n:5678/webhook-test/analyze-vuln"
+# N8N Webhook URL - Cargado desde variables de entorno para apuntar a producción por defecto
+N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "http://security-n8n:5678/webhook/analyze-vuln")
 
 class VulnerabilityAnalysisRequest(BaseModel):
     id: str | int

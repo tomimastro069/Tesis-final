@@ -4,7 +4,8 @@ import requests
 import uuid
 import json
 from typing import Optional
-from fastapi import FastAPI, BackgroundTasks, HTTPException
+from fastapi import FastAPI, BackgroundTasks, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # Configurar logs
@@ -41,6 +42,14 @@ app.add_middleware(
 
 from app.routers.n8n_router import router as n8n_router
 app.include_router(n8n_router)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Excepción global no manejada: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Error interno del servidor", "message": str(exc)},
+    )
 
 class ScanRequest(BaseModel):
     target: str
@@ -120,6 +129,13 @@ def ejecutar_pipeline_segundo_plano(scan_id: str, target: str, nivel: str, cooki
 
     except Exception as e:
         logger.error(f"[-] Error durante la ejecución del pipeline: {e}", exc_info=True)
+        
+        try:
+            from app.scanners.zap import abortar_escaneos_zap
+            abortar_escaneos_zap()
+        except Exception as zap_err:
+            logger.error(f"[-] Error intentando abortar ZAP tras fallo: {zap_err}")
+            
         update_scan_status(scan_id, 'failed')
         payload = {
             "status": "failed",
@@ -200,6 +216,26 @@ def delete_scan(scan_id: str):
     scan_data = get_scan_by_id(scan_id)
     if not scan_data:
         raise HTTPException(status_code=404, detail="Scan no encontrado")
+    
+    try:
+        from app.scanners.zap import abortar_escaneos_zap
+        abortar_escaneos_zap()
+    except Exception as zap_err:
+        logger.error(f"[-] Error abortando ZAP al eliminar/cancelar scan: {zap_err}")
+
+    try:
+        from app.config import settings
+        lock_path = os.path.join(settings.OUTPUT_DIR, "sqlmap_bg.lock")
+        if os.path.exists(lock_path):
+            with open(lock_path, "r", encoding="utf-8") as f:
+                pid = int(f.read().strip())
+            logger.info(f"[*] Matando proceso de SQLMap con PID {pid} por cancelación...")
+            import signal
+            os.kill(pid, signal.SIGTERM)
+            if os.path.exists(lock_path):
+                os.remove(lock_path)
+    except Exception as sqlmap_err:
+        logger.error(f"[-] Error matando proceso SQLMap por cancelación (puede que no esté corriendo): {sqlmap_err}")
     
     from app.db.database import soft_delete_scan
     soft_delete_scan(scan_id)

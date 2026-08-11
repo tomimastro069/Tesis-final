@@ -14,13 +14,33 @@ Bienvenido al Orquestador de Seguridad, una herramienta diseñada para integrar 
 
 ### Opción A: Despliegue con Docker Compose (Recomendado)
 
-El proyecto cuenta con un entorno Docker listo para usar que levanta la instancia de DVWA (aplicación web intencionalmente vulnerable), ZAP controlable por API, y el entorno de nuestro orquestador con todas las herramientas preinstaladas (SQLMap, FFUF, Python).
+El proyecto cuenta con un entorno Docker listo para usar que levanta la instancia de DVWA (aplicación web intencionalmente vulnerable), ZAP controlable por API, n8n con aprovisionamiento autónomo, y el entorno de nuestro orquestador con todas las herramientas preinstaladas (SQLMap, FFUF, Python).
 
-1. **Clonar y levantar servicios:**
+1. **Configurar las Variables de Entorno (Requerido para la IA):**
+   Antes de levantar los contenedores por primera vez, debes crear el archivo `.env` en la carpeta `orquestador-seguridad/` copiando la plantilla `.env.example` y configurando tu clave de API de Gemini (generada en Google AI Studio):
+   
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Abre el archivo `.env` y define tu clave de API:
+   ```env
+   IA_API_KEY=tu_api_key_de_gemini
+   ```
+
+2. **Levantar los servicios:**
+   Ejecuta el siguiente comando para iniciar todo el stack. En el primer arranque, n8n importará y activará automáticamente el flujo de análisis con IA y tus credenciales:
 
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
+
+   > [!NOTE]
+   > **¿Qué pasa si levantaste los contenedores antes de configurar el `.env`?**
+   > Si iniciaste los servicios sin configurar la API key y n8n ya se inicializó, puedes borrar el marcador de inicio y forzar una reconfiguración ejecutando:
+   > ```bash
+   > rm -f ../n8n/data/init_done && docker compose down && docker compose up -d
+   > ```
 
 2. **Acceder al contenedor de la aplicación:**
 

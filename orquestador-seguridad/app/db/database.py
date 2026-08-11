@@ -34,13 +34,24 @@ def get_connection():
         if psycopg2 is None:
             raise RuntimeError("psycopg2 no está instalado. Ejecuta pip install -r requirements.txt")
 
-        return psycopg2.connect(
-            host=os.getenv("DB_HOST", "db"),
-            port=int(os.getenv("DB_PORT", "5432")),
-            dbname=os.getenv("DB_NAME", "security_history"),
-            user=os.getenv("DB_USER", "security_user"),
-            password=os.getenv("DB_PASSWORD", "security_pass"),
-        )
+        import time
+        max_retries = 3
+        retry_delay = 1.0
+        for i in range(max_retries):
+            try:
+                return psycopg2.connect(
+                    host=os.getenv("DB_HOST", "db"),
+                    port=int(os.getenv("DB_PORT", "5432")),
+                    dbname=os.getenv("DB_NAME", "security_history"),
+                    user=os.getenv("DB_USER", "security_user"),
+                    password=os.getenv("DB_PASSWORD", "security_pass"),
+                )
+            except psycopg2.OperationalError as e:
+                if i < max_retries - 1:
+                    time.sleep(retry_delay)
+                    retry_delay *= 2
+                    continue
+                raise e
 
     return sqlite3.connect(DB_PATH)
 

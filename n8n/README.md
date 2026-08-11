@@ -2,6 +2,12 @@
 
 Esta carpeta contiene la configuración del workflow (flujo de trabajo) en n8n encargado de procesar y enriquecer las vulnerabilidades utilizando Inteligencia Artificial.
 
+> [!IMPORTANT]
+> **Aprovisionamiento Autónomo:**
+> La inicialización de n8n, la importación del flujo de trabajo (`flujo.json`), la configuración de las credenciales de la API y su activación se realizan de forma **100% automática** al iniciar los servicios (`docker compose up -d`). Solo necesitas crear el archivo `.env` en la carpeta del orquestador con tu clave `IA_API_KEY`.
+>
+> Las instrucciones de esta guía sirven como referencia si deseas modificar, depurar o volver a exportar el flujo manualmente.
+
 ---
 
 ## 🛠️ Cómo Iniciar y Configurar n8n

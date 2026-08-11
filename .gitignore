@@ -5,3 +5,8 @@ app/db/
  output/raw/*
 
 n8n/.env
+orquestador-seguridad/.env
+n8n/data/*
+!n8n/data/.gitkeep
+orquestador-seguridad/output/raw/ffuf_raw.json
+orquestador-seguridad/output/raw/temp_wordlist.txt

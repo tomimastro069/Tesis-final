@@ -28,6 +28,8 @@ services:
   zap:
     image: ghcr.io/zaproxy/zaproxy:stable
     container_name: zap
+    environment:
+      - ZAP_PORT=8090
     command: >
       zap.sh -daemon
       -host 0.0.0.0
@@ -55,6 +57,7 @@ services:
       DB_NAME: security_history
       DB_USER: security_user
       DB_PASSWORD: security_pass
+      N8N_WEBHOOK_URL: http://security-n8n:5678/webhook/analyze-vuln
     volumes:
       - .:/app
     ports:
@@ -70,11 +73,16 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - NODE_ENV=production
+      - IA_API_KEY=${IA_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - groq_key=${groq_key:-}
     volumes:
-      - n8n_data:/home/node/.n8n
+      - ../n8n/data:/home/node/.n8n
+      - ../n8n/flujo.json:/etc/n8n/flujo.json:ro
+      - ../n8n/init-n8n.sh:/etc/n8n/init-n8n.sh:ro
+    entrypoint: ["tini", "--", "/bin/sh", "/etc/n8n/init-n8n.sh"]
     depends_on:
       - app
 
 volumes:
   postgres_data:
-  n8n_data:

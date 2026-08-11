@@ -1,4 +1,7 @@
 {
+  "id": "1",
+  "name": "Analyze Vulnerability AI",
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -97,21 +100,21 @@
     },
     {
       "parameters": {
-        "model": "llama-3.3-70b-versatile",
+        "model": "gemini-1.5-flash",
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
         512,
         208
       ],
       "id": "1d60296c-7cac-4e98-8b3d-0c7707acb55f",
-      "name": "Groq Chat Model",
+      "name": "Google Gemini Chat Model",
       "credentials": {
-        "groqApi": {
-          "id": "FFLw4DuaPSo3C6Tf",
-          "name": "Groq account"
+        "googlePalmApi": {
+          "id": "gemini-api-cred-id",
+          "name": "Google Gemini account"
         }
       }
     }
@@ -150,7 +153,7 @@
         ]
       ]
     },
-    "Groq Chat Model": {
+    "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
