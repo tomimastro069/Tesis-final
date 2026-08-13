@@ -29,7 +29,7 @@ function DesktopContent() {
   return (
     <div className="w-screen h-screen bg-[#008080] relative overflow-hidden font-win98 text-white select-none">
       {/* Grilla para Iconos del Escritorio */}
-      <div className="absolute inset-0 pb-[45px] z-0">
+      <div className="absolute top-0 bottom-[45px] left-0 right-0 z-0">
         <ResponsiveGridLayout
           className="layout"
           width={window.innerWidth}
@@ -107,7 +107,7 @@ function DesktopContent() {
       </div>
 
       {/* Ventanas Activas */}
-      <div className="absolute inset-0 pb-[45px] z-10 pointer-events-none">
+      <div className="absolute top-0 bottom-[45px] left-0 right-0 z-10 pointer-events-none">
         {windows.map(win => (
           <WindowFrame key={win.id} id={win.id} />
         ))}
