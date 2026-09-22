@@ -14,3 +14,4 @@ orquestador-seguridad/app/__pycache__/__init__.cpython-313.pyc
 .walkthrough/
 .vscode/
 docs/informe/informe-v15.docx
+docs/informe/referencia/*.docx
