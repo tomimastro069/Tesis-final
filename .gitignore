@@ -11,3 +11,6 @@ n8n/data/*
 orquestador-seguridad/output/raw/ffuf_raw.json
 orquestador-seguridad/output/raw/temp_wordlist.txt
 orquestador-seguridad/app/__pycache__/__init__.cpython-313.pyc
+.walkthrough/
+.vscode/
+docs/informe/informe-v15.docx
