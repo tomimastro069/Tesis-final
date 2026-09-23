@@ -12,6 +12,16 @@
   inset: 7pt,
 )
 
+#show raw.where(block: true): it => block(
+  fill: rgb("#f8f9fa"),
+  stroke: 0.5pt + rgb("#d0d7de"),
+  inset: (x: 8pt, y: 7pt),
+  radius: 3pt,
+  width: 100%,
+  text(font: "DejaVu Sans Mono", size: 8.5pt, it)
+)
+#show raw.where(block: false): set text(font: "DejaVu Sans Mono", size: 9pt)
+
 #set page(header: none)
 
 #text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
@@ -222,5 +232,7 @@ Vulnerability Scanning, Docker, Python.
 #include "capitulos/17-desarrollo-experimental.typ"
 
 #include "capitulos/18-referencias.typ"
+
+#pagebreak()
 
 #include "capitulos/19-anexos.typ"

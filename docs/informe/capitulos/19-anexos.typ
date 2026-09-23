@@ -4,278 +4,177 @@
 <anexo-a-estructura-del-proyecto-y-configuración-de-docker-compose>
 === A.1 Estructura del proyecto
 <a.1-estructura-del-proyecto>
-orquestador-seguridad/ \
-├── main.py \# Punto de entrada CLI \(interactivo) \
-├── api.py \# API REST \(FastAPI) - punto de entrada como servicio \
-├── docker-compose.yml \# Servicios: dvwa, zap, app, db, n8n \(5
-servicios) \
-├── Dockerfile \
-├── requirements.txt \
-├── test\_parsers.py / test\_speed.py / test\_zap.py / test\_sqlmap.py \
-├── OPTIMIZACION\_ZAP.md \# Documentación de optimización de timeouts y
-caché \
-├── app/ \
-│ ├── config/settings.py \
-│ ├── runners/exec.py \
-│ ├── scanners/{zap.py, ffuf.py, sqlmap.py} \
-│ ├── parsers/{zap\_parser.py, ffuf\_parser.py, sqlmap\_parser.py} \
-│ ├── workflow/{pipeline.py, consolidate\_sqlmap.py} \
-│ ├── db/database.py \
-│ ├── routers/n8n\_router.py \
-│ ├── reports/generator.py \
-│ └── utils/{results.py, time.py} \
-└── output/{raw/{benchmarks/}, reports/} \
+
+```text
+orquestador-seguridad/
+├── main.py                 # Punto de entrada CLI (interactivo)
+├── api.py                  # API REST (FastAPI) - punto de entrada como servicio
+├── docker-compose.yml      # Servicios: dvwa, zap, app, db, n8n (5 servicios)
+├── Dockerfile
+├── requirements.txt
+├── test_parsers.py / test_speed.py / test_zap.py / test_sqlmap.py
+├── OPTIMIZACION_ZAP.md     # Documentación de optimización de timeouts y caché
+├── app/
+│   ├── config/settings.py
+│   ├── runners/exec.py
+│   ├── scanners/{zap.py, ffuf.py, sqlmap.py}
+│   ├── parsers/{zap_parser.py, ffuf_parser.py, sqlmap_parser.py}
+│   ├── workflow/{pipeline.py, consolidate_sqlmap.py}
+│   ├── db/database.py
+│   ├── routers/n8n_router.py
+│   ├── reports/generator.py
+│   └── utils/{results.py, time.py}
+└── output/{raw/{benchmarks/}, reports/}
 n8n/
-
 ├── data/
-
 ├── flujo.json
+└── init-n8n.sh
+frontend/
+└── src/{app/components/, app/windows98/, hooks/, services/api.ts}
+```
 
-└── init-n8n.sh \
-frontend/ \
-└── src/{app/components/, app/windows98/, hooks/,
-services/#link("http://api.ts")[#underline[api.ts];];}
 === A.2 Archivo docker-compose.yml
 <a.2-archivo-docker-compose.yml>
-version: \"3.8\"
+
+```yaml
+version: "3.8"
 
 services:
 
-db:
+  db:
+    image: postgres:16-alpine
+    container_name: security-db
+    environment:
+      POSTGRES_DB: security_history
+      POSTGRES_USER: security_user
+      POSTGRES_PASSWORD: security_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security_user -d security_history"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-image: postgres:16-alpine
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports:
+      - "8080:80"
 
-container\_name: security-db
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: zap
+    environment:
+      - ZAP_PORT=8090
+    command: >
+      zap.sh -daemon
+      -host 0.0.0.0
+      -port 8090
+      -config api.key=12345
+      -config api.addrs.addr.name=.*
+      -config api.addrs.addr.regex=true
+    ports:
+      - "8090:8090"
 
-environment:
+  app:
+    build: .
+    container_name: security-app
+    depends_on:
+      db:
+        condition: service_healthy
+      zap:
+        condition: service_started
+      dvwa:
+        condition: service_started
+    environment:
+      DB_ENGINE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: security_history
+      DB_USER: security_user
+      DB_PASSWORD: security_pass
+      N8N_WEBHOOK_URL: http://security-n8n:5678/webhook/analyze-vuln
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
 
-POSTGRES\_DB: security\_history
-
-POSTGRES\_USER: security\_user
-
-POSTGRES\_PASSWORD: security\_pass
-
-volumes:
-
-- postgres\_data:/var/lib/postgresql/data
-
-ports:
-
-- \"5433:5432\"
-
-healthcheck:
-
-test: \[\"CMD-SHELL\", \"pg\_isready -U security\_user -d
-security\_history\"\]
-
-interval: 5s
-
-timeout: 5s
-
-retries: 10
-
-dvwa:
-
-image: vulnerables/web-dvwa
-
-container\_name: dvwa
-
-ports:
-
-- \"8080:80\"
-
-zap:
-
-image: ghcr.io/zaproxy/zaproxy:stable
-
-container\_name: zap
-
-environment:
-
-- ZAP\_PORT\=8090
-
-command: \>
-
-zap.sh -daemon
-
--host 0.0.0.0
-
--port 8090
-
--config api.key\=12345
-
--config api.addrs.addr.name\=.\*
-
--config api.addrs.addr.regex\=true
-
-ports:
-
-- \"8090:8090\"
-
-app:
-
-build: .
-
-container\_name: security-app
-
-depends\_on:
-
-db:
-
-condition: service\_healthy
-
-zap:
-
-condition: service\_started
-
-dvwa:
-
-condition: service\_started
-
-environment:
-
-DB\_ENGINE: postgres
-
-DB\_HOST: db
-
-DB\_PORT: 5432
-
-DB\_NAME: security\_history
-
-DB\_USER: security\_user
-
-DB\_PASSWORD: security\_pass
-
-N8N\_WEBHOOK\_URL: http:\/\/security-n8n:5678/webhook/analyze-vuln
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: security-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - IA_API_KEY=${IA_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - groq_key=${groq_key:-}
+    volumes:
+      - ../n8n/data:/home/node/.n8n
+      - ../n8n/flujo.json:/etc/n8n/flujo.json:ro
+      - ../n8n/init-n8n.sh:/etc/n8n/init-n8n.sh:ro
+    entrypoint: ["tini", "--", "/bin/sh", "/etc/n8n/init-n8n.sh"]
+    depends_on:
+      - app
 
 volumes:
+  postgres_data:
+```
 
-- .:/app
-
-ports:
-
-- \"8000:8000\"
-
-n8n:
-
-image: n8nio/n8n:latest
-
-container\_name: security-n8n
-
-ports:
-
-- \"5678:5678\"
-
-environment:
-
-- N8N\_HOST\=localhost
-
-- N8N\_PORT\=5678
-
-- N8N\_PROTOCOL\=http
-
-- NODE\_ENV\=production
-
-- IA\_API\_KEY\=\${IA\_API\_KEY:-}
-
-- GEMINI\_API\_KEY\=\${GEMINI\_API\_KEY:-}
-
-- groq\_key\=\${groq\_key:-}
-
-volumes:
-
-- ../n8n/data:/home/node/.n8n
-
-- ../n8n/flujo.json:/etc/n8n/flujo.json:ro
-
-- ../n8n/init-n8n.sh:/etc/n8n/init-n8n.sh:ro
-
-entrypoint: \[\"tini\", \"--\", \"/bin/sh\", \"/etc/n8n/init-n8n.sh\"\]
-
-depends\_on:
-
-- app
-
-volumes:
-
-postgres\_data:
-
-#emph[Nota sobre seguridad de la configuración. La definición de
-  credenciales estáticas y tokens en texto plano
-  \(POSTGRES\_PASSWORD\=security\_pass y api.key\=12345) constituye una
-  decisión técnica orientada a facilitar el despliegue del laboratorio
-  controlado, en concordancia con los alcances definidos en el capítulo 9.
-  Por el contrario, las claves de servicios de inteligencia artificial
-  \(IA\_API\_KEY, GEMINI\_API\_KEY, groq\_key) se gestionan mediante
-  interpolación de variables de entorno del host \(\${VAR:-}),
-  garantizando la protección de secretos de producción fuera del entorno
-  local.]
+#text(size: 10pt)[#emph[Nota sobre seguridad de la configuración. La definición de credenciales estáticas y tokens en texto plano (POSTGRES_PASSWORD=security_pass y api.key=12345) constituye una decisión técnica orientada a facilitar el despliegue del laboratorio controlado, en concordancia con los alcances definidos en el capítulo 9. Por el contrario, las claves de servicios de inteligencia artificial (IA_API_KEY, GEMINI_API_KEY, groq_key) se gestionan mediante interpolación de variables de entorno del host (\${VAR:-}), garantizando la protección de secretos de producción fuera del entorno local.]]
 
 === A.3 Archivo Dockerfile
 <a.3-archivo-dockerfile>
-\# Imagen base oficial de Python
 
+```dockerfile
+# Imagen base oficial de Python
 FROM python:3.11-slim
 
-\# Evita archivos .pyc y buffers raros
+# Evita archivos .pyc y buffers raros
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-ENV PYTHONDONTWRITEBYTECODE\=1
+# Instalamos dependencias del sistema necesarias
+RUN apt update && apt install -y \
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV PYTHONUNBUFFERED\=1
+ARG FFUF_VERSION=2.2.1
 
-\# Instalamos dependencias del sistema necesarias
+RUN wget https://github.com/ffuf/ffuf/releases/download/v${FFUF_VERSION}/ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
+    && tar -xzf ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
+    && mv ffuf /usr/local/bin/ffuf \
+    && chmod +x /usr/local/bin/ffuf \
+    && rm ffuf_${FFUF_VERSION}_linux_amd64.tar.gz
 
-RUN apt update && apt install -y \\
+# Instalamos SQLMap (clonamos el repo oficial)
+RUN apt update && apt install -y git \
+    && git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git /opt/sqlmap \
+    && rm -rf /var/lib/apt/lists/*
 
-wget \\
-
-ca-certificates \\
-
-&& rm -rf /var/lib/apt/lists/\*
-
-ARG FFUF\_VERSION\=2.2.1
-
-RUN wget
-https:\/\/github.com/ffuf/ffuf/releases/download/v\${FFUF\_VERSION}/ffuf\_\${FFUF\_VERSION}\_linux\_amd64.tar.gz
-\\
-
-&& tar -xzf ffuf\_\${FFUF\_VERSION}\_linux\_amd64.tar.gz \\
-
-&& mv ffuf /usr/local/bin/ffuf \\
-
-&& chmod +x /usr/local/bin/ffuf \\
-
-&& rm ffuf\_\${FFUF\_VERSION}\_linux\_amd64.tar.gz
-
-\# Instalamos SQLMap \(clonamos el repo oficial)
-
-RUN apt update && apt install -y git \\
-
-&& git clone --depth 1 https:\/\/github.com/sqlmapproject/sqlmap.git
-/opt/sqlmap \\
-
-&& rm -rf /var/lib/apt/lists/\*
-
-\# Directorio de trabajo dentro del contenedor
-
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-\# Copiamos requirements primero \(optimiza cache)
-
+# Copiamos requirements primero (optimiza cache)
 COPY requirements.txt .
 
-\# Instalamos dependencias Python
-
+# Instalamos dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-\# Copiamos el resto del proyecto
-
+# Copiamos el resto del proyecto
 COPY . .
 
-\# Comando por defecto
+# Comando por defecto
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+```
 
-CMD \[\"uvicorn\", \"api:app\", \"--host\", \"0.0.0.0\", \"--port\",
-\"8000\"\]
 
 == Anexo B — Fragmento Representativo: Pipeline de Ejecución
 <anexo-b-fragmento-representativo-pipeline-de-ejecución>
