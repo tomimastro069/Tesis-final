@@ -86,7 +86,7 @@ comercial.
 #pagebreak()
 
 #strong[Tabla 1. Comparación de plataformas de orquestación y gestión de
-vulnerabilidades]
+vulnerabilidades] <tabla-1>
 
 #figure(
 align(center)[#table(

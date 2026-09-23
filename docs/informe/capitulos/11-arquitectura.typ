@@ -31,13 +31,13 @@ la Figura 1:
 ]
 
 #text(size: 10pt)[#emph[Figura 1. Diagrama de Arquitectura de Servicio. Elaboración propia
-  \(véase versión ampliada en el Anexo H).]]
+  \(véase versión ampliada en el Anexo H).]] <fig-1>
 
 #pagebreak()
 
 == 11.2 Componentes y Sus Roles
 <componentes-y-sus-roles>
-#strong[Tabla 2. Componentes del sistema y su función en el pipeline]
+#strong[Tabla 2. Componentes del sistema y su función en el pipeline] <tabla-2>
 
 #figure(
   align(center)[#table(
@@ -75,7 +75,7 @@ tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
 
 #text(size: 10pt)[#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
   enriquecimiento cruzado entre ZAP, ffuf y SQLMap. Elaboración propia
-  \(véase versión ampliada en el Anexo H).]]
+  \(véase versión ampliada en el Anexo H).]] <fig-2>
 
 == 11.3 Red Docker y Aislamiento
 <red-docker-y-aislamiento>
@@ -135,7 +135,7 @@ sigue la secuencia representada en la Figura 3:
 ]
 
 #text(size: 10pt)[#emph[Figura 3. Diagrama de Pipeline de ejecución. Elaboración propia
-  \(véase versión ampliada en el Anexo H).]]
+  \(véase versión ampliada en el Anexo H).]] <fig-3>
 
 == 11.5 Diagrama de Secuencia — Ciclo de Vida de POST /scan
 <diagrama-de-secuencia-ciclo-de-vida-de-post-scan>
@@ -164,7 +164,7 @@ del frontend.
 ]
 
 #text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
-  Elaboración propia \(véase versión ampliada en el Anexo H).]]
+  Elaboración propia \(véase versión ampliada en el Anexo H).]] <fig-4>
 
 #pagebreak()
 

@@ -45,7 +45,7 @@ punto de datos en la sección 14.3.
 == 13.1 Resumen de Hallazgos
 <resumen-de-hallazgos>
 #strong[Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de
-  agosto de 2026]
+  agosto de 2026] <tabla-3>
 
 #figure(
   align(center)[#table(
@@ -95,7 +95,7 @@ priorizarse con más certeza aunque su impacto sea menor.
 
 #pagebreak()
 
-#strong[Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo]
+#strong[Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo] <tabla-4>
 
 #figure(
   align(center)[#table(
@@ -130,7 +130,7 @@ esta entrega provienen de SQLMap \(sección 13.4).
 #pagebreak()
 == 13.3 Rutas Descubiertas por ffuf
 <rutas-descubiertas-por-ffuf>
-#strong[Tabla 5. Rutas descubiertas por fuzzing de directorios \(ffuf)]
+#strong[Tabla 5. Rutas descubiertas por fuzzing de directorios \(ffuf)] <tabla-5>
 
 #figure(
   align(center)[#table(
@@ -166,7 +166,7 @@ boolean-based blind fue: username\=SCVZ\' RLIKE \(SELECT \(CASE WHEN
 RmAL&password\=Fqvd&Login\=Login.
 
 #strong[Tabla 6. Endpoints confirmados como vulnerables por SQLMap —
-  corrida del 5 de agosto de 2026]
+  corrida del 5 de agosto de 2026] <tabla-6>
 
 #figure(
   align(center)[#table(
@@ -185,7 +185,7 @@ RmAL&password\=Fqvd&Login\=Login.
   resultado\_unificado.json.]]
 
 #strong[Tabla 7. Datos extraídos a través de Sql Injection – corrida del
-  5 de agosto del 2026]
+  5 de agosto del 2026] <tabla-7>
 
 #figure(
   align(center)[#table(
@@ -235,7 +235,7 @@ sección 14.3.
 
 == 13.5 Análisis por Categoría OWASP Top 10
 <análisis-por-categoría-owasp-top-10>
-#strong[Tabla 8. Hallazgos clasificados por categoría OWASP Top 10]
+#strong[Tabla 8. Hallazgos clasificados por categoría OWASP Top 10] <tabla-8>
 
 #figure(
   align(center)[#table(

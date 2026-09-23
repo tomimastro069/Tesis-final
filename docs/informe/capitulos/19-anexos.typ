@@ -442,7 +442,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #align(center)[
   #image("../media/media/image2.png", width: 100%)
   #v(0.5em)
-  #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]]
+  #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]] <fig-1-ampliada>
 ]
 
 #pagebreak()
@@ -450,7 +450,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #align(center)[
   #image("../media/media/image1.jpg", width: 100%)
   #v(0.5em)
-  #text(size: 10pt)[#emph[Figura 2 (ampliada). Diagrama Orquestador-Seguridad. Elaboración propia.]]
+  #text(size: 10pt)[#emph[Figura 2 (ampliada). Diagrama Orquestador-Seguridad. Elaboración propia.]] <fig-2-ampliada>
 ]
 
 #pagebreak()
@@ -458,7 +458,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #align(center)[
   #image("../media/media/image4.jpg", width: 92%)
   #v(0.5em)
-  #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama del Pipeline de Ejecución. Elaboración propia.]]
+  #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama del Pipeline de Ejecución. Elaboración propia.]] <fig-3-ampliada>
 ]
 
 #pagebreak()
@@ -466,7 +466,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #align(center)[
   #image("../media/media/image3.png", width: 100%)
   #v(0.5em)
-  #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML. Elaboración propia.]]
+  #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML. Elaboración propia.]] <fig-4-ampliada>
 ]
 
 

@@ -35,7 +35,7 @@ pipeline combinado.
 #pagebreak()
 
 #strong[Tabla 9. Cobertura por herramienta en solitario frente al
-  pipeline combinado \(misma ejecución del 5 de agosto de 2026)]
+  pipeline combinado \(misma ejecución del 5 de agosto de 2026)] <tabla-9>
 
 #figure(
   align(center)[#table(
@@ -157,7 +157,7 @@ verificables contra los archivos resultado\_sin\_cache.json y
 resultado\_con\_cache.json del directorio output/raw/benchmarks/ del
 repositorio del proyecto.
 
-#strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental]
+#strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental] <tabla-10>
 
 #figure(
   align(center)[#table(
@@ -212,7 +212,7 @@ entregaron a SQLMap en ese momento— y no un cambio estructural del
 comportamiento del sistema.
 
 #strong[Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y
-  con caché]
+  con caché] <tabla-11>
 
 #figure(
   align(center)[#table(

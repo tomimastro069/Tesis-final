@@ -107,7 +107,7 @@ específicas:
 La siguiente tabla verifica, de forma sintética, el cumplimiento de cada
 uno de los nueve objetivos específicos definidos en la sección 4.2.
 
-#strong[Tabla 12. Verificación de cumplimiento por objetivo específico]
+#strong[Tabla 12. Verificación de cumplimiento por objetivo específico] <tabla-12>
 
 #figure(
   align(center)[#table(

@@ -140,6 +140,16 @@ Vulnerability Scanning, Docker, Python.
 #heading(level: 1, outlined: false)[Índice] <índice>
 #outline(title: none, indent: auto)
 
+#let pagina(etiqueta) = context {
+  let elems = query(etiqueta)
+  if elems.len() > 0 {
+    let p = counter(page).at(elems.first().location()).first()
+    link(etiqueta)[#p]
+  } else {
+    [—]
+  }
+}
+
 #pagebreak()
 = Índice de Figuras
 <índice-de-figuras>
@@ -148,14 +158,14 @@ Vulnerability Scanning, Docker, Python.
   columns: (1fr, auto),
   align: (left, right),
   row-gutter: 0.85em,
-  [Figura 1. Diagrama de Arquitectura de Servicio], [22],
-  [Figura 2. Diagrama Orquestador-Seguridad], [23],
-  [Figura 3. Diagrama de Pipeline de ejecución], [25],
-  [Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan], [26],
-  [Figura 1 (ampliada). Diagrama de Arquitectura de Servicio], [59],
-  [Figura 2 (ampliada). Diagrama Orquestador-Seguridad], [60],
-  [Figura 3 (ampliada). Diagrama del Pipeline de Ejecución], [61],
-  [Figura 4 (ampliada). Diagrama de secuencia UML], [62],
+  [Figura 1. Diagrama de Arquitectura de Servicio], pagina(<fig-1>),
+  [Figura 2. Diagrama Orquestador-Seguridad], pagina(<fig-2>),
+  [Figura 3. Diagrama de Pipeline de ejecución], pagina(<fig-3>),
+  [Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan], pagina(<fig-4>),
+  [Figura 1 (ampliada). Diagrama de Arquitectura de Servicio], pagina(<fig-1-ampliada>),
+  [Figura 2 (ampliada). Diagrama Orquestador-Seguridad], pagina(<fig-2-ampliada>),
+  [Figura 3 (ampliada). Diagrama del Pipeline de Ejecución], pagina(<fig-3-ampliada>),
+  [Figura 4 (ampliada). Diagrama de secuencia UML], pagina(<fig-4-ampliada>),
 )
 
 #v(1.8em)
@@ -167,19 +177,19 @@ Vulnerability Scanning, Docker, Python.
   columns: (1fr, auto),
   align: (left, right),
   row-gutter: 0.85em,
-  [Tabla 1. Comparación de plataformas de orquestación y gestión de vulnerabilidades], [14],
-  [Tabla 2. Componentes del sistema y su función en el pipeline], [22],
-  [Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de agosto de 2026], [33],
-  [Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo], [34],
-  [Tabla 5. Rutas descubiertas por fuzzing de directorios (ffuf)], [35],
-  [Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del 5 de agosto de 2026], [35],
-  [Tabla 7. Datos extraídos a través de Sql Injection – corrida del 5 de agosto del 2026], [35],
-  [Tabla 8. Hallazgos clasificados por categoría OWASP Top 10], [36],
-  [Tabla 9. Cobertura por herramienta en solitario frente al pipeline combinado], [38],
-  [Tabla 10. Tiempo total del pipeline con y sin caché incremental], [40],
-  [Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con caché], [40],
-  [Tabla 12. Verificación de cumplimiento por objetivo específico], [44],
-  [Tabla 13. Distribución temporal de la sesión de auditoría manual del capítulo 17], [49],
+  [Tabla 1. Comparación de plataformas de orquestación y gestión de vulnerabilidades], pagina(<tabla-1>),
+  [Tabla 2. Componentes del sistema y su función en el pipeline], pagina(<tabla-2>),
+  [Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de agosto de 2026], pagina(<tabla-3>),
+  [Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo], pagina(<tabla-4>),
+  [Tabla 5. Rutas descubiertas por fuzzing de directorios (ffuf)], pagina(<tabla-5>),
+  [Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del 5 de agosto de 2026], pagina(<tabla-6>),
+  [Tabla 7. Datos extraídos a través de Sql Injection – corrida del 5 de agosto del 2026], pagina(<tabla-7>),
+  [Tabla 8. Hallazgos clasificados por categoría OWASP Top 10], pagina(<tabla-8>),
+  [Tabla 9. Cobertura por herramienta en solitario frente al pipeline combinado], pagina(<tabla-9>),
+  [Tabla 10. Tiempo total del pipeline con y sin caché incremental], pagina(<tabla-10>),
+  [Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con caché], pagina(<tabla-11>),
+  [Tabla 12. Verificación de cumplimiento por objetivo específico], pagina(<tabla-12>),
+  [Tabla 13. Distribución temporal de la sesión de auditoría manual del capítulo 17], pagina(<tabla-13>),
 )
 
 #pagebreak()

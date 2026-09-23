@@ -180,7 +180,7 @@ de las vulnerabilidades dentro de una infraestructura informática.
 
 #pagebreak()
 #strong[Tabla 13. Distribución temporal de la sesión de auditoría manual
-  del capítulo 17]
+  del capítulo 17] <tabla-13>
 
 #figure(
   align(center)[#table(
