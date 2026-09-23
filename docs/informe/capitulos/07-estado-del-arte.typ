@@ -87,14 +87,14 @@ de equipos, integraciones empresariales) bajo modelos de licenciamiento
 comercial.
 ]
 
+#pagebreak()
+
 #strong[Tabla 1. Comparación de plataformas de orquestación y gestión de
 vulnerabilidades]
 
 #figure(
 align(center)[#table(
   columns: 5,
-  align: (col, row) => (auto,auto,auto,auto,auto,).at(col),
-  inset: 6pt,
   [Plataforma], [Alcance funcional], [Curva de instalación], [Costo],
   [Automatización del pipeline],
   [Faraday],

@@ -4,6 +4,14 @@
 #show heading.where(level: 2): set text(size: 12pt, fill: rgb("#4e80bc"))
 #show heading.where(level: 3): set text(size: 11pt, fill: rgb("#4e80bc"))
 
+#show table.cell.where(x: 0): set text(weight: "bold")
+#show table.cell.where(y: 0): set text(weight: "bold", fill: white)
+#set table(
+  fill: (x, y) => if y == 0 { rgb("#2b579a") } else { rgb("#e8f1f5") },
+  stroke: 0.5pt + rgb("#a0b8d8"),
+  inset: 7pt
+)
+
 #set page(header: none)
 
 #text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
@@ -200,6 +208,8 @@ capítulo 17 49
 #include "capitulos/06-hipotesis.typ"
 
 #include "capitulos/07-estado-del-arte.typ"
+
+#pagebreak()
 
 #include "capitulos/08-marco-teorico.typ"
 
