@@ -101,6 +101,7 @@ específicas:
   capaz de reportar progreso en tiempo real y ser operada por usuarios
   no técnicos.
 
+#pagebreak()
 === 15.1.1 Verificación por objetivo específico
 <verificación-por-objetivo-específico>
 La siguiente tabla verifica, de forma sintética, el cumplimiento de cada
@@ -109,51 +110,44 @@ uno de los nueve objetivos específicos definidos en la sección 4.2.
 #strong[Tabla 12. Verificación de cumplimiento por objetivo específico]
 
 #figure(
-align(center)[#table(
-  columns: 4,
-  align: (col, row) => (auto,auto,auto,auto,).at(col),
-  inset: 6pt,
-  [OE], [Objetivo], [Estado], [Evidencia],
-  [OE1],
-  [Integrar ZAP, ffuf y SQLMap en un flujo automatizado con
-  enriquecimiento cruzado],
-  [Cumplido],
-  [Sección 11.4 y Figura 2; Tabla 9 \(cap. 14)],
-  [OE2],
-  [Arquitectura modular extensible],
-  [Cumplido],
-  [Sección 12 completa; paquetes runners/scanners/parsers/workflow],
-  [OE3],
-  [Parsers especializados que normalicen resultados heterogéneos],
-  [Cumplido],
-  [Sección 12.7],
-  [OE4],
-  [Despliegue contenerizado y reproducible con Docker],
-  [Cumplido],
-  [Sección 12.1; docker-compose.yml \(5 servicios)],
-  [OE5],
-  [Evaluar el sistema contra los criterios de validación de 10.6],
-  [Cumplido],
-  [Criterios de 10.6 verificados: cap. 13 \(funcionalidad y
-  consolidación), Tabla 8 \(cobertura) y Tabla 11 \(reproducibilidad del
-  96,3%–100%).],
-  [OE6],
-  [Autenticación automática contra secciones protegidas],
-  [Cumplido],
-  [Sección 12.9; Anexo E],
-  [OE7],
-  [Exponer el orquestador como API REST asíncrona con historial],
-  [Cumplido],
-  [Sección 12.10; Anexo F],
-  [OE8],
-  [Generar reportes técnico y ejecutivo con clasificación de riesgo],
-  [Cumplido],
-  [reporte\_seguridad.md, reporte\_cliente.md],
-  [OE9],
-  [Interfaz web para lanzar y consultar escaneos sin línea de comandos],
-  [Cumplido],
-  [Anexo G; frontend React],
-)]
+  align(center)[#table(
+    columns: 4,
+    align: (col, row) => (auto, auto, auto, auto).at(col),
+    inset: 6pt,
+    [OE], [Objetivo], [Estado], [Evidencia],
+    [OE1],
+    [Integrar ZAP, ffuf y SQLMap en un flujo automatizado con
+      enriquecimiento cruzado],
+    [Cumplido],
+    [Sección 11.4 y Figura 2; Tabla 9 \(cap. 14)],
+
+    [OE2],
+    [Arquitectura modular extensible],
+    [Cumplido],
+    [Sección 12 completa; paquetes runners/scanners/parsers/workflow],
+
+    [OE3], [Parsers especializados que normalicen resultados heterogéneos], [Cumplido], [Sección 12.7],
+    [OE4],
+    [Despliegue contenerizado y reproducible con Docker],
+    [Cumplido],
+    [Sección 12.1; docker-compose.yml \(5 servicios)],
+
+    [OE5],
+    [Evaluar el sistema contra los criterios de validación de 10.6],
+    [Cumplido],
+    [Criterios de 10.6 verificados: cap. 13 \(funcionalidad y
+      consolidación), Tabla 8 \(cobertura) y Tabla 11 \(reproducibilidad del
+      96,3%–100%).],
+
+    [OE6], [Autenticación automática contra secciones protegidas], [Cumplido], [Sección 12.9; Anexo E],
+    [OE7], [Exponer el orquestador como API REST asíncrona con historial], [Cumplido], [Sección 12.10; Anexo F],
+    [OE8],
+    [Generar reportes técnico y ejecutivo con clasificación de riesgo],
+    [Cumplido],
+    [reporte\_seguridad.md, reporte\_cliente.md],
+
+    [OE9], [Interfaz web para lanzar y consultar escaneos sin línea de comandos], [Cumplido], [Anexo G; frontend React],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración propia.]]
@@ -166,7 +160,7 @@ ya están implementados, el trabajo futuro se concentra en lo que
 efectivamente falta:
 
 + #strong[Comparación cuantitativa individual vs. combinada con corridas
-  aisladas reales:] instrumentar el pipeline para ejecutar cada
+    aisladas reales:] instrumentar el pipeline para ejecutar cada
   herramienta de forma verdaderamente aislada \(sin las demás activas)
   además de en conjunto, y registrar la diferencia de cobertura, para
   validar H2 con evidencia numérica propia de un experimento controlado.

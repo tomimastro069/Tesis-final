@@ -1,5 +1,8 @@
 = 18. Referencias
 <referencias>
+
+#set par(hanging-indent: 0.5in)
+
 Abdulghaffar, K., Elmrabit, N., & Yousefi, M. \(2023). Enhancing web
 application security through automated penetration testing with multiple
 vulnerability scanners. #emph[Computers, 12];\(11), 235.
@@ -8,7 +11,6 @@ vulnerability scanners. #emph[Computers, 12];\(11), 235.
 Alsaedi, A., Alhuzali, A., & Bamasag, O. \(2021). Black-box fuzzing
 approaches to secure web applications: Survey. #emph[International
 Journal of Advanced Computer Science and Applications,]
-
 #emph[12];\(5). #link("https://doi.org/10.14569/IJACSA.2021.0120599")
 
 Althunayyan, M., Saxena, N., Li, S., & Gope, P. \(2022). Evaluation of
@@ -106,3 +108,5 @@ Zhang, T., Huang, H., Lu, Y., Zhu, K., & Zhao, J. \(2023).
 State-sensitive black-box web application scanning for cross-site
 scripting vulnerability detection. #emph[Applied Sciences, 13];\(16),
 9212. #link("https://doi.org/10.3390/app13169212")
+
+#set par(hanging-indent: 0pt)
