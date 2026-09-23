@@ -1,3 +1,15 @@
+#set text(font: ("Calibri", "Liberation Sans", "Arial"), size: 11pt)
+
+#show heading.where(level: 1): set text(size: 14pt, fill: rgb("#4e80bc"))
+#show heading.where(level: 2): set text(size: 12pt, fill: rgb("#4e80bc"))
+#show heading.where(level: 3): set text(size: 11pt, fill: rgb("#4e80bc"))
+
+#align(center)[
+  #text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
+    Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web
+  ]
+]
+
 #quote(block: true)[
 #strong[Subtítulo:] Sistema de orquestación para análisis automatizado
 de vulnerabilidades web mediante fuzzing y escaneo activo
@@ -11,6 +23,8 @@ ofensiva · Automatización de pruebas · Ingeniería de software
 
 #strong[Fecha:] 2026
 ]
+
+#pagebreak()
 
 = Resumen
 <resumen>
@@ -54,24 +68,8 @@ junto con las limitaciones metodológicas correspondientes.
 Automatización, Docker, Python.
 ]
 
-= 
-<section>
-= 
-<section-1>
-= 
-<section-2>
-= 
-<section-3>
-= 
-<section-4>
-= 
-<section-5>
-= 
-<section-6>
-= 
-<section-7>
-= 
-<section-8>
+#pagebreak()
+
 = Abstract
 <abstract>
 #quote(block: true)[
@@ -102,13 +100,13 @@ detailed in Chapter 14.
 Vulnerability Scanning, Docker, Python.
 ]
 
+#pagebreak()
+
 = Índice
 <índice>
 #outline(title: none, indent: auto)
 
-
-== 
-<section-9>
+#pagebreak()
 = Índice de Figuras
 <índice-de-figuras>
 Figura 1. Diagrama de Arquitectura de Servicio 22

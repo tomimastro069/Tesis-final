@@ -74,11 +74,11 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración propia a partir de resultado\_unificado.json.
+#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de resultado\_unificado.json.
 Las filas «ZAP» y «ffuf» reflejan lo que cada herramienta aporta dentro
 de la corrida combinada, no una ejecución separada de cada una contra el
 objetivo; SQLMap en aislamiento total es una limitación arquitectónica
-documentada, no medida por separado.]
+documentada, no medida por separado.]]
 
 #quote(block: true)[
 #strong[Nota metodológica.] Esta tabla no proviene de tres ejecuciones
@@ -175,14 +175,14 @@ align(center)[#table(
 )
 
 #quote(block: true)[
-#emph[Nota. Medición propia sobre una ejecución real del pipeline
+#text(size: 10pt)[#emph[Nota. Medición propia sobre una ejecución real del pipeline
 completo contra DVWA, reportada por los autores, corridas del 6 de
 agosto de 2026 \(ver referencia de archivos arriba). El panel de caché
 de la corrida con caché activo registró: ffuf 0 de 207.628 palabras
 probadas \(207.628 omitidas por caché); SQLMap 3 de 8 URLs re-testeadas
 \(5 omitidas por caché, 3 re-testeadas por haber sido vulnerables en una
 corrida anterior); ZAP no participa del mecanismo de caché y ejecuta
-spider y escaneo activo completos en ambas corridas.]
+spider y escaneo activo completos en ambas corridas.]]
 
 Esta es, a diferencia de la comparación retirada de H1, una medición
 real de tiempo del pipeline end-to-end, con la salvedad de que compara
@@ -251,7 +251,7 @@ align(center)[#table(
 )
 
 #quote(block: true)[
-#emph[Nota. Medición propia reportada por los autores. Los campos se
+#text(size: 10pt)[#emph[Nota. Medición propia reportada por los autores. Los campos se
 interpretan según la estructura del bloque «resumen» de
 resultado\_unificado.json, consistente con las Tablas 3 a 8. Al igual
 que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
@@ -260,7 +260,7 @@ en cada caso corresponde a la URL semilla y a las URLs derivadas del
 proceso de autenticación y de re-testeo automático de los dos endpoints
 marcados como vulnerables \(/vulnerabilities/brute/ y
 /vulnerabilities/sqli/), incorporadas al conjunto unificado de la misma
-forma señalada en la nota de la Tabla 3.]
+forma señalada en la nota de la Tabla 3.]]
 ]
 
 Estos resultados proveen respaldo empírico directo para corroborar la

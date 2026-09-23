@@ -531,22 +531,22 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 <section-13>
 
 #box(width: 7.828125546806649in, image("../media/media/image2.png"))
-#emph[Figura 1 \(ampliada). Diagrama de Arquitectura de Servicio.
-  Elaboración propia.]
+#text(size: 10pt)[#emph[Figura 1 \(ampliada). Diagrama de Arquitectura de Servicio.
+  Elaboración propia.]]
 
 #box(width: 7.432292213473316in, image("../media/media/image1.jpg"))
 
-#emph[Figura 2 \(ampliada). Diagrama Orquestador-Seguridad. Elaboración
-  propia.]
+#text(size: 10pt)[#emph[Figura 2 \(ampliada). Diagrama Orquestador-Seguridad. Elaboración
+  propia.]]
 
 #quote(block: true)[
   #box(width: 6.246719160104987in, image("../media/media/image4.jpg"))
 ]
 
-#emph[Figura 3 \(ampliada). Diagrama del Pipeline de Ejecución.
-  Elaboración propia.]
+#text(size: 10pt)[#emph[Figura 3 \(ampliada). Diagrama del Pipeline de Ejecución.
+  Elaboración propia.]]
 
 #box(width: 8.229166666666666in, image("../media/media/image3.png"))
 
-#emph[Figura 4 \(ampliada). Diagrama de secuencia UML. Elaboración
-  propia.]
+#text(size: 10pt)[#emph[Figura 4 \(ampliada). Diagrama de secuencia UML. Elaboración
+  propia.]]

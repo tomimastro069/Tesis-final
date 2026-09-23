@@ -128,10 +128,10 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración propia a partir de la documentación oficial de
+#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de la documentación oficial de
 cada plataforma \(Faraday Security, 2025; DefectDojo, 2025; TheHive
 Project, 2025; Shuffle, 2025) y de la descripción funcional del sistema
-desarrollado.]
+desarrollado.]]
 
 #quote(block: true)[
 Frente a este panorama, el proyecto presentado en este trabajo propone

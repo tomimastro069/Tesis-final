@@ -68,7 +68,7 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Datos extraídos de resultado\_unificado.json \(campo
+#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json \(campo
 resumen). El total de 34 URLs únicas no es la simple suma de spider
 \(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
 del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
@@ -76,7 +76,7 @@ de autenticación automática \(#link("http://dvwa/login.php") con
 parámetros de sesión), incorporadas al conjunto unificado antes de la
 deduplicación por el módulo consolidar\_resultados\() y no
 contabilizadas en los campos spider.resultados ni ffuf.rutas del JSON
-crudo.]
+crudo.]]
 
 == 13.2 Vulnerabilidades Detectadas por OWASP ZAP
 <vulnerabilidades-detectadas-por-owasp-zap>
@@ -158,9 +158,9 @@ align(center)[#table(
 )
 
 #quote(block: true)[
-#emph[Nota. Datos extraídos de resultado\_unificado.json /
+#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json /
 reporte\_seguridad.md. La severidad reproduce el campo riskdesc de ZAP
-en formato «Nivel de Riesgo \(Nivel de Confianza)».]
+en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
 
 La distribución de las 37 alertas por nivel de severidad base es la
 siguiente: Medium 16 \(43,2%), Low 14 \(37,8%) e Informational 7
@@ -206,8 +206,8 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Datos extraídos de resultado\_unificado.json, campo
-ffuf.rutas.]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json, campo
+ffuf.rutas.]]
 
 == 13.4 Análisis Automatizado con SQLMap
 <análisis-automatizado-con-sqlmap>
@@ -240,8 +240,8 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Datos extraídos de sqlmap\_bg.log y
-resultado\_unificado.json.]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
+resultado\_unificado.json.]]
 
 #strong[Tabla 7. Datos extraídos a través de Sql Injection – corrida del
 5 de agosto del 2026]
@@ -280,14 +280,14 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Datos extraídos de sqlmap\_bg.log y
+#text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
 resultado\_unificado.json. Además, se evitaron columnas como «avatar»,
 «last\_login» o «failed\_login» debido a que no aportan información
 relevante para el análisis presentado en este informe. Los valores
 mostrados son las credenciales por defecto de DVWA, una aplicación
 deliberadamente vulnerable; el criterio de manejo responsable de datos
 extraídos descrito en el capítulo 16 \(principio 1.6 del código ACM)
-rige para cualquier uso de esta técnica sobre un objetivo real.]
+rige para cualquier uso de esta técnica sobre un objetivo real.]]
 
 A partir de la explotación exitosa, SQLMap identificó el motor de base
 de datos como MySQL/MariaDB, enumeró la base de datos activa \(dvwa) y
@@ -341,7 +341,7 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración propia.]
+#text(size: 10pt)[#emph[Nota. Elaboración propia.]]
 
 El sistema detectó vulnerabilidades pertenecientes a tres categorías
 distintas del OWASP Top 10 en esta ejecución, cumpliendo el criterio de

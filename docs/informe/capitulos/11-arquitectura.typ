@@ -29,8 +29,8 @@ la Figura 1:
 ]
 
 #quote(block: true)[
-#emph[Figura 1. Diagrama de Arquitectura de Servicio. Elaboración propia
-\(véase versión ampliada en el Anexo H) .]
+#text(size: 10pt)[#emph[Figura 1. Diagrama de Arquitectura de Servicio. Elaboración propia
+\(véase versión ampliada en el Anexo H) .]]
 ]
 
 == 11.2 Componentes y Sus Roles
@@ -64,7 +64,7 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración propia.]
+#text(size: 10pt)[#emph[Nota. Elaboración propia.]]
 
 La Figura 2 detalla cómo el orquestador coordina específicamente a las
 tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
@@ -72,9 +72,9 @@ tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
 #box(width: 5.832357830271216in, image("../media/media/image5.jpg"))
 
 #quote(block: true)[
-#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
+#text(size: 10pt)[#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
 enriquecimiento cruzado entre ZAP, ffuf y SQLMap. Elaboración propia
-\(véase versión ampliada en el Anexo H).]
+\(véase versión ampliada en el Anexo H).]]
 ]
 
 == 11.3 Red Docker y Aislamiento
@@ -137,8 +137,8 @@ sigue la secuencia representada en la Figura 3:
 #quote(block: true)[
 #box(width: 5.78614501312336in, image("../media/media/image4.jpg"))
 
-#emph[Figura 3. Diagrama de Pipeline de ejecución. Elaboración propia
-\(véase versión ampliada en el Anexo H).]
+#text(size: 10pt)[#emph[Figura 3. Diagrama de Pipeline de ejecución. Elaboración propia
+\(véase versión ampliada en el Anexo H).]]
 ]
 
 == 11.5 Diagrama de Secuencia — Ciclo de Vida de POST /scan
@@ -168,8 +168,8 @@ del frontend.
 #box(width: 6.75in, image("../media/media/image3.png"))
 
 #quote(block: true)[
-#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
-Elaboración propia \(véase versión ampliada en el Anexo H).]
+#text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
+Elaboración propia \(véase versión ampliada en el Anexo H).]]
 ]
 
 #strong[EXPLICACIÓN GENERAL DEL DIAGRAMA:]

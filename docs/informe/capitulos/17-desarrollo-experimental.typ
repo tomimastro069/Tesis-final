@@ -235,9 +235,9 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración de los autores a partir de los datos
+#text(size: 10pt)[#emph[Nota. Elaboración de los autores a partir de los datos
 recolectados durante la sesión de auditoría manual del 4 de agosto de
-2026 descrita en este apartado.]
+2026 descrita en este apartado.]]
 
 La Tabla 13 ilustra cómo se distribuyó el esfuerzo temporal a lo largo
 de las distintas etapas de la auditoría informática. Se puede observar

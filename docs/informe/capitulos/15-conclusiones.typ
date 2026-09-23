@@ -162,7 +162,7 @@ align(center)[#table(
 )]
 )
 
-#emph[Nota. Elaboración propia.]
+#text(size: 10pt)[#emph[Nota. Elaboración propia.]]
 
 == 15.2 Trabajos Futuros
 <trabajos-futuros>
