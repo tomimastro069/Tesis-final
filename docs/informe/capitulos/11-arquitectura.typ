@@ -69,7 +69,9 @@ la Figura 1:
 La Figura 2 detalla cómo el orquestador coordina específicamente a las
 tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
 
-#box(width: 5.832357830271216in, image("../media/media/image5.jpg"))
+#align(center)[
+  #image("../media/media/image5.jpg", width: 78%)
+]
 
 #text(size: 10pt)[#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
   enriquecimiento cruzado entre ZAP, ffuf y SQLMap. Elaboración propia
@@ -128,7 +130,9 @@ sigue la secuencia representada en la Figura 3:
     técnico como el reporte ejecutivo.
 ]
 
-#box(width: 5.78614501312336in, image("../media/media/image4.jpg"))
+#align(center)[
+  #image("../media/media/image4.jpg", width: 65%)
+]
 
 #text(size: 10pt)[#emph[Figura 3. Diagrama de Pipeline de ejecución. Elaboración propia
   \(véase versión ampliada en el Anexo H).]]
@@ -155,7 +159,9 @@ síncrona y la ejecución asíncrona es la que permite que el pipeline
 según el estado del caché— no comprometa la responsividad de la API ni
 del frontend.
 
-#box(width: 6.75in, image("../media/media/image3.png"))
+#align(center)[
+  #image("../media/media/image3.png", width: 78%)
+]
 
 #text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
   Elaboración propia \(véase versión ampliada en el Anexo H).]]
