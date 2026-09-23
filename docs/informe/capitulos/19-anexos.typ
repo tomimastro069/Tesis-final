@@ -35,9 +35,6 @@ n8n/
 frontend/ \
 └── src/{app/components/, app/windows98/, hooks/,
 services/#link("http://api.ts")[#underline[api.ts];];}
-
-===
-<section-10>
 === A.2 Archivo docker-compose.yml
 <a.2-archivo-docker-compose.yml>
 version: \"3.8\"
@@ -325,9 +322,6 @@ sqlmap\_level\=sqlmap\_level) \
 return {\"target\": target\_url, \"spider\_raw\": spider\_urls, \
 \"zap\_raw\": reporte\_zap\_crudo, \"sqlmap\_raw\": sqlmap\_raw, \
 \"ffuf\_raw\": ffuf\_data}
-
-==
-<section-11>
 == Anexo C — Fragmento Representativo: Parser de ZAP
 <anexo-c-fragmento-representativo-parser-de-zap>
 def parsear\_zap\(dato\_dict\_crudo): \
@@ -431,9 +425,6 @@ if intentar\_login\(): \
 return \"; \".join\(f\"{k}\={v}\" for k, v in
 session.cookies.get\_dict\().items\()) \
 return None
-
-==
-<section-12>
 == Anexo F — Fragmento Representativo: API REST
 <anexo-f-fragmento-representativo-api-rest>
 app \= FastAPI\(title\=\"Orquestador de Seguridad API\",
@@ -526,9 +517,6 @@ Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.4 y
 \(Diagrama Orquestador-Seguridad), Figura 3 \(Diagrama de Pipeline de
 ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 /scan).
-
-==
-<section-13>
 
 #box(width: 7.828125546806649in, image("../media/media/image2.png"))
 #text(size: 10pt)[#emph[Figura 1 \(ampliada). Diagrama de Arquitectura de Servicio.

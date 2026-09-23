@@ -4,27 +4,48 @@
 #show heading.where(level: 2): set text(size: 12pt, fill: rgb("#4e80bc"))
 #show heading.where(level: 3): set text(size: 11pt, fill: rgb("#4e80bc"))
 
-#align(center)[
-  #text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
-    Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web
-  ]
+#set page(header: none)
+
+#text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
+  Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web
 ]
 
-#quote(block: true)[
-#strong[Subtítulo:] Sistema de orquestación para análisis automatizado
-de vulnerabilidades web mediante fuzzing y escaneo activo
+#v(2.5em)
+
+#text(size: 13pt, weight: "bold")[
+  UNIVERSIDAD TECNOLÓGICA NACIONAL – FACULTAD REGIONAL MENDOZA
+]
+
+#v(0.3em)
+
+#text(size: 12pt, weight: "bold")[
+  Tecnicatura Universitaria en Programación
+]
+
+#v(2.5em)
+
+#strong[Subtítulo:] Sistema de orquestación para análisis automatizado de vulnerabilidades web mediante fuzzing y escaneo activo
+
+#v(1.8em)
 
 #strong[Autores:] Tomas Mastropietro, Cristian Krahulik, Juan Segura
 
+#v(1.8em)
+
 #strong[Directores:] Alberto Cortez y Ariel Enferrel.
 
-#strong[Línea de Investigación:] Seguridad informática · Ciberseguridad
-ofensiva · Automatización de pruebas · Ingeniería de software
+#v(1.8em)
+
+#strong[Línea de Investigación:] Seguridad informática · Ciberseguridad ofensiva · Automatización de pruebas · Ingeniería de software
+
+#v(1.8em)
 
 #strong[Fecha:] 2026
-]
 
 #pagebreak()
+
+#counter(page).update(1)
+#set page(header: align(right)[#context counter(page).display("1")])
 
 = Resumen
 <resumen>
@@ -160,11 +181,17 @@ Tabla 12. Verificación de cumplimiento por objetivo específico 44
 Tabla 13. Distribución temporal de la sesión de auditoría manual del
 capítulo 17 49
 
+#pagebreak()
+
 #include "capitulos/01-introduccion.typ"
 
 #include "capitulos/02-planteo-problema.typ"
 
+#pagebreak()
+
 #include "capitulos/03-justificacion.typ"
+
+#pagebreak()
 
 #include "capitulos/04-objetivos.typ"
 
