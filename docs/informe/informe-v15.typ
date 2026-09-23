@@ -137,8 +137,7 @@ Vulnerability Scanning, Docker, Python.
 
 #pagebreak()
 
-= Índice
-<índice>
+#heading(level: 1, outlined: false)[Índice] <índice>
 #outline(title: none, indent: auto)
 
 #pagebreak()
