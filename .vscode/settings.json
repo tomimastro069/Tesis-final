@@ -2,5 +2,9 @@
     "python.analysis.extraPaths": [
         "./orquestador-seguridad/app",
         "./orquestador-seguridad"
+    ],
+    "tinymist.fontPaths": [
+        "/mnt/c/Windows/Fonts",
+        "/home/cristian/.local/share/fonts"
     ]
 }

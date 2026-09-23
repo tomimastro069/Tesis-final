@@ -18,9 +18,9 @@
   inset: (x: 8pt, y: 7pt),
   radius: 3pt,
   width: 100%,
-  text(font: "DejaVu Sans Mono", size: 8.5pt, it)
+  text(font: ("Consolas", "DejaVu Sans Mono"), size: 8.5pt, it)
 )
-#show raw.where(block: false): set text(font: "DejaVu Sans Mono", size: 9pt)
+#show raw.where(block: false): set text(font: ("Consolas", "DejaVu Sans Mono"), size: 9pt)
 
 #set page(header: none)
 

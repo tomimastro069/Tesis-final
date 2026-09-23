@@ -33,6 +33,8 @@ frontend/
 └── src/{app/components/, app/windows98/, hooks/, services/api.ts}
 ```
 
+#pagebreak()
+
 === A.2 Archivo docker-compose.yml
 <a.2-archivo-docker-compose.yml>
 
@@ -127,8 +129,11 @@ volumes:
   postgres_data:
 ```
 
-#text(size: 10pt)[#emph[Nota sobre seguridad de la configuración. La definición de credenciales estáticas y tokens en texto plano (POSTGRES_PASSWORD=security_pass y api.key=12345) constituye una decisión técnica orientada a facilitar el despliegue del laboratorio controlado, en concordancia con los alcances definidos en el capítulo 9. Por el contrario, las claves de servicios de inteligencia artificial (IA_API_KEY, GEMINI_API_KEY, groq_key) se gestionan mediante interpolación de variables de entorno del host (\${VAR:-}), garantizando la protección de secretos de producción fuera del entorno local.]]
+#text(
+  size: 10pt,
+)[#emph[Nota sobre seguridad de la configuración. La definición de credenciales estáticas y tokens en texto plano (POSTGRES_PASSWORD=security_pass y api.key=12345) constituye una decisión técnica orientada a facilitar el despliegue del laboratorio controlado, en concordancia con los alcances definidos en el capítulo 9. Por el contrario, las claves de servicios de inteligencia artificial (IA_API_KEY, GEMINI_API_KEY, groq_key) se gestionan mediante interpolación de variables de entorno del host (\${VAR:-}), garantizando la protección de secretos de producción fuera del entorno local.]]
 
+#pagebreak()
 === A.3 Archivo Dockerfile
 <a.3-archivo-dockerfile>
 
@@ -175,190 +180,204 @@ COPY . .
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-
+#pagebreak()
 == Anexo B — Fragmento Representativo: Pipeline de Ejecución
 <anexo-b-fragmento-representativo-pipeline-de-ejecución>
-def run\_security\_pipeline\(target\_url, nivel\=\"medium\",
-cookies\=None, \
-sqlmap\_level\=\"basic\", progress\_callback\=None): \
-init\_db\() \
-... \
-if not cookies: \
-cookies \= establecer\_sesion\_automatica\(target\_url) \
-limpiar\_sesion\_zap\() \
-if cookies: \
-configurar\_autenticacion\(cookies) \
-\
-\# --- 1. ZAP SPIDER --- \
-spider\_id \= iniciar\_spider\(target\_url) \
-esperar\_spider\(spider\_id, progress\_callback\=cb\_spider) \
-spider\_urls \= obtener\_urls\(spider\_id) \
-\
-\# --- 2. FFUF \(antes del Active Scan) --- \
-ffuf\_raw \= run\_ffuf\(target\_url, WORDLIST\_PATH, OUTPUT\_DIR,
-cookies\=cookies) \
-ffuf\_data \= {} if ffuf\_raw.get\(\"skipped\") else
-json.load\(open\(ffuf\_raw\[\"output\_file\"\])) \
-rutas\_ffuf\_nuevas \= ffuf\_data.get\(\"results\", \[\]) \
-\
-\# --- 3. INYECTAR RUTAS DE FFUF EN ZAP --- \
-if rutas\_ffuf\_nuevas: \
-agregar\_urls\_a\_zap\(rutas\_ffuf\_nuevas) \
-\
-\# --- 4. ZAP ACTIVE SCAN --- \
-ascan\_id \= iniciar\_escaneo\_activo\(target\_url) \
-esperar\_escaneo\_activo\(ascan\_id, progress\_callback\=cb\_ascan) \
-reporte\_zap\_crudo \= obtener\_reporte\_json\() \
-\
-\# --- 5. SQLMAP \(sesion refrescada, URLs combinadas) --- \
-lista\_urls\_total \= list\(set\(spider\_urls.get\(\"results\", \[\]) +
-\
-\[r.get\(\"url\", \"\") for r in rutas\_ffuf\_nuevas\])) \
-sqlmap\_raw \= run\_sqlmap\_batch\(lista\_urls\_total, cookies\=cookies,
-\
-sqlmap\_level\=sqlmap\_level) \
-\
-return {\"target\": target\_url, \"spider\_raw\": spider\_urls, \
-\"zap\_raw\": reporte\_zap\_crudo, \"sqlmap\_raw\": sqlmap\_raw, \
-\"ffuf\_raw\": ffuf\_data}
+
+```python
+def run_security_pipeline(target_url, nivel="medium", cookies=None,
+                          sqlmap_level="basic", progress_callback=None):
+    init_db()
+    ...
+    if not cookies:
+        cookies = establecer_sesion_automatica(target_url)
+    limpiar_sesion_zap()
+    if cookies:
+        configurar_autenticacion(cookies)
+
+    # --- 1. ZAP SPIDER ---
+    spider_id = iniciar_spider(target_url)
+    esperar_spider(spider_id, progress_callback=cb_spider)
+    spider_urls = obtener_urls(spider_id)
+
+    # --- 2. FFUF (antes del Active Scan) ---
+    ffuf_raw = run_ffuf(target_url, WORDLIST_PATH, OUTPUT_DIR, cookies=cookies)
+    ffuf_data = {} if ffuf_raw.get("skipped") else json.load(open(ffuf_raw["output_file"]))
+    rutas_ffuf_nuevas = ffuf_data.get("results", [])
+
+    # --- 3. INYECTAR RUTAS DE FFUF EN ZAP ---
+    if rutas_ffuf_nuevas:
+        agregar_urls_a_zap(rutas_ffuf_nuevas)
+
+    # --- 4. ZAP ACTIVE SCAN ---
+    ascan_id = iniciar_escaneo_activo(target_url)
+    esperar_escaneo_activo(ascan_id, progress_callback=cb_ascan)
+    reporte_zap_crudo = obtener_reporte_json()
+
+    # --- 5. SQLMAP (sesión refrescada, URLs combinadas) ---
+    lista_urls_total = list(set(spider_urls.get("results", []) +
+                                [r.get("url", "") for r in rutas_ffuf_nuevas]))
+    sqlmap_raw = run_sqlmap_batch(lista_urls_total, cookies=cookies,
+                                  sqlmap_level=sqlmap_level)
+
+    return {"target": target_url, "spider_raw": spider_urls,
+            "zap_raw": reporte_zap_crudo, "sqlmap_raw": sqlmap_raw,
+            "ffuf_raw": ffuf_data}
+```
+
+#pagebreak()
 == Anexo C — Fragmento Representativo: Parser de ZAP
 <anexo-c-fragmento-representativo-parser-de-zap>
-def parsear\_zap\(dato\_dict\_crudo): \
-try: \
-data \= dato\_dict\_crudo \
-vistas \= set\() \
-alertas\_parseadas \= \[\] \
-for sitio in data.get\(\"site\", \[\]): \
-for alerta in sitio.get\(\"alerts\", \[\]): \
-for instancia in alerta.get\(\"instances\", \[\]): \
-url \= instancia.get\(\"uri\", \"\") \
-clave \= \(url, alerta.get\(\"alert\", \"\")) \
-if clave not in vistas: \
-vistas.add\(clave) \
-alertas\_parseadas.append\({ \
-\"url\": url, \
-\"vulnerabilidad\": alerta.get\(\"alert\", \"Vulnerabilidad sin
-nombre\"), \
-\"severidad\": alerta.get\(\"riskdesc\", \"No clasificado\"), \
-\"metodo\": instancia.get\(\"method\", \"N/A\"), \
-\"solucion\": alerta.get\(\"solution\", \"No hay solucion disponible\")
-\
-}) \
-return {\"herramienta\": \"ZAP\", \"total\_alertas\":
-len\(alertas\_parseadas), \
-\"alertas\": alertas\_parseadas} \
-except \(KeyError, TypeError) as e: \
-print\(f\"Error al parsear los datos de ZAP: {e}\") \
-return {}
 
-== Anexo D — Ejemplo del JSON Unificado Final \(corrida del 5 de agosto de 2026)
+```python
+def parsear_zap(dato_dict_crudo):
+    try:
+        data = dato_dict_crudo
+        vistas = set()
+        alertas_parseadas = []
+        for sitio in data.get("site", []):
+            for alerta in sitio.get("alerts", []):
+                for instancia in alerta.get("instances", []):
+                    url = instancia.get("uri", "")
+                    clave = (url, alerta.get("alert", ""))
+                    if clave not in vistas:
+                        vistas.add(clave)
+                        alertas_parseadas.append({
+                            "url": url,
+                            "vulnerabilidad": alerta.get("alert", "Vulnerabilidad sin nombre"),
+                            "severidad": alerta.get("riskdesc", "No clasificado"),
+                            "metodo": instancia.get("method", "N/A"),
+                            "solucion": alerta.get("solution", "No hay solucion disponible")
+                        })
+        return {"herramienta": "ZAP", "total_alertas": len(alertas_parseadas),
+                "alertas": alertas_parseadas}
+    except (KeyError, TypeError) as e:
+        print(f"Error al parsear los datos de ZAP: {e}")
+        return {}
+```
+
+#pagebreak()
+== Anexo D — Ejemplo del JSON Unificado Final (corrida del 5 de agosto de 2026)
 <anexo-d-ejemplo-del-json-unificado-final-corrida-del-5-de-agosto-de-2026>
+
 El siguiente extracto reproduce el campo resumen del archivo
-resultado\_unificado.json de la ejecución documentada en el capítulo 13,
+resultado_unificado.json de la ejecución documentada en el capítulo 13,
 verificable directamente en el repositorio del proyecto.
 
-{ \
-\"resumen\": { \
-\"total\_urls\_unicas\": 34, \
-\"urls\_spider\": 24, \
-\"alertas\_zap\": 37, \
-\"rutas\_ffuf\": 8, \
-\"vulnerabilidades\_sqlmap\": 4 \
-}, \
-\"zap\": { \
-\"herramienta\": \"ZAP\", \
-\"host\": \"dvwa\", \
-\"total\_alertas\": 37, \
-\"alertas\": \[ \
-{ \"url\": \"http:\/\/dvwa/about.php\", \
-\"vulnerabilidad\": \"Content Security Policy \(CSP) Header Not Set\", \
-\"severidad\": \"Medium \(High)\" } \
-\] \
-}, \
-\"ffuf\": { \"herramienta\": \"ffuf\", \"total\_rutas\": 8, \
-\"rutas\": \[ { \"url\": \"http:\/\/dvwa/setup.php\", \"status\": 200 }
-\] }, \
-\"sqlmap\": { \"herramienta\": \"SQLMAP\", \
-\"vulnerabilidades\": \[ \
-{ \"url\":
-\"http:\/\/dvwa/vulnerabilities/brute/?Login\=Login&password\=ZAP&username\=ZAP\",
-\
-\"salida\": \"... Type: boolean-based blind ... parameter \'username\'
-is vulnerable\" } \
-\] \
-} \
+```json
+{
+  "resumen": {
+    "total_urls_unicas": 34,
+    "urls_spider": 24,
+    "alertas_zap": 37,
+    "rutas_ffuf": 8,
+    "vulnerabilidades_sqlmap": 4
+  },
+  "zap": {
+    "herramienta": "ZAP",
+    "host": "dvwa",
+    "total_alertas": 37,
+    "alertas": [
+      {
+        "url": "http://dvwa/about.php",
+        "vulnerabilidad": "Content Security Policy (CSP) Header Not Set",
+        "severidad": "Medium (High)"
+      }
+    ]
+  },
+  "ffuf": {
+    "herramienta": "ffuf",
+    "total_rutas": 8,
+    "rutas": [
+      {
+        "url": "http://dvwa/setup.php",
+        "status": 200
+      }
+    ]
+  },
+  "sqlmap": {
+    "herramienta": "SQLMAP",
+    "vulnerabilidades": [
+      {
+        "url": "http://dvwa/vulnerabilities/brute/?Login=Login&password=ZAP&username=ZAP",
+        "salida": "... Type: boolean-based blind ... parameter 'username' is vulnerable"
+      }
+    ]
+  }
 }
+```
 
-Todas las rutas reportadas usan http:\/\/dvwa/, el hostname real de la
+Todas las rutas reportadas usan http://dvwa/, el hostname real de la
 red interna de Docker, en lugar del hostname ilustrativo target.com que
 figuraba en versiones anteriores del documento; esta ejecución
 corresponde a datos reales y no a un ejemplo construido.
 
+#pagebreak()
 == Anexo E — Fragmento Representativo: Autenticación Automática
 <anexo-e-fragmento-representativo-autenticación-automática>
-def establecer\_sesion\_automatica\(target\_url): \
-\"\"\"Login automatico en DVWA; reintenta inicializando la BD si
-falla.\"\"\" \
-session \= requests.Session\() \
-def intentar\_login\(): \
-r \= session.get\(login\_url, timeout\=10) \
-token \= re.search\(r\"user\_token\[\'\\\"\]
-value\=\[\'\\\"\]\(\[^\'\\\"\]\*)\", r.text) \
-session.post\(login\_url, data\={\"username\": \"admin\", \"password\":
-\"password\", \
-\"Login\": \"Login\", \"user\_token\": token.group\(1) if token else
-\"\"}) \
-r\_sec \= session.post\(security\_url, data\={\"security\": \"low\",
-\"seclev\_submit\": \"Submit\"}) \
-return \"logout\" in r\_sec.text.lower\() \
-\
-if intentar\_login\(): \
-return \"; \".join\(f\"{k}\={v}\" for k, v in
-session.cookies.get\_dict\().items\()) \
-\
-\# Login fallo: inicializar la base de datos de DVWA y reintentar \
-session.post\(setup\_url, data\={\"create\_db\": \"Create / Reset
-Database\"}) \
-time.sleep\(3); session.cookies.clear\() \
-if intentar\_login\(): \
-return \"; \".join\(f\"{k}\={v}\" for k, v in
-session.cookies.get\_dict\().items\()) \
-return None
+
+```python
+def establecer_sesion_automatica(target_url):
+    """Login automatico en DVWA; reintenta inicializando la BD si falla."""
+    session = requests.Session()
+    def intentar_login():
+        r = session.get(login_url, timeout=10)
+        token = re.search(r"user_token['\"] value=['\"]([^'\"]*)", r.text)
+        session.post(login_url, data={"username": "admin", "password": "password",
+                                      "Login": "Login", "user_token": token.group(1) if token else ""})
+        r_sec = session.post(security_url, data={"security": "low", "seclev_submit": "Submit"})
+        return "logout" in r_sec.text.lower()
+
+    if intentar_login():
+        return "; ".join(f"{k}={v}" for k, v in session.cookies.get_dict().items())
+
+    # Login fallo: inicializar la base de datos de DVWA y reintentar
+    session.post(setup_url, data={"create_db": "Create / Reset Database"})
+    time.sleep(3)
+    session.cookies.clear()
+    if intentar_login():
+        return "; ".join(f"{k}={v}" for k, v in session.cookies.get_dict().items())
+    return None
+```
+
+#pagebreak()
 == Anexo F — Fragmento Representativo: API REST
 <anexo-f-fragmento-representativo-api-rest>
-app \= FastAPI\(title\=\"Orquestador de Seguridad API\",
-version\=\"1.0.0\") \
-\
-class ScanRequest\(BaseModel): \
-target: str \
-nivel: Optional\[str\] \= \"medium\" \
-cookies: Optional\[str\] \= None \
-callback\_url: Optional\[str\] \= None \
-sqlmap\_level: Optional\[str\] \= \"basic\" \
-\
-\@app.post\(\"/scan\", status\_code\=202) \
-def iniciar\_escaneo\(request: ScanRequest, background\_tasks:
-BackgroundTasks): \
-scan\_id \= str\(uuid.uuid4\()) \
-create\_scan\(scan\_id, request.target) \
-background\_tasks.add\_task\(ejecutar\_pipeline\_segundo\_plano,
-scan\_id\=scan\_id, \
-target\=request.target, nivel\=request.nivel, \
-cookies\=request.cookies, sqlmap\_level\=request.sqlmap\_level) \
-return {\"message\": \"Escaneo lanzado\", \"scan\_id\": scan\_id} \
-\
-\@app.get\(\"/scan/{scan\_id}/progress\") \
-def get\_scan\_progress\(scan\_id: str): \
-if scan\_id in scan\_progress\_store: \
-return scan\_progress\_store\[scan\_id\] \
-scan\_data \= get\_scan\_by\_id\(scan\_id) \
-if not scan\_data: \
-raise HTTPException\(status\_code\=404, detail\=\"Scan no encontrado\")
-\
-return {\"percentage\": 100, \"message\": \"Analisis Completado\"} if
-scan\_data\[\"status\"\] \=\= \"completed\" \\ \
-else {\"percentage\": 0, \"message\": \"Iniciando o retomando
-analisis...\"}
+
+```python
+app = FastAPI(title="Orquestador de Seguridad API", version="1.0.0")
+
+class ScanRequest(BaseModel):
+    target: str
+    nivel: Optional[str] = "medium"
+    cookies: Optional[str] = None
+    callback_url: Optional[str] = None
+    sqlmap_level: Optional[str] = "basic"
+
+@app.post("/scan", status_code=202)
+def iniciar_escaneo(request: ScanRequest, background_tasks: BackgroundTasks):
+    scan_id = str(uuid.uuid4())
+    create_scan(scan_id, request.target)
+    background_tasks.add_task(ejecutar_pipeline_segundo_plano,
+                              scan_id=scan_id,
+                              target=request.target, nivel=request.nivel,
+                              cookies=request.cookies, sqlmap_level=request.sqlmap_level)
+    return {"message": "Escaneo lanzado", "scan_id": scan_id}
+
+@app.get("/scan/{scan_id}/progress")
+def get_scan_progress(scan_id: str):
+    if scan_id in scan_progress_store:
+        return scan_progress_store[scan_id]
+    scan_data = get_scan_by_id(scan_id)
+    if not scan_data:
+        raise HTTPException(status_code=404, detail="Scan no encontrado")
+
+    return {"percentage": 100, "message": "Analisis Completado"} if scan_data["status"] == "completed" \
+        else {"percentage": 0, "message": "Iniciando o retomando analisis..."}
+```
+
+#pagebreak()
+
 
 == Anexo G — Frontend: Panel de Control
 <anexo-g-frontend-panel-de-control>
@@ -408,6 +427,7 @@ análisis multi-objetivo que la idea original imaginaba queda limitado,
 por diseño y por las restricciones legales del capítulo 16, a un único
 entorno de laboratorio autorizado \(DVWA).
 
+#pagebreak()
 == Anexo H — Diagramas en Tamaño Ampliado
 <anexo-h-diagramas-en-tamaño-ampliado>
 Este anexo reproduce a mayor tamaño, para su mejor observación, las
@@ -417,21 +437,35 @@ Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.4 y
 ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 /scan).
 
-#box(width: 7.828125546806649in, image("../media/media/image2.png"))
-#text(size: 10pt)[#emph[Figura 1 \(ampliada). Diagrama de Arquitectura de Servicio.
-  Elaboración propia.]]
+#v(1em)
 
-#box(width: 7.432292213473316in, image("../media/media/image1.jpg"))
+#align(center)[
+  #image("../media/media/image2.png", width: 85%)
+  #v(0.5em)
+  #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]]
+]
 
-#text(size: 10pt)[#emph[Figura 2 \(ampliada). Diagrama Orquestador-Seguridad. Elaboración
-  propia.]]
+#pagebreak()
 
-#box(width: 6.246719160104987in, image("../media/media/image4.jpg"))
+#align(center)[
+  #image("../media/media/image1.jpg", width: 95%)
+  #v(0.5em)
+  #text(size: 10pt)[#emph[Figura 2 (ampliada). Diagrama Orquestador-Seguridad. Elaboración propia.]]
+]
 
-#text(size: 10pt)[#emph[Figura 3 \(ampliada). Diagrama del Pipeline de Ejecución.
-  Elaboración propia.]]
+#pagebreak()
 
-#box(width: 8.229166666666666in, image("../media/media/image3.png"))
+#align(center)[
+  #image("../media/media/image4.jpg", width: 70%)
+  #v(0.5em)
+  #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama del Pipeline de Ejecución. Elaboración propia.]]
+]
 
-#text(size: 10pt)[#emph[Figura 4 \(ampliada). Diagrama de secuencia UML. Elaboración
-  propia.]]
+#pagebreak()
+
+#align(center)[
+  #image("../media/media/image3.png", width: 95%)
+  #v(0.5em)
+  #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML. Elaboración propia.]]
+]
+
