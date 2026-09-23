@@ -1,6 +1,5 @@
 = 14. Discusión
 <discusión>
-#quote(block: true)[
 Los resultados obtenidos confirman que es técnicamente viable
 implementar un sistema de orquestación de herramientas de seguridad web
 utilizando exclusivamente tecnologías open source y un desarrollo propio
@@ -20,11 +19,9 @@ un frontend que consume estos endpoints. Esta extensión responde
 directamente a PI4 \(extensibilidad y reproducibilidad): la separación
 entre orquestador, API y frontend permitió incorporar estas capas sin
 modificar la lógica interna del pipeline.
-]
 
 == 14.1 Contraste de cobertura: uso individual frente a combinado \(H2)
 <contraste-de-cobertura-uso-individual-frente-a-combinado-h2>
-#quote(block: true)[
 El pipeline actual no solo integra los hallazgos de las tres
 herramientas al final del proceso, sino que los cruza durante la
 ejecución: las rutas descubiertas por ffuf se inyectan en la sesión de
@@ -34,53 +31,61 @@ SQLMap solo recibe URLs candidatas porque el spider y ffuf las aportaron
 previamente. La Tabla 9 descompone, a partir de esta misma ejecución,
 qué detecta cada herramienta por separado frente al resultado del
 pipeline combinado.
-]
+
+#pagebreak()
 
 #strong[Tabla 9. Cobertura por herramienta en solitario frente al
-pipeline combinado \(misma ejecución del 5 de agosto de 2026)]
+  pipeline combinado \(misma ejecución del 5 de agosto de 2026)]
 
 #figure(
-align(center)[#table(
-  columns: 5,
-  align: (col, row) => (auto,auto,auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Herramienta / Método], [URLs analizadas], [Hallazgos], [Cobertura
-  OWASP Top 10], [Limitación de operar en solitario],
-  [ZAP \(spider + active scan)],
-  [24 \(su propio spider)],
-  [37 alertas],
-  [A05:2021],
-  [No descubre rutas no enlazadas de forma proactiva; no profundiza en
-  inyección SQL],
-  [ffuf],
-  [8 \(wordlist)],
-  [0 \(solo identifica códigos HTTP, no clasifica vulnerabilidades)],
-  [A01:2021 \(indirecta)],
-  [No evalúa el contenido de las respuestas ni ejecuta lógica de
-  detección],
-  [SQLMap en aislamiento total],
-  [0 \(requiere URLs de entrada)],
-  [0],
-  [—],
-  [No tiene capacidad de crawling propia; depende arquitectónicamente de
-  que otra herramienta le entregue URLs parametrizadas],
-  [Orquestador \(combinado)],
-  [34 \(unificadas)],
-  [41 \(37 ZAP + 4 SQLMap)],
-  [A01, A03, A05 \(tres categorías)],
-  [Pipeline secuencial; no se ejecutó, además de esta corrida, una
-  segunda ejecución de control con las herramientas verdaderamente
-  aisladas entre sí],
-)]
+  align(center)[#table(
+    columns: 5,
+    align: (col, row) => (auto, auto, auto, auto, auto).at(col),
+    inset: 6pt,
+    [Herramienta / Método],
+    [URLs analizadas],
+    [Hallazgos],
+    [Cobertura
+      OWASP Top 10],
+    [Limitación de operar en solitario],
+
+    [ZAP \(spider + active scan)],
+    [24 \(su propio spider)],
+    [37 alertas],
+    [A05:2021],
+    [No descubre rutas no enlazadas de forma proactiva; no profundiza en
+      inyección SQL],
+
+    [ffuf],
+    [8 \(wordlist)],
+    [0 \(solo identifica códigos HTTP, no clasifica vulnerabilidades)],
+    [A01:2021 \(indirecta)],
+    [No evalúa el contenido de las respuestas ni ejecuta lógica de
+      detección],
+
+    [SQLMap en aislamiento total],
+    [0 \(requiere URLs de entrada)],
+    [0],
+    [—],
+    [No tiene capacidad de crawling propia; depende arquitectónicamente de
+      que otra herramienta le entregue URLs parametrizadas],
+
+    [Orquestador \(combinado)],
+    [34 \(unificadas)],
+    [41 \(37 ZAP + 4 SQLMap)],
+    [A01, A03, A05 \(tres categorías)],
+    [Pipeline secuencial; no se ejecutó, además de esta corrida, una
+      segunda ejecución de control con las herramientas verdaderamente
+      aisladas entre sí],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración propia a partir de resultado\_unificado.json.
-Las filas «ZAP» y «ffuf» reflejan lo que cada herramienta aporta dentro
-de la corrida combinada, no una ejecución separada de cada una contra el
-objetivo; SQLMap en aislamiento total es una limitación arquitectónica
-documentada, no medida por separado.]]
+  Las filas «ZAP» y «ffuf» reflejan lo que cada herramienta aporta dentro
+  de la corrida combinada, no una ejecución separada de cada una contra el
+  objetivo; SQLMap en aislamiento total es una limitación arquitectónica
+  documentada, no medida por separado.]]
 
-#quote(block: true)[
 #strong[Nota metodológica.] Esta tabla no proviene de tres ejecuciones
 independientes y controladas de cada herramienta contra DVWA, sino de la
 descomposición de una única corrida combinada. Falta aún una comparación
@@ -96,11 +101,9 @@ aporte URLs parametrizadas. La orquestación combinada amplía por
 construcción la superficie cubierta: no es solo que se sumen los
 hallazgos de cada herramienta, sino que los hallazgos de una habilitan
 el trabajo de la siguiente.
-]
 
 == 14.2 Reducción de esfuerzo manual \(H1)
 <reducción-de-esfuerzo-manual-h1>
-#quote(block: true)[
 El sistema incorpora un mecanismo de caché incremental respaldado en
 SQLite/PostgreSQL \(app/db/database.py) que registra qué palabras de
 wordlist y qué URLs con parámetros ya fueron analizadas contra un
@@ -124,7 +127,6 @@ el 60% del período \(75 minutos) fue ejecutado por procesos automáticos
 de escaneo y recolección de datos, restringiendo la intervención humana
 a 50 minutos \(40%) enfocados únicamente en la validación de cinco
 vectores críticos.
-]
 
 A pesar de que este registro no representa una prueba a ciegas de
 exploración manual independiente sobre toda la superficie —limitación
@@ -144,7 +146,6 @@ validación de hallazgos).
 
 == 14.3 Verificación de H4: impacto del caché incremental
 <verificación-de-h4-impacto-del-caché-incremental>
-#quote(block: true)[
 A diferencia de H1, la hipótesis H4 —que el caché incremental reduce el
 tiempo de ejecuciones repetidas del pipeline sobre un mismo objetivo— sí
 cuenta con una medición propia del pipeline completo \(ZAP + ffuf +
@@ -157,32 +158,26 @@ resultado\_con\_cache.json del directorio output/raw/benchmarks/ del
 repositorio del proyecto.
 
 #strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental]
-]
 
 #figure(
-align(center)[#table(
-  columns: 3,
-  align: (col, row) => (auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Condición], [Tiempo total del pipeline], [Reducción],
-  [Sin caché \(análisis completo desde cero)],
-  [14 min 05,81 s \(845,81 s)],
-  [—],
-  [Con caché incremental activo],
-  [4 min 23,15 s \(263,15 s)],
-  [68,9% menos tiempo],
-)]
+  align(center)[#table(
+    columns: 3,
+    align: (col, row) => (auto, auto, auto).at(col),
+    inset: 6pt,
+    [Condición], [Tiempo total del pipeline], [Reducción],
+    [Sin caché \(análisis completo desde cero)], [14 min 05,81 s \(845,81 s)], [—],
+    [Con caché incremental activo], [4 min 23,15 s \(263,15 s)], [68,9% menos tiempo],
+  )],
 )
 
-#quote(block: true)[
 #text(size: 10pt)[#emph[Nota. Medición propia sobre una ejecución real del pipeline
-completo contra DVWA, reportada por los autores, corridas del 6 de
-agosto de 2026 \(ver referencia de archivos arriba). El panel de caché
-de la corrida con caché activo registró: ffuf 0 de 207.628 palabras
-probadas \(207.628 omitidas por caché); SQLMap 3 de 8 URLs re-testeadas
-\(5 omitidas por caché, 3 re-testeadas por haber sido vulnerables en una
-corrida anterior); ZAP no participa del mecanismo de caché y ejecuta
-spider y escaneo activo completos en ambas corridas.]]
+  completo contra DVWA, reportada por los autores, corridas del 6 de
+  agosto de 2026 \(ver referencia de archivos arriba). El panel de caché
+  de la corrida con caché activo registró: ffuf 0 de 207.628 palabras
+  probadas \(207.628 omitidas por caché); SQLMap 3 de 8 URLs re-testeadas
+  \(5 omitidas por caché, 3 re-testeadas por haber sido vulnerables en una
+  corrida anterior); ZAP no participa del mecanismo de caché y ejecuta
+  spider y escaneo activo completos en ambas corridas.]]
 
 Esta es, a diferencia de la comparación retirada de H1, una medición
 real de tiempo del pipeline end-to-end, con la salvedad de que compara
@@ -208,60 +203,41 @@ este benchmark, frente a las 4 de la corrida de referencia del capítulo
 Ambas corridas de este benchmark confirmaron inyección tanto en
 /vulnerabilities/brute/ \(username) como en /vulnerabilities/sqli/
 \(id), de forma coincidente con la corrida del 2 de agosto documentada
-en 13.4, mientras que la corrida de
-
-referencia del 5 de agosto del capítulo 13 solo confirmó el primer
-endpoint. Este tercer punto de datos refuerza la lectura de que la no
-detección de /vulnerabilities/sqli/ en la corrida del capítulo 13 fue un
-evento puntual de esa pasada —probablemente ligado al conjunto de URLs
-parametrizadas que el spider y ffuf le entregaron a SQLMap en ese
-momento— y no un cambio estructural del comportamiento del sistema.
-]
+en 13.4, mientras que la corrida de referencia del 5 de agosto del
+capítulo 13 solo confirmó el primer endpoint. Este tercer punto de datos
+refuerza la lectura de que la no detección de /vulnerabilities/sqli/ en la
+corrida del capítulo 13 fue un evento puntual de esa pasada —probablemente
+ligado al conjunto de URLs parametrizadas que el spider y ffuf le
+entregaron a SQLMap en ese momento— y no un cambio estructural del
+comportamiento del sistema.
 
 #strong[Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y
-con caché]
+  con caché]
 
 #figure(
-align(center)[#table(
-  columns: 4,
-  align: (col, row) => (auto,auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Indicador], [Sin caché], [Con caché], [Coincidencia],
-  [Total de URLs únicas],
-  [59],
-  [57],
-  [96,6%],
-  [URLs descubiertas por el Spider],
-  [54],
-  [52],
-  [96,3%],
-  [Alertas de ZAP],
-  [48],
-  [48],
-  [100%],
-  [Rutas descubiertas por ffuf],
-  [0],
-  [0],
-  [100%],
-  [Vulnerabilidades de SQLMap],
-  [8],
-  [8],
-  [100%],
-)]
+  align(center)[#table(
+    columns: 4,
+    align: (col, row) => (auto, auto, auto, auto).at(col),
+    inset: 6pt,
+    [Indicador], [Sin caché], [Con caché], [Coincidencia],
+    [Total de URLs únicas], [59], [57], [96,6%],
+    [URLs descubiertas por el Spider], [54], [52], [96,3%],
+    [Alertas de ZAP], [48], [48], [100%],
+    [Rutas descubiertas por ffuf], [0], [0], [100%],
+    [Vulnerabilidades de SQLMap], [8], [8], [100%],
+  )],
 )
 
-#quote(block: true)[
 #text(size: 10pt)[#emph[Nota. Medición propia reportada por los autores. Los campos se
-interpretan según la estructura del bloque «resumen» de
-resultado\_unificado.json, consistente con las Tablas 3 a 8. Al igual
-que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
-excede la suma de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
-en cada caso corresponde a la URL semilla y a las URLs derivadas del
-proceso de autenticación y de re-testeo automático de los dos endpoints
-marcados como vulnerables \(/vulnerabilities/brute/ y
-/vulnerabilities/sqli/), incorporadas al conjunto unificado de la misma
-forma señalada en la nota de la Tabla 3.]]
-]
+  interpretan según la estructura del bloque «resumen» de
+  resultado\_unificado.json, consistente con las Tablas 3 a 8. Al igual
+  que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
+  excede la suma de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
+  en cada caso corresponde a la URL semilla y a las URLs derivadas del
+  proceso de autenticación y de re-testeo automático de los dos endpoints
+  marcados como vulnerables \(/vulnerabilities/brute/ y
+  /vulnerabilities/sqli/), incorporadas al conjunto unificado de la misma
+  forma señalada en la nota de la Tabla 3.]]
 
 Estos resultados proveen respaldo empírico directo para corroborar la
 hipótesis H4 y el parámetro de reproducibilidad detallado en el apartado
@@ -275,7 +251,6 @@ descubrimientos.
 
 == 14.4 Rendimiento y ajuste de timeouts
 <rendimiento-y-ajuste-de-timeouts>
-#quote(block: true)[
 El rendimiento del pipeline fue un problema identificado y resuelto
 durante el desarrollo. Por defecto, el Active Scan de ZAP podía superar
 las 4 horas por objetivo debido a su configuración conservadora \(2
@@ -291,11 +266,9 @@ ZAP para poder inyectarle las rutas descubiertas, y SQLMap necesita las
 URLs combinadas de spider y ffuf además de una sesión recién
 refrescada—, pero el cuello de botella real \(la duración del escaneo de
 ZAP) fue acotado explícitamente en lugar de dejarse sin control.
-]
 
 == 14.5 Seguimiento longitudinal y sugerencias de mitigación por IA
 <seguimiento-longitudinal-y-sugerencias-de-mitigación-por-ia>
-#quote(block: true)[
 El sistema de re-testeo automático de URLs vulnerables agrega una
 dimensión no contemplada en las hipótesis originales: las URLs donde se
 confirmó una vulnerabilidad se excluyen deliberadamente del caché y se
@@ -313,18 +286,15 @@ presentarse con cautela: las sugerencias generadas por el modelo no
 fueron validadas sistemáticamente contra un criterio experto, por lo que
 se recomiendan como apoyo complementario y no como fuente única de
 remediación.
-]
 
 == 14.6 Comparación con el panorama de la industria
 <comparación-con-el-panorama-de-la-industria>
-#quote(block: true)[
 Al contrastar el sistema propuesto con el panorama actual de la
 industria \(ver también Tabla 1), se identifican paralelismos y
 divergencias operativas:
-]
 
 - #strong[Plataformas de Gestión de Vulnerabilidades \(Faraday,
-  DefectDojo):] se especializan en la centralización y el triaje de
+    DefectDojo):] se especializan en la centralización y el triaje de
   hallazgos heterogéneos, permitiendo una visión estática del riesgo,
   pero carecen de mecanismos para coordinar activamente la ejecución
   secuencial en tiempo real o facilitar el enriquecimiento dinámico de
@@ -340,7 +310,6 @@ divergencias operativas:
   específicamente al escaneo web interactivo y la portabilidad mediante
   Docker Compose.
 
-#quote(block: true)[
 Contraste de hallazgos con el estado del arte: Aunque la fase
 experimental se acotó a un laboratorio controlado utilizando DVWA como
 objetivo, las métricas recolectadas respaldan de manera directa las
@@ -348,29 +317,28 @@ observaciones reportadas en la literatura reciente de ciberseguridad
 ofensiva:
 
 1. #strong[Sinergia y complementariedad de scanners \(Qadir et al.,
-2025):] Al evaluar múltiples herramientas de DAST sobre docenas de
-objetivos web, se observa que ningún motor aislado logra abarcar por
-completo la totalidad del OWASP Top 10. Esta premisa se comprueba en la
-Tabla 9, donde el pipeline unificado expandió la detección desde una
-sola categoría \(A05 en ZAP) hasta tres categorías críticas \(A01, A03 y
-A05).
+    2025):] Al evaluar múltiples herramientas de DAST sobre docenas de
+  objetivos web, se observa que ningún motor aislado logra abarcar por
+  completo la totalidad del OWASP Top 10. Esta premisa se comprueba en la
+  Tabla 9, donde el pipeline unificado expandió la detección desde una
+  sola categoría \(A05 en ZAP) hasta tres categorías críticas \(A01, A03 y
+  A05).
 
 2. #strong[Ampliación de la superficie de ataque mediante fuzzing
-\(Alsaedi et al., 2021):] El descubrimiento de ocho rutas no
-identificadas por el rastreo de ZAP —incluyendo endpoints de
-administración clave como /setup.php y /security.php— confirma
-empíricamente que el fuzzing de directorios resulta indispensable para
-complementar el escaneo activo.
+    \(Alsaedi et al., 2021):] El descubrimiento de ocho rutas no
+  identificadas por el rastreo de ZAP —incluyendo endpoints de
+  administración clave como /setup.php y /security.php— confirma
+  empíricamente que el fuzzing de directorios resulta indispensable para
+  complementar el escaneo activo.
 
 3. #strong[Especialización en la detección de inyecciones \(Althunayyan
-et al., 2022; Elia et al., 2010):] La confirmación de vectores SQL
-mediante técnicas avanzadas por parte de SQLMap en secciones no
-catalogadas como vulnerables por ZAP demuestra la disparidad entre
-escáneres generales y módulos dedicados, fundamentando la inclusión de
-este componente en la arquitectura.
+    et al., 2022; Elia et al., 2010):] La confirmación de vectores SQL
+  mediante técnicas avanzadas por parte de SQLMap en secciones no
+  catalogadas como vulnerables por ZAP demuestra la disparidad entre
+  escáneres generales y módulos dedicados, fundamentando la inclusión de
+  este componente en la arquitectura.
 
 Como línea de trabajo futuro \(sección 15.2), se plantea la evaluación
 comparativa de esta plataforma frente a soluciones comerciales en
 entornos vulnerables adicionales \(como WebGoat o OWASP Juice Shop),
 analizando la tasa de falsos positivos y el impacto en la red.
-]

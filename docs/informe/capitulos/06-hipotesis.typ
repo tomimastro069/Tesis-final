@@ -1,6 +1,5 @@
 = 6. Hipótesis
 <hipótesis>
-#quote(block: true)[
 Se plantean las siguientes hipótesis de investigación:
 
 #strong[H1:] La automatización del proceso de análisis de seguridad
@@ -24,4 +23,3 @@ heterogéneas en una estructura unificada y coherente.
 datos reduce el tiempo de las ejecuciones repetidas del pipeline sobre
 un mismo objetivo, al evitar repetir pruebas ya realizadas sobre
 elementos previamente analizados y sin hallazgos.
-]

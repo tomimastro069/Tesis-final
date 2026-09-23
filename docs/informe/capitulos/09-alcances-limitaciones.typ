@@ -2,11 +2,9 @@
 <alcances-y-limitaciones>
 == 9.1 Alcances
 <alcances>
-#quote(block: true)[
 El proyecto cubre el diseño, la implementación y la validación de un
 orquestador de seguridad funcional en un entorno de laboratorio
 controlado, con las siguientes capacidades implementadas y verificadas:
-]
 
 - Ejecución automatizada de tres herramientas de análisis de seguridad
   \(OWASP ZAP, ffuf y SQLMap), con enriquecimiento cruzado entre ffuf y

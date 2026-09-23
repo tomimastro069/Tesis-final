@@ -2,7 +2,6 @@
 <conclusiones-y-trabajos-futuros>
 == 15.1 Conclusiones
 <conclusiones>
-#quote(block: true)[
 Primero, el sistema evolucionó de un pipeline secuencial simple a un
 servicio completo: una API REST que ejecuta el escaneo en segundo plano,
 reporta progreso, persiste resultados e historial, y se integra con n8n
@@ -52,9 +51,7 @@ como idea complementaria y hoy documentado en el Anexo G como decisión
 de diseño.
 
 Sexto, las dos comparaciones cuantitativas más exigentes que este
-trabajo se propuso resolver
-
-—cobertura individual frente a combinada, y tiempo del pipeline
+trabajo se propuso resolver —cobertura individual frente a combinada, y tiempo del pipeline
 automatizado frente a un proceso manual equivalente— fueron abordadas en
 el capítulo 14, pero con resultados distintos entre sí: la primera
 cuenta con una descomposición basada en datos reales de una ejecución
@@ -67,7 +64,6 @@ comparaciones ya resueltas.
 En relación directa con las preguntas de investigación formuladas en el
 capítulo 5, el proyecto arriba a las siguientes conclusiones
 específicas:
-]
 
 - #strong[Respuesta a PI1 \(Eficiencia y re-ejecución):] La orquestación
   coordinada permitió ejecutar el pipeline de tres herramientas de
@@ -107,10 +103,8 @@ específicas:
 
 === 15.1.1 Verificación por objetivo específico
 <verificación-por-objetivo-específico>
-#quote(block: true)[
 La siguiente tabla verifica, de forma sintética, el cumplimiento de cada
 uno de los nueve objetivos específicos definidos en la sección 4.2.
-]
 
 #strong[Tabla 12. Verificación de cumplimiento por objetivo específico]
 
@@ -166,12 +160,10 @@ align(center)[#table(
 
 == 15.2 Trabajos Futuros
 <trabajos-futuros>
-#quote(block: true)[
 Dado que autenticación automática, reportes en Markdown, configuración
 centralizada, base de datos de historial, panel web y sugerencias de IA
 ya están implementados, el trabajo futuro se concentra en lo que
 efectivamente falta:
-]
 
 + #strong[Comparación cuantitativa individual vs. combinada con corridas
   aisladas reales:] instrumentar el pipeline para ejecutar cada

@@ -1,6 +1,5 @@
 = 3. Justificación
 <justificación>
-#quote(block: true)[
 La investigación se justifica desde múltiples dimensiones que se
 refuerzan mutuamente.
 
@@ -47,4 +46,3 @@ en la industria pueden integrarse dentro de una arquitectura de software
 modular y automatizada —extendida hacia un servicio con API,
 persistencia e interfaz web—, generando un prototipo reproducible que
 puede ser adaptado por otros equipos de desarrollo o investigación.
-]

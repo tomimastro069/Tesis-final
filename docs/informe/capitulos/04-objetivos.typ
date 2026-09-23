@@ -2,12 +2,10 @@
 <objetivos>
 == 4.1 Objetivo General
 <objetivo-general>
-#quote(block: true)[
 Diseñar e implementar un sistema automatizado que permita orquestar
 múltiples herramientas de análisis de seguridad web para detectar
 vulnerabilidades en aplicaciones web, consolidar los resultados en
 reportes unificados y exponer el sistema como un servicio reutilizable.
-]
 
 == 4.2 Objetivos Específicos
 <objetivos-específicos>

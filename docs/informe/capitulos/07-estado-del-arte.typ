@@ -1,6 +1,5 @@
 = 7. Estado del Arte
 <estado-del-arte>
-#quote(block: true)[
 En los últimos años se han desarrollado numerosas herramientas
 destinadas al análisis de seguridad en aplicaciones web, clasificables
 en distintas categorías según su enfoque y funcionalidad.
@@ -38,9 +37,7 @@ Las herramientas de fuzzing como ffuf o dirsearch permiten descubrir
 rutas ocultas o endpoints expuestos mediante el envío sistemático de
 requests generados a partir de wordlists, complementando el
 descubrimiento de superficie de ataque que realiza el spider de un
-escáner
-
-DAST. Alsaedi et al. \(2021) relevan en su encuesta sobre fuzzing de
+escáner DAST. Alsaedi et al. \(2021) relevan en su encuesta sobre fuzzing de
 caja negra el estado de las técnicas de construcción de ataques para
 aplicaciones web, y clasifican a las herramientas de descubrimiento de
 rutas como una etapa complementaria —no sustituta— del escaneo activo
@@ -85,7 +82,6 @@ trabajo, pero requieren instalación y configuración considerablemente
 más complejas, y varias ofrecen sus funcionalidades avanzadas \(gestión
 de equipos, integraciones empresariales) bajo modelos de licenciamiento
 comercial.
-]
 
 #pagebreak()
 
@@ -133,11 +129,9 @@ cada plataforma \(Faraday Security, 2025; DefectDojo, 2025; TheHive
 Project, 2025; Shuffle, 2025) y de la descripción funcional del sistema
 desarrollado.]]
 
-#quote(block: true)[
 Frente a este panorama, el proyecto presentado en este trabajo propone
 una alternativa de menor escala: un orquestador propio en Python que
 integra tres herramientas puntuales, con persistencia de historial, API
 y un panel web simplificado, priorizando la simplicidad de despliegue y
 la reproducibilidad sobre la amplitud funcional de una plataforma SOAR
 completa.
-]

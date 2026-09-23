@@ -2,7 +2,6 @@
 <metodología>
 == 10.1 Diseño de la Investigación
 <diseño-de-la-investigación>
-#quote(block: true)[
 Se adopta un paradigma post-positivista con enfoque predominantemente
 cuantitativo en la medición de variables del sistema \(cantidad de
 hallazgos, severidad, cobertura), combinado con un diseño de
@@ -17,11 +16,9 @@ realizan mediante la ejecución del pipeline contra DVWA, una aplicación
 web intencionalmente vulnerable utilizada como entorno de prueba
 \(testbed), y los resultados se evalúan contra los criterios de
 validación definidos en la sección 10.6.
-]
 
 == 10.2 Fases del Proyecto
 <fases-del-proyecto>
-#quote(block: true)[
 El proyecto se desarrolló en seis fases secuenciales. La primera fase
 consistió en la investigación de herramientas de seguridad web, donde se
 evaluaron las capacidades, formatos de salida y posibilidades de
@@ -44,11 +41,9 @@ automática contra la aplicación objetivo, una capa de base de datos
 \(SQLite/PostgreSQL) para historial de escaneos y caché incremental, una
 API REST \(FastAPI) para ejecución asíncrona del pipeline, y un frontend
 web que consume dicha API para lanzar escaneos y visualizar resultados.
-]
 
 == 10.3 Variables
 <variables>
-#quote(block: true)[
 La variable independiente de la investigación es la automatización del
 proceso de análisis de seguridad mediante el orquestador. Se define
 operacionalmente como la ejecución coordinada de las herramientas OWASP
@@ -57,7 +52,6 @@ implementado en Python, en contraposición a la ejecución manual e
 independiente de cada herramienta por parte de un analista.
 
 Las variables dependientes son las siguientes:
-]
 
 + Número de vulnerabilidades detectadas: cantidad total de hallazgos de
   seguridad identificados por el sistema durante una ejecución completa
@@ -84,16 +78,13 @@ Las variables dependientes son las siguientes:
   está pendiente de extenderse a una medición equivalente del proceso
   manual \(ver 14.2).
 
-#quote(block: true)[
 Las variables de control comprenden el entorno objetivo \(DVWA en su
 configuración por defecto), las versiones específicas de las
 herramientas utilizadas \(imágenes Docker), las wordlists empleadas por
 ffuf, y los niveles de profundidad y riesgo configurados en SQLMap.
-]
 
 == 10.4 Instrumentos
 <instrumentos>
-#quote(block: true)[
 Los instrumentos utilizados en la investigación son los propios
 componentes del sistema desarrollado. Los contenedores Docker
 constituyen la infraestructura de ejecución que garantiza la
@@ -108,7 +99,6 @@ estructurado que constituye la fuente de datos para el análisis. El
 script test\_speed.py funciona como instrumento de medición de tiempo,
 comparando la duración de una primera ejecución de ffuf sin caché contra
 ejecuciones posteriores con caché activa sobre el mismo objetivo.
-]
 
 == 10.5 Amenazas a la Validez
 <amenazas-a-la-validez>
@@ -136,10 +126,8 @@ ejecuciones posteriores con caché activa sobre el mismo objetivo.
 
 == 10.6 Criterios de Validación
 <criterios-de-validación>
-#quote(block: true)[
 Un componente del sistema se considera validado cuando cumple
 simultáneamente los siguientes criterios:
-]
 
 - #strong[Funcionalidad:] la herramienta se ejecuta correctamente dentro
   del pipeline y produce una salida procesable por el parser

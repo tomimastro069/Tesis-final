@@ -527,9 +527,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #text(size: 10pt)[#emph[Figura 2 \(ampliada). Diagrama Orquestador-Seguridad. Elaboración
   propia.]]
 
-#quote(block: true)[
-  #box(width: 6.246719160104987in, image("../media/media/image4.jpg"))
-]
+#box(width: 6.246719160104987in, image("../media/media/image4.jpg"))
 
 #text(size: 10pt)[#emph[Figura 3 \(ampliada). Diagrama del Pipeline de Ejecución.
   Elaboración propia.]]

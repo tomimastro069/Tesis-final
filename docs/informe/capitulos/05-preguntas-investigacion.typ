@@ -1,9 +1,7 @@
 = 5. Preguntas de Investigación
 <preguntas-de-investigación>
-#quote(block: true)[
 Las siguientes preguntas guían el desarrollo y la evaluación del
 proyecto:
-]
 
 + #strong[\(PI1)] ¿En qué medida un sistema de orquestación desarrollado
   en Python mejora, en términos cualitativos y de tiempo de

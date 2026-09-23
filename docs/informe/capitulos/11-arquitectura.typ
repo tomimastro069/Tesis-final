@@ -2,66 +2,66 @@
 <arquitectura-propuesta-e-implementada>
 == 11.1 Descripción General
 <descripción-general>
-#quote(block: true)[
 La arquitectura del sistema se organiza en cuatro capas, ilustradas en
 la Figura 1:
-]
 
 #block[
-#set enum(numbering: "1.", start: 1)
-+ Orquestador Python: coordina la ejecución del pipeline \(spider → ffuf
-  → inyección de rutas en ZAP → escaneo activo → SQLMap), gestiona
-  autenticación y sesión, y consolida resultados.
+  #set enum(numbering: "1.", start: 1)
+  + Orquestador Python: coordina la ejecución del pipeline \(spider → ffuf
+    → inyección de rutas en ZAP → escaneo activo → SQLMap), gestiona
+    autenticación y sesión, y consolida resultados.
 
-+ Herramientas de escaneo: OWASP ZAP \(spider y escaneo activo), ffuf
-  \(fuzzing de directorios) y SQLMap \(inyección SQL), cada una
-  encapsulada en su propio módulo \(ver Figura 2).
+  + Herramientas de escaneo: OWASP ZAP \(spider y escaneo activo), ffuf
+    \(fuzzing de directorios) y SQLMap \(inyección SQL), cada una
+    encapsulada en su propio módulo \(ver Figura 2).
 
-+ Capa de persistencia: base de datos SQLite o PostgreSQL que almacena
-  historial de escaneos, caché incremental de ffuf y SQLMap, y URLs
-  marcadas para re-testeo automático.
+  + Capa de persistencia: base de datos SQLite o PostgreSQL que almacena
+    historial de escaneos, caché incremental de ffuf y SQLMap, y URLs
+    marcadas para re-testeo automático.
 
-+ Capa de servicio: una API REST \(FastAPI) que expone el pipeline de
-  forma asíncrona con seguimiento de progreso, y un frontend web que
-  consume esa API para lanzar escaneos y visualizar resultados,
-  incluyendo sugerencias de mitigación obtenidas mediante un flujo de
-  n8n.#box(width: 5.75in, image("../media/media/image6.jpg"))
+  + Capa de servicio: una API REST \(FastAPI) que expone el pipeline de
+    forma asíncrona con seguimiento de progreso, y un frontend web que
+    consume esa API para lanzar escaneos y visualizar resultados,
+    incluyendo sugerencias de mitigación obtenidas mediante un flujo de
+    n8n.
 ]
 
-#quote(block: true)[
+#align(center)[
+  #image("../media/media/image2.png", width: 78%)
+]
+
 #text(size: 10pt)[#emph[Figura 1. Diagrama de Arquitectura de Servicio. Elaboración propia
-\(véase versión ampliada en el Anexo H) .]]
-]
+  \(véase versión ampliada en el Anexo H).]]
+
+#pagebreak()
 
 == 11.2 Componentes y Sus Roles
 <componentes-y-sus-roles>
 #strong[Tabla 2. Componentes del sistema y su función en el pipeline]
 
 #figure(
-align(center)[#table(
-  columns: 3,
-  align: (col, row) => (auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Componente], [Contenedor], [Función en el pipeline],
-  [DVWA],
-  [dvwa],
-  [Aplicación objetivo de las pruebas],
-  [OWASP ZAP],
-  [zap],
-  [Spider, escaneo activo y generación de reportes vía API REST],
-  [Orquestador Python],
-  [security-app],
-  [Coordinación del pipeline, autenticación automática, ejecución de
-  ffuf y SQLMap, parseo y consolidación],
-  [API REST],
-  [security-app],
-  [Expone el pipeline como servicio asíncrono \(/scan, /scans,
-  /scan/{id}, /scan/{id}/progress)],
-  [Base de datos],
-  [db \(SQLite embebida o PostgreSQL)],
-  [Persistencia de historial de escaneos, caché incremental de
-  ffuf/SQLMap y URLs marcadas para re-testeo],
-)]
+  align(center)[#table(
+    columns: 3,
+    align: (col, row) => (auto, auto, auto).at(col),
+    inset: 6pt,
+    [Componente], [Contenedor], [Función en el pipeline],
+    [DVWA], [dvwa], [Aplicación objetivo de las pruebas],
+    [OWASP ZAP], [zap], [Spider, escaneo activo y generación de reportes vía API REST],
+    [Orquestador Python],
+    [security-app],
+    [Coordinación del pipeline, autenticación automática, ejecución de
+      ffuf y SQLMap, parseo y consolidación],
+
+    [API REST],
+    [security-app],
+    [Expone el pipeline como servicio asíncrono \(/scan, /scans,
+      /scan/{id}, /scan/{id}/progress)],
+
+    [Base de datos],
+    [db \(SQLite embebida o PostgreSQL)],
+    [Persistencia de historial de escaneos, caché incremental de
+      ffuf/SQLMap y URLs marcadas para re-testeo],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración propia.]]
@@ -71,15 +71,12 @@ tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
 
 #box(width: 5.832357830271216in, image("../media/media/image5.jpg"))
 
-#quote(block: true)[
 #text(size: 10pt)[#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
-enriquecimiento cruzado entre ZAP, ffuf y SQLMap. Elaboración propia
-\(véase versión ampliada en el Anexo H).]]
-]
+  enriquecimiento cruzado entre ZAP, ffuf y SQLMap. Elaboración propia
+  \(véase versión ampliada en el Anexo H).]]
 
 == 11.3 Red Docker y Aislamiento
 <red-docker-y-aislamiento>
-#quote(block: true)[
 Todos los servicios se ejecutan dentro de una red virtual Docker
 gestionada por Docker Compose. Esta configuración garantiza el
 aislamiento del tráfico interno entre contenedores y permite la
@@ -90,60 +87,54 @@ al host únicamente para los servicios que requieren acceso externo
 durante el desarrollo. La API habilita CORS para permitir que el
 frontend, ejecutado fuera de la red interna de Docker, consuma sus
 endpoints durante el desarrollo.
-]
 
 == 11.4 Flujo de Datos Detallado
 <flujo-de-datos-detallado>
-#quote(block: true)[
 El ciclo de vida completo de un análisis de seguridad en el sistema
 sigue la secuencia representada en la Figura 3:
-]
 
 #block[
-#set enum(numbering: "1.", start: 1)
-+ El orquestador establece sesión autenticada contra la aplicación
-  objetivo \(login automático y configuración del nivel de seguridad) y
-  limpia la sesión previa de ZAP.
+  #set enum(numbering: "1.", start: 1)
+  + El orquestador establece sesión autenticada contra la aplicación
+    objetivo \(login automático y configuración del nivel de seguridad) y
+    limpia la sesión previa de ZAP.
 
-+ Ejecuta el spider de ZAP contra la URL objetivo, que recorre la
-  aplicación web descubriendo las URLs accesibles.
+  + Ejecuta el spider de ZAP contra la URL objetivo, que recorre la
+    aplicación web descubriendo las URLs accesibles.
 
-+ Ejecuta ffuf contra la URL base, consultando primero el historial en
-  base de datos para descartar palabras de wordlist ya testeadas contra
-  ese objetivo.
+  + Ejecuta ffuf contra la URL base, consultando primero el historial en
+    base de datos para descartar palabras de wordlist ya testeadas contra
+    ese objetivo.
 
-+ Las rutas descubiertas por ffuf se inyectan en la sesión de ZAP antes
-  del paso siguiente.
+  + Las rutas descubiertas por ffuf se inyectan en la sesión de ZAP antes
+    del paso siguiente.
 
-+ Se ejecuta el escaneo activo de ZAP, que ataca tanto las URLs
-  descubiertas por su propio spider como las rutas aportadas por ffuf.
+  + Se ejecuta el escaneo activo de ZAP, que ataca tanto las URLs
+    descubiertas por su propio spider como las rutas aportadas por ffuf.
 
-+ Se combinan las URLs del spider y de ffuf, se filtran las candidatas
-  con parámetros o rutas interactivas, se descartan las que ya están
-  cacheadas sin hallazgos previos y se conserva siempre el re-testeo de
-  las marcadas como vulnerables en ejecuciones anteriores; SQLMap se
-  ejecuta en segundo plano sobre esa lista final, con la sesión de
-  autenticación renovada para evitar su expiración.
+  + Se combinan las URLs del spider y de ffuf, se filtran las candidatas
+    con parámetros o rutas interactivas, se descartan las que ya están
+    cacheadas sin hallazgos previos y se conserva siempre el re-testeo de
+    las marcadas como vulnerables en ejecuciones anteriores; SQLMap se
+    ejecuta en segundo plano sobre esa lista final, con la sesión de
+    autenticación renovada para evitar su expiración.
 
-+ Los resultados crudos de cada herramienta son procesados por parsers
-  especializados que normalizan las estructuras de datos y eliminan
-  duplicados.
+  + Los resultados crudos de cada herramienta son procesados por parsers
+    especializados que normalizan las estructuras de datos y eliminan
+    duplicados.
 
-+ El módulo de consolidación unifica los resultados de todos los parsers
-  en un único archivo JSON estructurado, que alimenta tanto el reporte
-  técnico como el reporte ejecutivo.
+  + El módulo de consolidación unifica los resultados de todos los parsers
+    en un único archivo JSON estructurado, que alimenta tanto el reporte
+    técnico como el reporte ejecutivo.
 ]
 
-#quote(block: true)[
 #box(width: 5.78614501312336in, image("../media/media/image4.jpg"))
 
 #text(size: 10pt)[#emph[Figura 3. Diagrama de Pipeline de ejecución. Elaboración propia
-\(véase versión ampliada en el Anexo H).]]
-]
+  \(véase versión ampliada en el Anexo H).]]
 
 == 11.5 Diagrama de Secuencia — Ciclo de Vida de POST /scan
 <diagrama-de-secuencia-ciclo-de-vida-de-post-scan>
-#quote(block: true)[
 Las Figuras 1 a 3 documentan la arquitectura estática del sistema y el
 flujo interno del pipeline de escaneo, pero no el comportamiento
 asíncrono de la API frente al cliente. La Figura 4 completa esa
@@ -163,18 +154,16 @@ síncrona y la ejecución asíncrona es la que permite que el pipeline
 —cuya duración se documenta en la sección 14.3 entre 4 y 14 minutos
 según el estado del caché— no comprometa la responsividad de la API ni
 del frontend.
-]
 
 #box(width: 6.75in, image("../media/media/image3.png"))
 
-#quote(block: true)[
 #text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
-Elaboración propia \(véase versión ampliada en el Anexo H).]]
-]
+  Elaboración propia \(véase versión ampliada en el Anexo H).]]
+
+#pagebreak()
 
 #strong[EXPLICACIÓN GENERAL DEL DIAGRAMA:]
 
-#quote(block: true)[
 1. Frontend → API: POST /scan
 
 El usuario inicia un escaneo desde el frontend. El frontend envía una
@@ -193,7 +182,7 @@ La API programa ejecutar\_pipeline\_segundo\_plano\() como una tarea en
 segundo plano.
 
 Esto significa que #strong[la API no espera a que termine el escaneo
-para responderle al frontend];. El pipeline continúa ejecutándose
+  para responderle al frontend];. El pipeline continúa ejecutándose
 independientemente de la petición HTTP original.
 
 4. API → Frontend: 202 Accepted + scan\_id
@@ -282,7 +271,7 @@ percentage: 100
 message: \"Analisis Completado\"
 
 Por eso, en el diagrama #strong[\"porcentaje\" significa el porcentaje
-de avance del pipeline];, no un porcentaje de vulnerabilidades
+  de avance del pipeline];, no un porcentaje de vulnerabilidades
 encontradas ni un porcentaje de cobertura.
 
 13. Polling periódico
@@ -312,9 +301,8 @@ finalizó.
 15. API → n8n: webhook HTTP
 
 Finalmente, la API envía una notificación mediante un #strong[webhook
-HTTP a n8n] para informar que el escaneo terminó.
+  HTTP a n8n] para informar que el escaneo terminó.
 
 Esto permite que n8n continúe con los procesos asociados a la
 finalización del análisis, como las funcionalidades de sugerencias de
 mitigación.
-]

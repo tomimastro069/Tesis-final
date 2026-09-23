@@ -9,7 +9,7 @@
 #set table(
   fill: (x, y) => if y == 0 { rgb("#2b579a") } else { rgb("#e8f1f5") },
   stroke: 0.5pt + rgb("#a0b8d8"),
-  inset: 7pt
+  inset: 7pt,
 )
 
 #set page(header: none)
@@ -57,7 +57,6 @@
 
 = Resumen
 <resumen>
-#quote(block: true)[
 El presente trabajo describe el diseño, implementación y validación de
 un sistema automatizado de análisis de seguridad para aplicaciones web
 basado en técnicas de fuzzing y escaneo activo. El sistema desarrollado,
@@ -95,13 +94,11 @@ junto con las limitaciones metodológicas correspondientes.
 
 #strong[Palabras clave:] Fuzzing, Seguridad Web, OWASP ZAP, SQLMap,
 Automatización, Docker, Python.
-]
 
 #pagebreak()
 
 = Abstract
 <abstract>
-#quote(block: true)[
 This work presents the design, implementation and validation of an
 automated security analysis system for web applications based on fuzzing
 techniques and active vulnerability scanning. The developed system,
@@ -127,7 +124,6 @@ detailed in Chapter 14.
 
 #strong[Keywords:] Fuzzing, Web Security, OWASP ZAP, Automation,
 Vulnerability Scanning, Docker, Python.
-]
 
 #pagebreak()
 
@@ -138,56 +134,44 @@ Vulnerability Scanning, Docker, Python.
 #pagebreak()
 = Índice de Figuras
 <índice-de-figuras>
-Figura 1. Diagrama de Arquitectura de Servicio 22
 
-Figura 2. Diagrama Orquestador-Seguridad 23
+#grid(
+  columns: (1fr, auto),
+  align: (left, right),
+  row-gutter: 0.85em,
+  [Figura 1. Diagrama de Arquitectura de Servicio], [22],
+  [Figura 2. Diagrama Orquestador-Seguridad], [23],
+  [Figura 3. Diagrama de Pipeline de ejecución], [25],
+  [Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan], [26],
+  [Figura 1 (ampliada). Diagrama de Arquitectura de Servicio], [59],
+  [Figura 2 (ampliada). Diagrama Orquestador-Seguridad], [60],
+  [Figura 3 (ampliada). Diagrama del Pipeline de Ejecución], [61],
+  [Figura 4 (ampliada). Diagrama de secuencia UML], [62],
+)
 
-Figura 3. Diagrama de Pipeline de ejecución 25
-
-Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan 26
-
-Figura 1 \(ampliada). Diagrama de Arquitectura de Servicio 59
-
-Figura 2 \(ampliada). Diagrama Orquestador-Seguridad 60
-
-Figura 3 \(ampliada). Diagrama del Pipeline de Ejecución 61
-
-Figura 4 \(ampliada). Diagrama de secuencia UML 62
+#v(1.8em)
 
 = Índice de Tablas
 <índice-de-tablas>
-Tabla 1. Comparación de plataformas de orquestación y gestión de
-vulnerabilidades 14
 
-Tabla 2. Componentes del sistema y su función en el pipeline 22
-
-Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de agosto de
-2026 33
-
-Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo 34
-
-Tabla 5. Rutas descubiertas por fuzzing de directorios \(ffuf) 35
-
-Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del
-5 de agosto de 2026 35
-
-Tabla 7. Datos extraídos a través de Sql Injection – corrida del 5 de
-agosto del 2026 35
-
-Tabla 8. Hallazgos clasificados por categoría OWASP Top 10 36
-
-Tabla 9. Cobertura por herramienta en solitario frente al pipeline
-combinado 38
-
-Tabla 10. Tiempo total del pipeline con y sin caché incremental 40
-
-Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con
-caché 40
-
-Tabla 12. Verificación de cumplimiento por objetivo específico 44
-
-Tabla 13. Distribución temporal de la sesión de auditoría manual del
-capítulo 17 49
+#grid(
+  columns: (1fr, auto),
+  align: (left, right),
+  row-gutter: 0.85em,
+  [Tabla 1. Comparación de plataformas de orquestación y gestión de vulnerabilidades], [14],
+  [Tabla 2. Componentes del sistema y su función en el pipeline], [22],
+  [Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de agosto de 2026], [33],
+  [Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo], [34],
+  [Tabla 5. Rutas descubiertas por fuzzing de directorios (ffuf)], [35],
+  [Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del 5 de agosto de 2026], [35],
+  [Tabla 7. Datos extraídos a través de Sql Injection – corrida del 5 de agosto del 2026], [35],
+  [Tabla 8. Hallazgos clasificados por categoría OWASP Top 10], [36],
+  [Tabla 9. Cobertura por herramienta en solitario frente al pipeline combinado], [38],
+  [Tabla 10. Tiempo total del pipeline con y sin caché incremental], [40],
+  [Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con caché], [40],
+  [Tabla 12. Verificación de cumplimiento por objetivo específico], [44],
+  [Tabla 13. Distribución temporal de la sesión de auditoría manual del capítulo 17], [49],
+)
 
 #pagebreak()
 
@@ -213,15 +197,21 @@ capítulo 17 49
 
 #include "capitulos/08-marco-teorico.typ"
 
+#pagebreak()
+
 #include "capitulos/09-alcances-limitaciones.typ"
 
 #include "capitulos/10-metodologia.typ"
+
+#pagebreak()
 
 #include "capitulos/11-arquitectura.typ"
 
 #include "capitulos/12-implementacion.typ"
 
 #include "capitulos/13-resultados.typ"
+
+#pagebreak()
 
 #include "capitulos/14-discusion.typ"
 

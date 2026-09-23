@@ -1,6 +1,5 @@
 = 16. Consideraciones Éticas
 <consideraciones-éticas>
-#quote(block: true)[
 Las herramientas utilizadas en este proyecto —OWASP ZAP, ffuf y SQLMap—
 son herramientas de seguridad ofensiva, por lo que su uso indebido
 podría generar impactos negativos en sistemas informáticos de terceros.
@@ -75,4 +74,3 @@ podría inducir a una remediación incorrecta o incompleta, por lo que el
 sistema debe comunicar claramente que estas sugerencias son un apoyo
 complementario y no un reemplazo del juicio de un profesional de
 seguridad.
-]

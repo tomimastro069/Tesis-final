@@ -1,6 +1,5 @@
 = 13. Resultados Obtenidos
 <resultados-obtenidos>
-#quote(block: true)[
 Los resultados de este capítulo corresponden a la ejecución del pipeline
 completo contra DVWA \(DVWA Project, 2024) registrada el 5 de agosto de
 2026 a las 19:53 \(hora local del entorno), y son verificables
@@ -42,45 +41,38 @@ hipotético— es la evidencia más directa disponible en este informe de
 que los resultados de SQLMap pueden variar entre ejecuciones sobre el
 mismo objetivo sin cambios de por medio, y es retomado con un tercer
 punto de datos en la sección 14.3.
-]
-
+#pagebreak()
 == 13.1 Resumen de Hallazgos
 <resumen-de-hallazgos>
 #strong[Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de
-agosto de 2026]
+  agosto de 2026]
 
 #figure(
-align(center)[#table(
-  columns: 2,
-  align: (col, row) => (auto,auto,).at(col),
-  inset: 6pt,
-  [Indicador], [Valor],
-  [Total de URLs únicas descubiertas y analizadas],
-  [34],
-  [URLs descubiertas por el Spider],
-  [24],
-  [Alertas de seguridad reportadas por ZAP],
-  [37],
-  [Rutas descubiertas por ffuf],
-  [8],
-  [Hallazgos individuales reportados por SQLMap],
-  [4 \(4 técnicas × 1 endpoint vulnerable)],
-)]
+  align(center)[#table(
+    columns: 2,
+    align: (col, row) => (auto, auto).at(col),
+    inset: 6pt,
+    [Indicador], [Valor],
+    [Total de URLs únicas descubiertas y analizadas], [34],
+    [URLs descubiertas por el Spider], [24],
+    [Alertas de seguridad reportadas por ZAP], [37],
+    [Rutas descubiertas por ffuf], [8],
+    [Hallazgos individuales reportados por SQLMap], [4 \(4 técnicas × 1 endpoint vulnerable)],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json \(campo
-resumen). El total de 34 URLs únicas no es la simple suma de spider
-\(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
-del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
-de autenticación automática \(#link("http://dvwa/login.php") con
-parámetros de sesión), incorporadas al conjunto unificado antes de la
-deduplicación por el módulo consolidar\_resultados\() y no
-contabilizadas en los campos spider.resultados ni ffuf.rutas del JSON
-crudo.]]
+  resumen). El total de 34 URLs únicas no es la simple suma de spider
+  \(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
+  del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
+  de autenticación automática \(#link("http://dvwa/login.php") con
+  parámetros de sesión), incorporadas al conjunto unificado antes de la
+  deduplicación por el módulo consolidar\_resultados\() y no
+  contabilizadas en los campos spider.resultados ni ffuf.rutas del JSON
+  crudo.]]
 
 == 13.2 Vulnerabilidades Detectadas por OWASP ZAP
 <vulnerabilidades-detectadas-por-owasp-zap>
-#quote(block: true)[
 El escaneo activo de OWASP ZAP reportó un total de 37 alertas de
 seguridad. La Tabla 4 sintetiza los tipos de alerta detectados y su
 cantidad de ocurrencias.
@@ -100,118 +92,68 @@ no debe confundirse con la severidad: un hallazgo de alto riesgo pero
 baja confianza amerita revisión manual antes de tratarse como
 confirmado, mientras que uno de bajo riesgo y alta confianza puede
 priorizarse con más certeza aunque su impacto sea menor.
-]
+
+#pagebreak()
 
 #strong[Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo]
 
 #figure(
-align(center)[#table(
-  columns: 4,
-  align: (col, row) => (auto,auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Vulnerabilidad], [Severidad], [Ocurrencias], [URL de ejemplo],
-  [Content Security Policy \(CSP) Header Not Set],
-  [Medium \(High)],
-  [5],
-  [http:\/\/dvwa/about.php],
-  [Directory Browsing],
-  [Medium \(Medium)],
-  [5],
-  [http:\/\/dvwa/docs/],
-  [Missing Anti-clickjacking Header],
-  [Medium \(Medium)],
-  [5],
-  [http:\/\/dvwa/about.php],
-  [Server Leaks Version Information \(\"Server\" header)],
-  [Low \(High)],
-  [5],
-  [http:\/\/dvwa],
-  [X-Content-Type-Options Header Missing],
-  [Low \(Medium)],
-  [5],
-  [http:\/\/dvwa/dvwa/css/login.css],
-  [User Agent Fuzzer],
-  [Informational \(Medium)],
-  [5],
-  [http:\/\/dvwa/about.php],
-  [In Page Banner Information Leak],
-  [Low \(High)],
-  [2],
-  [http:\/\/dvwa/sitemap.xml],
-  [Information Disclosure - Debug Error Messages],
-  [Low \(Medium)],
-  [2],
-  [http:\/\/dvwa/instructions.php],
-  [HTTP Only Site],
-  [Medium \(Medium)],
-  [1],
-  [http:\/\/dvwa/],
-  [Authentication Request Identified],
-  [Informational \(High)],
-  [1],
-  [http:\/\/dvwa/login.php],
-  [Information Disclosure - Suspicious Comments],
-  [Informational \(Medium)],
-  [1],
-  [http:\/\/dvwa/setup.php],
-)]
+  align(center)[#table(
+    columns: 4,
+    align: (col, row) => (auto, auto, auto, auto).at(col),
+    inset: 6pt,
+    [Vulnerabilidad], [Severidad], [Ocurrencias], [URL de ejemplo],
+    [Content Security Policy \(CSP) Header Not Set], [Medium \(High)], [5], [http:\/\/dvwa/about.php],
+    [Directory Browsing], [Medium \(Medium)], [5], [http:\/\/dvwa/docs/],
+    [Missing Anti-clickjacking Header], [Medium \(Medium)], [5], [http:\/\/dvwa/about.php],
+    [Server Leaks Version Information \(\"Server\" header)], [Low \(High)], [5], [http:\/\/dvwa],
+    [X-Content-Type-Options Header Missing], [Low \(Medium)], [5], [http:\/\/dvwa/dvwa/css/login.css],
+    [User Agent Fuzzer], [Informational \(Medium)], [5], [http:\/\/dvwa/about.php],
+    [In Page Banner Information Leak], [Low \(High)], [2], [http:\/\/dvwa/sitemap.xml],
+    [Information Disclosure - Debug Error Messages], [Low \(Medium)], [2], [http:\/\/dvwa/instructions.php],
+    [HTTP Only Site], [Medium \(Medium)], [1], [http:\/\/dvwa/],
+    [Authentication Request Identified], [Informational \(High)], [1], [http:\/\/dvwa/login.php],
+    [Information Disclosure - Suspicious Comments], [Informational \(Medium)], [1], [http:\/\/dvwa/setup.php],
+  )],
 )
 
-#quote(block: true)[
 #text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json /
-reporte\_seguridad.md. La severidad reproduce el campo riskdesc de ZAP
-en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
+  reporte\_seguridad.md. La severidad reproduce el campo riskdesc de ZAP
+  en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
 
 La distribución de las 37 alertas por nivel de severidad base es la
 siguiente: Medium 16 \(43,2%), Low 14 \(37,8%) e Informational 7
 \(18,9%). No se registraron alertas de severidad High en esta ejecución
 del escaneo pasivo/activo de ZAP; los hallazgos de severidad alta de
 esta entrega provienen de SQLMap \(sección 13.4).
-]
 
+#pagebreak()
 == 13.3 Rutas Descubiertas por ffuf
 <rutas-descubiertas-por-ffuf>
 #strong[Tabla 5. Rutas descubiertas por fuzzing de directorios \(ffuf)]
 
 #figure(
-align(center)[#table(
-  columns: 3,
-  align: (col, row) => (auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Ruta Descubierta], [Input \(Wordlist)], [Código HTTP],
-  [http:\/\/dvwa/about.php],
-  [about.php],
-  [200],
-  [http:\/\/dvwa/index.php],
-  [index.php],
-  [302],
-  [http:\/\/dvwa/instructions.php],
-  [instructions.php],
-  [200],
-  [http:\/\/dvwa/login.php],
-  [login.php],
-  [200],
-  [http:\/\/dvwa/logout.php],
-  [logout.php],
-  [302],
-  [http:\/\/dvwa/phpinfo.php],
-  [phpinfo.php],
-  [302],
-  [http:\/\/dvwa/security.php],
-  [security.php],
-  [302],
-  [http:\/\/dvwa/setup.php],
-  [setup.php],
-  [200],
-)]
+  align(center)[#table(
+    columns: 3,
+    align: (col, row) => (auto, auto, auto).at(col),
+    inset: 6pt,
+    [Ruta Descubierta], [Input \(Wordlist)], [Código HTTP],
+    [http:\/\/dvwa/about.php], [about.php], [200],
+    [http:\/\/dvwa/index.php], [index.php], [302],
+    [http:\/\/dvwa/instructions.php], [instructions.php], [200],
+    [http:\/\/dvwa/login.php], [login.php], [200],
+    [http:\/\/dvwa/logout.php], [logout.php], [302],
+    [http:\/\/dvwa/phpinfo.php], [phpinfo.php], [302],
+    [http:\/\/dvwa/security.php], [security.php], [302],
+    [http:\/\/dvwa/setup.php], [setup.php], [200],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json, campo
-ffuf.rutas.]]
+  ffuf.rutas.]]
 
 == 13.4 Análisis Automatizado con SQLMap
 <análisis-automatizado-con-sqlmap>
-#quote(block: true)[
 SQLMap se ejecutó sobre las URLs con parámetros descubiertas por el
 spider y por ffuf. En esta corrida se confirmó como vulnerable el
 parámetro username del formulario de fuerza bruta
@@ -222,72 +164,51 @@ boolean-based blind fue: username\=SCVZ\' RLIKE \(SELECT \(CASE WHEN
 \(4201\=4201) THEN 0x5343565a ELSE 0x28 END))--
 
 RmAL&password\=Fqvd&Login\=Login.
-]
 
 #strong[Tabla 6. Endpoints confirmados como vulnerables por SQLMap —
-corrida del 5 de agosto de 2026]
+  corrida del 5 de agosto de 2026]
 
 #figure(
-align(center)[#table(
-  columns: 3,
-  align: (col, row) => (auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Endpoint], [Parámetro], [Técnicas que confirmaron la inyección],
-  [/vulnerabilities/brute/],
-  [username],
-  [Boolean-based blind \(RLIKE), Error-based \(EXTRACTVALUE), Time-based
-  blind \(SLEEP), UNION query \(8 columnas)],
-)]
+  align(center)[#table(
+    columns: 3,
+    align: (col, row) => (auto, auto, auto).at(col),
+    inset: 6pt,
+    [Endpoint], [Parámetro], [Técnicas que confirmaron la inyección],
+    [/vulnerabilities/brute/],
+    [username],
+    [Boolean-based blind \(RLIKE), Error-based \(EXTRACTVALUE), Time-based
+      blind \(SLEEP), UNION query \(8 columnas)],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
-resultado\_unificado.json.]]
+  resultado\_unificado.json.]]
 
 #strong[Tabla 7. Datos extraídos a través de Sql Injection – corrida del
-5 de agosto del 2026]
+  5 de agosto del 2026]
 
 #figure(
-align(center)[#table(
-  columns: 5,
-  align: (col, row) => (auto,auto,auto,auto,auto,).at(col),
-  inset: 6pt,
-  [User\_id], [User], [Password], [last\_name], [first\_name],
-  [1],
-  [admin],
-  [903a98d709fa4683aaaa036b84c125a6],
-  [admin],
-  [admin],
-  [2],
-  [gordonb],
-  [e99a18c428cb38d5f260853678922e03],
-  [Brown],
-  [Gordon],
-  [3],
-  [1337],
-  [8d3533d75ae2c3966d7e0d4fcc69216b],
-  [Me],
-  [Hack],
-  [4],
-  [pablo],
-  [0d107d09f5bbe40cade3de5c71e9e9b7],
-  [Picasso],
-  [Pablo],
-  [5],
-  [smithy],
-  [5f4dcc3b5aa765d61d8327deb882cf99],
-  [Smith],
-  [Bob],
-)]
+  align(center)[#table(
+    columns: 5,
+    align: (col, row) => (auto, auto, auto, auto, auto).at(col),
+    inset: 6pt,
+    [User\_id], [User], [Password], [last\_name], [first\_name],
+    [1], [admin], [903a98d709fa4683aaaa036b84c125a6], [admin], [admin],
+    [2], [gordonb], [e99a18c428cb38d5f260853678922e03], [Brown], [Gordon],
+    [3], [1337], [8d3533d75ae2c3966d7e0d4fcc69216b], [Me], [Hack],
+    [4], [pablo], [0d107d09f5bbe40cade3de5c71e9e9b7], [Picasso], [Pablo],
+    [5], [smithy], [5f4dcc3b5aa765d61d8327deb882cf99], [Smith], [Bob],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
-resultado\_unificado.json. Además, se evitaron columnas como «avatar»,
-«last\_login» o «failed\_login» debido a que no aportan información
-relevante para el análisis presentado en este informe. Los valores
-mostrados son las credenciales por defecto de DVWA, una aplicación
-deliberadamente vulnerable; el criterio de manejo responsable de datos
-extraídos descrito en el capítulo 16 \(principio 1.6 del código ACM)
-rige para cualquier uso de esta técnica sobre un objetivo real.]]
+  resultado\_unificado.json. Además, se evitaron columnas como «avatar»,
+  «last\_login» o «failed\_login» debido a que no aportan información
+  relevante para el análisis presentado en este informe. Los valores
+  mostrados son las credenciales por defecto de DVWA, una aplicación
+  deliberadamente vulnerable; el criterio de manejo responsable de datos
+  extraídos descrito en el capítulo 16 \(principio 1.6 del código ACM)
+  rige para cualquier uso de esta técnica sobre un objetivo real.]]
 
 A partir de la explotación exitosa, SQLMap identificó el motor de base
 de datos como MySQL/MariaDB, enumeró la base de datos activa \(dvwa) y
@@ -299,7 +220,6 @@ corresponde a una extracción en vivo y no a datos de ejemplo
 reutilizados. El volcado completo está disponible en
 reporte\_seguridad.md y sqlmap\_bg.log.
 
-#quote(block: true)[
 Sobre el endpoint /vulnerabilities/sqli/ \(parámetro id): en la corrida
 del 2 de agosto de 2026 este endpoint también se había confirmado como
 vulnerable, con las mismas cuatro técnicas. En la corrida del 5 de
@@ -312,33 +232,34 @@ SQLMap necesita para reconocerlo como candidato, o bien el mecanismo de
 re-testeo priorizó otro orden de ataque dentro del tiempo disponible.
 Esta explicación se retoma y refuerza con un tercer punto de datos en la
 sección 14.3.
-]
 
 == 13.5 Análisis por Categoría OWASP Top 10
 <análisis-por-categoría-owasp-top-10>
 #strong[Tabla 8. Hallazgos clasificados por categoría OWASP Top 10]
 
 #figure(
-align(center)[#table(
-  columns: 3,
-  align: (col, row) => (auto,auto,auto,).at(col),
-  inset: 6pt,
-  [Categoría OWASP], [Vulnerabilidades detectadas], [Herramienta],
-  [A01:2021 – Broken Access Control],
-  [Directory Browsing \(5 instancias); rutas administrativas
-  \(/setup.php, /security.php) descubiertas por ffuf],
-  [ZAP, ffuf],
-  [A03:2021 – Injection],
-  [SQL Injection confirmada en /vulnerabilities/brute/ \(username);
-  confirmada también en /vulnerabilities/sqli/ \(id) en la corrida
-  previa del 2 de agosto de 2026],
-  [SQLMap],
-  [A05:2021 – Security Misconfiguration],
-  [CSP Header Not Set, Missing Anti-clickjacking Header,
-  X-Content-Type-Options Missing, Server Leaks Version Information, HTTP
-  Only Site],
-  [ZAP],
-)]
+  align(center)[#table(
+    columns: 3,
+    align: (col, row) => (auto, auto, auto).at(col),
+    inset: 6pt,
+    [Categoría OWASP], [Vulnerabilidades detectadas], [Herramienta],
+    [A01:2021 – Broken Access Control],
+    [Directory Browsing \(5 instancias); rutas administrativas
+      \(/setup.php, /security.php) descubiertas por ffuf],
+    [ZAP, ffuf],
+
+    [A03:2021 – Injection],
+    [SQL Injection confirmada en /vulnerabilities/brute/ \(username);
+      confirmada también en /vulnerabilities/sqli/ \(id) en la corrida
+      previa del 2 de agosto de 2026],
+    [SQLMap],
+
+    [A05:2021 – Security Misconfiguration],
+    [CSP Header Not Set, Missing Anti-clickjacking Header,
+      X-Content-Type-Options Missing, Server Leaks Version Information, HTTP
+      Only Site],
+    [ZAP],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración propia.]]

@@ -2,7 +2,6 @@
 <implementación-técnica>
 == 12.1 Infraestructura Docker
 <infraestructura-docker>
-#quote(block: true)[
 El sistema se define en un archivo docker-compose.yml \(Docker Inc.,
 2024) que especifica los servicios dvwa \(la aplicación objetivo, basada
 en la imagen vulnerables/web-dvwa, DVWA Project, 2024), zap \(el escáner
@@ -22,11 +21,9 @@ El contenedor del orquestador monta el directorio del proyecto como un
 volumen \(.:/app), lo que permite que los archivos de salida generados
 durante la ejecución del pipeline sean accesibles directamente desde el
 sistema de archivos del host.
-]
 
 == 12.2 Pipeline de Ejecución
 <pipeline-de-ejecución>
-#quote(block: true)[
 El pipeline de ejecución se implementa en el módulo
 app/workflow/pipeline.py, que expone dos funciones principales:
 run\_security\_pipeline\() y run\_parser\_pipeline\(). La primera
@@ -36,11 +33,9 @@ descubiertas, escaneo activo de ZAP y SQLMap en segundo plano,
 devolviendo un diccionario con los datos crudos de las cuatro fuentes.
 La segunda función invoca los parsers especializados y consolida los
 resultados normalizados.
-]
 
 == 12.3 Módulo Runner
 <módulo-runner>
-#quote(block: true)[
 El módulo app/runners/exec.py implementa la función run\_command\(), que
 actúa como capa de abstracción para la ejecución de comandos del sistema
 operativo mediante subprocess.run\(). El parámetro timeout tiene un
@@ -49,11 +44,9 @@ scanner puede sobrescribirlo: SQLMap recibe explícitamente el valor
 SQLMAP\_TIMEOUT centralizado en settings.py \(300 segundos), por lo que
 la diferencia entre ambos valores es una configuración deliberada por
 herramienta y no una inconsistencia entre secciones.
-]
 
 == 12.4 Módulo de Escaneo ZAP
 <módulo-de-escaneo-zap>
-#quote(block: true)[
 El módulo app/scanners/zap.py encapsula toda la comunicación con la API
 REST de OWASP ZAP \(OWASP Foundation, 2024): iniciar\_spider\(),
 esperar\_spider\() y obtener\_urls\() controlan el crawling inicial;
@@ -64,11 +57,9 @@ sesión para escaneos autenticados; agregar\_urls\_a\_zap\() inyecta en
 el árbol de sitios de ZAP las rutas descubiertas por ffuf; y
 limpiar\_sesion\_zap\() reinicia la sesión de ZAP al comienzo de cada
 ejecución.
-]
 
 == 12.5 Módulo de Escaneo ffuf
 <módulo-de-escaneo-ffuf>
-#quote(block: true)[
 El módulo app/scanners/ffuf.py implementa la función run\_ffuf\() \(ffuf
 Project, 2024). Antes de ejecutar el fuzzer, consulta la base de datos
 por las palabras de la wordlist ya testeadas contra el objetivo, genera
@@ -76,11 +67,9 @@ una wordlist temporal solo con las palabras nuevas, y marca la ejecución
 como skipped si no hay palabras nuevas para probar. El comando se
 configura con -u, -w, -mc 200,302 y -of json/-o. Al finalizar, las
 palabras efectivamente probadas se persisten en la base de datos.
-]
 
 == 12.6 Módulo de Escaneo SQLMap
 <módulo-de-escaneo-sqlmap>
-#quote(block: true)[
 El módulo app/scanners/sqlmap.py implementa la detección de inyecciones
 SQL \(SQLMap Project, 2024). La función
 filtrar\_urls\_con\_parametros\() prioriza las URLs con parámetros GET y
@@ -93,11 +82,9 @@ historial en base de datos: las marcadas como vulnerables se re-testean
 siempre; las ya analizadas sin hallazgos se omiten; las nuevas se
 encolan. El escaneo se ejecuta en segundo plano mediante un script bash
 generado dinámicamente.
-]
 
 == 12.7 Sistema de Parseo
 <sistema-de-parseo>
-#quote(block: true)[
 El sistema de parseo se implementa en el paquete app/parsers/ y consta
 de tres módulos especializados. zap\_parser.py normaliza los resultados
 del spider y aplana las alertas del reporte de ZAP eliminando duplicados
@@ -136,22 +123,18 @@ diccionario o lista cruda, aplican transformaciones y filtrado, eliminan
 duplicados e incluyen manejo de excepciones \(KeyError, TypeError) que
 devuelven estructuras vacías en caso de error, evitando que un fallo en
 el parseo de una herramienta interrumpa el pipeline completo.
-]
 
 == 12.8 Consolidación de Resultados
 <consolidación-de-resultados>
-#quote(block: true)[
 El módulo app/utils/results.py implementa la función
 consolidar\_resultados\(), que recibe los diccionarios normalizados de
 spider, ZAP, ffuf y SQLMap y genera una estructura unificada con un
 bloque de resumen \(conteos agregados) y los resultados completos de
 cada herramienta. La función resultados\_prueba\_json\() persiste el
 resultado consolidado en un archivo JSON en output/raw/.
-]
 
 == 12.9 Autenticación Automática
 <autenticación-automática>
-#quote(block: true)[
 El sistema implementa un flujo de login programático contra DVWA
 \(establecer\_sesion\_automatica\()): obtiene el token CSRF del
 formulario de login, envía las credenciales, fija el nivel de seguridad
@@ -161,16 +144,13 @@ aplicación objetivo mediante setup.php antes de reintentar. La cookie de
 sesión obtenida se reutiliza para autenticar a ZAP, ffuf y SQLMap, y se
 renueva antes de ejecutar SQLMap para evitar que expire durante el
 escaneo activo de ZAP.
-]
 
 == 12.10 API REST y Frontend
 <api-rest-y-frontend>
-#quote(block: true)[
 El módulo api.py \(FastAPI) expone el pipeline como servicio: POST /scan
 lanza un escaneo en segundo plano; GET /scan/{id}/progress permite
 consultar el porcentaje de avance; GET /scans lista el historial
 persistido; GET /scan/{id} devuelve el detalle de un escaneo puntual;
-
 DELETE /scan/{id} realiza un borrado lógico. Al finalizar un escaneo, la
 API notifica su finalización mediante un webhook HTTP a un flujo de n8n.
 El frontend, desarrollado en React, consume estos endpoints para ofrecer
@@ -184,4 +164,3 @@ test\_speed.py, test\_zap.py y test\_sqlmap.py son scripts de
 verificación manual \(ejecutan una función y muestran el resultado por
 consola), no una suite de pruebas unitarias automatizadas con
 aserciones.
-]
