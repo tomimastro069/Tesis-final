@@ -1,7 +1,7 @@
 ---
 name: auditar-subsanacion
 description: >-
-  Trigger: '/auditar-subsanacion', 'auditar subsanacion', 'verificar correcciones'. Cruza un informe nuevo (docs/informe/) contra el dictamen anterior (docs/dictamen/) para validar la resolución de observaciones, detectar incumplimientos y alertar sobre regresiones.
+  Trigger: '/auditar-subsanacion', 'auditar subsanacion', 'verificar correcciones'. Cruza un informe nuevo (Typst modular o PDF en docs/informe/) contra el dictamen anterior (docs/dictamen/) para validar la resolución de observaciones, detectar incumplimientos y alertar sobre regresiones.
 ---
 
 # Procedimiento de Auditoría de Subsanación y Control de Regresiones (`auditar-subsanacion`)
@@ -17,7 +17,8 @@ Este procedimiento operativo guía al asistente en la contrastación minuciosa d
 1. **Definir el documento evaluador de referencia:**
    * Dictamen anterior: `docs/dictamen/dictamen-{N-1}.md` (o `.pdf`).
 2. **Definir el informe bajo evaluación:**
-   * Nueva entrega: `docs/informe/informe-v{N}.*` (ej. `informe-v15.pdf`).
+   * Nueva entrega: Código fuente Typst modular (`docs/informe/informe-v{N}.typ` y `docs/informe/capitulos/{01..19}-{nombre}.typ`) o PDF compilado (`docs/informe/informe-v{N}.pdf`).
+   * Material de referencia histórico: Resguardo inmutable en `docs/informe/referencia/` para verificar omisiones respecto a la versión base.
 3. **Verificar correlación:**
    * Confirmar que el informe bajo análisis sea la versión sucesora directa de la auditada en el dictamen previo.
 
@@ -35,7 +36,7 @@ Antes de inspeccionar el nuevo informe, extraer y estructurar todas las observac
 
 ## 3. Protocolo de Inspección y Clasificación en el Nuevo Informe
 
-Para cada ítem del inventario previo, localizar la sección correspondiente en el nuevo informe y verificar la evidencia real. Clasificar el estado con una de las tres etiquetas estrictas:
+Para cada ítem del inventario previo, localizar la sección correspondiente en el nuevo informe (inspeccionando el archivo capitular `capitulos/{NN}-{nombre}.typ` o la página del PDF) y verificar la evidencia real. Clasificar el estado con una de las tres etiquetas estrictas:
 
 * `[TOTALMENTE SUBSANADO]`:
   * El cambio implementado por los autores resuelve de manera integral, precisa e incontrovertible lo requerido por el tribunal.
@@ -61,6 +62,9 @@ El asistente debe auditar que las modificaciones no hayan introducido nuevos pro
    * Verificar que la portada institucional no haya duplicado información.
    * Verificar que las 26 referencias bibliográficas conserven sangría francesa APA 7.
    * Comprobar que no existan tablas desbordadas o títulos huérfanos al pie de página.
+5. **Regresiones de Compilación y Sintaxis Typst:**
+   * Verificar que las rutas de activos gráficos respeten la estructura relativa (`../media/media/...` desde `capitulos/`).
+   * Verificar que las etiquetas de referencia (`<label>`) y citas (`@label`) permanezcan vinculadas y no generen advertencias en Tinymist/Typst.
 
 ---
 
@@ -79,11 +83,10 @@ Generar una tabla resumen con el estado global de la entrega:
 
 ## 6. Metodología de Corrección Paso a Paso (Anti-Abrumación)
 
-Para todos aquellos puntos catalogados como `[PARCIALMENTE SUBSANADO]` o `[NO SUBSANADO]`, el asistente **no debe volcar una lista interminable de textos para editar**. Debe ejecutar el protocolo paso a paso:
+Para todos aquellos puntos catalogados como `[PARCIALMENTE SUBSANADO]` o `[NO SUBSANADO]`, el asistente **no debe volcar una lista interminable de textos para editar**. Debe ejecutar el protocolo paso a paso en Typst:
 
 1. **Seleccionar un único punto crítico a la vez** (priorizando condiciones previas y hallazgos de severidad alta).
 2. **Explicar el problema pedagógicamente:** Por qué el tribunal lo señaló y qué falta para cerrarlo con rigor UTN.
-3. **Sección y ubicación exacta:** Indicar capítulo, sección, página o tabla involucrada.
-4. **Qué quitar:** Mostrar el bloque textual exacto que el usuario debe borrar en su procesador de texto.
-5. **Qué poner:** Entregar el bloque de reemplazo listo para copiar y pegar, redactado con estilo formal, académico e impecable.
-6. **Pausar y esperar:** Solicitar confirmación o captura al usuario antes de avanzar al siguiente punto de la lista.
+3. **Localización modular:** Indicar el archivo capitular exacto (`docs/informe/capitulos/{NN}-{nombre}.typ`), la sección y la etiqueta involucrada.
+4. **Bloque Typst exacto:** Proporcionar el código Typst de reemplazo o inserción con el formateo adecuado.
+5. **Validación de compilación:** Verificar que el cambio compile limpiamente y no rompa la estructura antes de avanzar al siguiente punto.

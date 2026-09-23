@@ -23,7 +23,12 @@ El flujo documental de tesina se organiza estrictamente en dos entidades diferen
 
 ### A. Informe / Trabajo de Tesina (`docs/informe/`)
 * **Definición:** Es el documento técnico integral desarrollado por el equipo de autores/alumnos para exponer el diseño, desarrollo, arquitectura, experimentación empírica y conclusiones de su trabajo final de graduación.
-* **Nomenclatura estándar:** `docs/informe/informe-v{N}.pdf` (o `.docx` / `.md`), donde `{N}` representa el número de versión (ej. `informe-v14.pdf`, `informe-v15.pdf`).
+* **Arquitectura Técnica y Nomenclatura Estándar:**
+  1. **Documento Fuente Maestro:** `docs/informe/informe-v{N}.typ` (contiene metadatos, resumen, abstract, índices unificados `#outline` y directivas `#include` para los capítulos).
+  2. **Capítulos Modulares:** `docs/informe/capitulos/{NN}-{nombre}.typ` (los 19 capítulos del informe desacoplados e independientes).
+  3. **Activos Gráficos:** `docs/informe/media/media/` (diagramas de arquitectura, secuencias y capturas).
+  4. **Entregable Compilado Oficial:** `docs/informe/informe-v{N}.pdf` (generado automáticamente por Typst/Tinymist en la raíz de `docs/informe/`).
+  5. **Material de Referencia Histórico (Inmutable):** `docs/informe/referencia/` (resguardo del material original exportado de Google Docs: `.pdf`, `.docx`, `.md`).
 * **Estructura fija esperada (19 Capítulos):**
   1. *Introducción* (con párrafo de cierre formal: "Estructura del documento").
   2. *Planteo del Problema* (dimensiones DevSecOps, fricción con CI/CD, silos de información y 6 problemas destacados en negrita).
@@ -88,10 +93,10 @@ Todo dictamen generado o analizado por el asistente debe estructurarse conforme 
 Cuando el usuario solicite asistencia para corregir el informe o subsanar observaciones de un dictamen, el asistente **NUNCA debe volcar una catarata masiva de cambios simultáneos**. Se debe seguir estrictamente el **método paso a paso**:
 
 1. **Aislamiento del punto:** Seleccionar y presentar una única sección u observación a la vez.
-2. **Explicación del problema:** Detallar con claridad pedagógica qué observó el tribunal y cuál es la debilidad conceptual o formal.
-3. **Qué quitar:** Indicar el texto exacto a eliminar en el procesador de texto del usuario.
-4. **Qué poner:** Proporcionar el bloque de reemplazo listo para copiar y pegar, redactado con el registro formal, académico e impecable de la UTN.
-5. **Validación previa:** Esperar la confirmación, texto o captura de pantalla del usuario, verificar que encaje en la maqueta y que no rompa la paginación ni tablas, y recién entonces avanzar al siguiente punto.
+2. **Localización modular:** Identificar con precisión el archivo capitular afectado en `docs/informe/capitulos/{NN}-{nombre}.typ`.
+3. **Explicación del problema:** Detallar con claridad pedagógica qué observó el tribunal y cuál es la debilidad conceptual o formal.
+4. **Sintaxis Typst precisa:** Indicar el bloque de código Typst exacto a reemplazar o insertar, respetando etiquetas, tablas y estilos.
+5. **Validación de compilación:** Esperar la confirmación del usuario o verificar que el cambio no genere errores de sintaxis en Typst ni altere la numeración de páginas o tablas antes de avanzar al siguiente punto.
 
 ---
 
@@ -99,7 +104,7 @@ Cuando el usuario solicite asistencia para corregir el informe o subsanar observ
 
 Esta regla se complementa con cuatro habilidades operativas ejecutables alojadas en `.agents/skills/`:
 
-* **`analizar-informe` (`/analizar-informe`):** Audita exhaustivamente un informe en aislamiento (`docs/informe/`), recalculando tablas, remisiones, citas y coherencia técnica.
+* **`analizar-informe` (`/analizar-informe`):** Audita exhaustivamente un informe en aislamiento (`docs/informe/`), ya sea inspeccionando el código fuente Typst modular (`capitulos/*.typ`) o el PDF renderizado, recalculando tablas, remisiones, citas y coherencia técnica.
 * **`comparar-dictamenes` (`/comparar-dictamenes`):** Contrasta dos dictámenes sucesivos (`docs/dictamen/`), evaluando la evolución de notas, resolución de condiciones y variación de hallazgos.
-* **`auditar-subsanacion` (`/auditar-subsanacion`):** Cruza un informe nuevo contra el dictamen previo para verificar qué observaciones se cerraron, cuáles quedan parciales y alertar sobre regresiones.
+* **`auditar-subsanacion` (`/auditar-subsanacion`):** Cruza un informe nuevo (`.typ` o `.pdf`) contra el dictamen previo para verificar qué observaciones se cerraron, cuáles quedan parciales y alertar sobre regresiones.
 * **`generar-dictamen` (`/generar-dictamen`):** Redacta una devolución institucional completa en formato Markdown bajo el estándar de 8 secciones de la UTN FRM.
