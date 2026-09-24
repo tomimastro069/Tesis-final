@@ -183,10 +183,16 @@ de las vulnerabilidades dentro de una infraestructura informática.
   del capítulo 17] <tabla-13>
 
 #figure(
-  align(center)[#table(
-    columns: 6,
-    align: (col, row) => (auto, auto, auto, auto, auto, auto).at(col),
-    inset: 6pt,
+  align(center)[#text(size: 9.5pt)[#table(
+    columns: (1.2fr, 1.1fr, 1.5fr, 0.9fr, 0.95fr, 0.85fr),
+    align: (col, row) => if row == 0 {
+      center + horizon
+    } else if col >= 3 {
+      center + horizon
+    } else {
+      left + horizon
+    },
+    inset: (x: 5pt, y: 6pt),
     [Fase de la Auditoría],
     [Herramienta Utilizada],
     [Técnica / Modalidad
@@ -196,55 +202,55 @@ de las vulnerabilidades dentro de una infraestructura informática.
       \(Validación / Triaje)],
     [Tiempo Total por Herramienta],
 
-    [1. Reconocimiento de Sesión],
+    [1\. Reconocimiento de Sesión],
     [Navegador Web \(DevTools)],
     [Inspección de Cookies e Identificadores de Sesión],
-    [#emph[N/A \(Operación Manual)];],
+    [#emph[N/A \(Operación Manual)]],
     [10 minutos],
-    [#strong[10 minutos];],
+    [#strong[10 minutos]],
 
-    [2. Mapeo de Estructura],
+    [2\. Mapeo de Estructura],
     [OWASP ZAP Spider],
     [Rastreo Pasivo y Web Crawling de Enlaces Visibles],
     [05 minutos],
-    [#emph[N/A \(Fase de Reconocimiento)];],
-    [#strong[5 minutos];],
+    [#emph[N/A \(Fase de Reconocimiento)]],
+    [#strong[5 minutos]],
 
-    [3. Descubrimiento Oculto],
+    [3\. Descubrimiento Oculto],
     [ffuf \(Fuzzing)],
     [Fuerza Bruta de Directorios mediante Diccionarios],
     [10 minutos],
     [05 minutos],
-    [#strong[15 minutos];],
+    [#strong[15 minutos]],
 
-    [4. Análisis Dinámico \(DAST)],
+    [4\. Análisis Dinámico \(DAST)],
     [OWASP ZAP Active Scan],
     [Inyección de Vectores y Firmas de Ataque Genéricas],
     [40 minutos],
     [15 minutos \(Command Injection + XSS)],
-    [#strong[55 minutos];],
+    [#strong[55 minutos]],
 
-    [5. Explotación de Datos],
+    [5\. Explotación de Datos],
     [sqlmap],
     [Inyección SQL Automatizada y Volcado de Tablas],
     [20 minutos],
-    [10 minutos #emph[\(Validación de Sintaxis y UNION)];],
-    [#strong[30 minutos];],
+    [10 minutos #emph[\(Validación de Sintaxis y UNION)]],
+    [#strong[30 minutos]],
 
-    [6. Inclusión de Archivos],
+    [6\. Inclusión de Archivos],
     [OWASP ZAP / Manipulación URL],
     [Inyección de Secuencias de Escape Dinámicas \(LFI)],
-    [#emph[Incluido en ZAP Active Scan];],
+    [#emph[Incluido en ZAP Active Scan]],
     [10 minutos],
-    [#strong[10 minutos];],
+    [#strong[10 minutos]],
 
     [Cómputo Global del Experimento],
-    [#strong[Enfoque Mixto];],
-    [#strong[Ciclo de Auditoría y Validación Técnica Completa];],
-    [#strong[75 minutos];],
-    [#strong[50 minutos];],
-    [#strong[125 minutos \(\~2 horas)];],
-  )],
+    [#strong[Enfoque Mixto]],
+    [#strong[Ciclo de Auditoría y Validación Técnica Completa]],
+    [#strong[75 minutos]],
+    [#strong[50 minutos]],
+    [#strong[125 minutos \(\~2 horas)]],
+  )]],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración de los autores a partir de los datos
