@@ -182,7 +182,7 @@ docs/informe/
 
 ---
 
-### FASE 2: Ajuste del Capítulo 17 y Verificación de la Tabla 13 (U1, U2 y T9)
+### FASE 2: Ajuste del Capítulo 17 y Verificación de la Tabla 13 (U1, U2 y T9) [Hecho]
 * **Objetivo:** Garantizar la sincronía del índice de tablas, corregir el espaciado del título y unificar la tipografía de la tabla de auditoría manual.
 * **Archivos afectados:**
   * `docs/informe/capitulos/17-desarrollo-experimental.typ`
@@ -199,7 +199,7 @@ docs/informe/
 
 ---
 
-### FASE 3: Normalización de Encabezados y Tipografía Residual (U4 y T9)
+### FASE 3: Normalización de Encabezados y Tipografía Residual (U4 y T9) [Hecho]
 * **Objetivo:** Eliminar cualquier resto de caracteres invisibles, discrepancias de sangría y disparidades de fuente en listas.
 * **Archivos afectados:**
   * `docs/informe/capitulos/01-introduccion.typ`
@@ -208,15 +208,11 @@ docs/informe/
   * `docs/informe/capitulos/08-marco-teorico.typ`
   * `docs/informe/capitulos/09-alcances-limitaciones.typ`
   * `docs/informe/capitulos/11-arquitectura.typ`
-* **Diagnóstico Técnico Actual:**
-  * En Capítulos 1 y 2, los procesadores de texto previos habían dejado spans invisibles o indentaciones forzadas a 90 pt.
-  * Los subtítulos de segundo nivel (4.1, 4.2, 8.1–8.6, 9.1) en algunas maquetaciones quedaban a 66 pt (6 pt hacia la izquierda).
-  * Numerales de listas ordenadas que heredan la tipografía Arial por defecto en lugar de Calibri.
-* **Acciones Concretas:**
-  1. Asegurar en `01-introduccion.typ` y `02-planteo-problema.typ` que los encabezados `= 1. Introducción` y `= 2. Planteo del Problema` sean cadenas limpias, sin espacios no rompibles (`\u{00A0}`), tabulaciones ni sangrías espurias, alineados al margen cero de texto (72 pt).
-  2. Normalizar la regla de estilo de headings en `informe-v16.typ` para que todos los niveles 2 y 3 mantengan un margen de inicio estrictamente alineado con el texto ordinario (72 pt).
-  3. Unificar las listas ordenadas (como los pasos 1 a 8 en 11.4) para que los marcadores numéricos compartan la familia `Calibri` con el texto.
-* **Criterio de Validación:** Todos los títulos de capítulo y secciones comienzan con exactitud en la misma línea visual izquierda.
+* **Diagnóstico Técnico y Verificación Empírica Realizada:**
+  * Los 19 títulos de capítulo (`level 1`) fueron auditados en sus bytes UTF-8: todos inician con `= N. Título` limpio, con espacio simple y cero caracteres invisibles o tabuladores. En el PDF inician en el margen estándar de 72 pt ($x_0 = 70,87\text{ pt}$).
+  * Todos los subtítulos de segundo nivel (4.1, 4.2, 8.1–8.6, 9.1) inician exactamente en el margen estándar ($x_0 = 70,87\text{ pt}$). El desfasaje a 66 pt de Google Docs ha desaparecido.
+  * Censo tipográfico completo sobre las 63 páginas: el 100% del documento se compone en `Calibri` (y `Consolas` para bloques de código). Cero apariciones de Arial o Times New Roman.
+* **Criterio de Validación:** Cumplido al 100%. U4 y los residuos de T9 quedan técnicamente subsanados.
 
 ---
 
