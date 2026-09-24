@@ -50,7 +50,7 @@
 
 #v(1.8em)
 
-#strong[Directores:] Alberto Cortez y Ariel Enferrel.
+#strong[Directores:] Alberto Cortez y Ariel Enferrel
 
 #v(1.8em)
 
