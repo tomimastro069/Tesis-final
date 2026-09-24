@@ -41,7 +41,7 @@ El archivo generado debe respetar íntegramente la siguiente arquitectura docume
 * **Institución:** Universidad Tecnológica Nacional — Facultad Regional Mendoza (UTN FRM).
 * **Carrera:** Tecnicatura Universitaria en Programación (TUP).
 * **Trabajo Final:** Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web.
-* **Autores:** Tomi Mastro, Cristian Gonzalez.
+* **Autores:** Tomas Mastropietro, Cristian Krahulik ,Juan Segura.
 * **Directores de Tesina:** [Directores de la cátedra].
 * **Versión de Informe Evaluada:** Informe v{X} (`docs/informe/informe-v{X}.*`).
 * **Dictamen de Referencia Anterior:** Dictamen {N-1} (`docs/dictamen/dictamen-{N-1}.md`).
