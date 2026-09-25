@@ -149,7 +149,7 @@ El agente que continúe con este trabajo debe proceder bajo las siguientes direc
 - [x] **Tarea 2: Capítulo 2 — Planteo del Problema (`capitulos/02-planteo-problema.typ`)** [Meta: 6,9 $\rightarrow$ 8,3] **`[COMPLETADO]`**
 
 ### Bloque B: Rigor Metodológico y Epistemológico
-- [ ] **Tarea 3: Capítulo 6 — Hipótesis (`capitulos/06-hipotesis.typ`)** [Meta: 7,4 $\rightarrow$ 8,4] `[PENDIENTE]`
+- [ ] **Tarea 3: Capítulo 6 — Hipótesis (`capitulos/06-hipotesis.typ`)** [Meta: 7,4 $\rightarrow$ 8,4] **`[EN PROGRESO / PRÓXIMO PASO]`**
 - [ ] **Tarea 4: Capítulo 1 — Introducción (`capitulos/01-introduccion.typ`)** [Meta: 7,4 $\rightarrow$ 8,4] `[PENDIENTE]`
 - [ ] **Tarea 5: Capítulo 9 — Alcances y Limitaciones (`capitulos/09-alcances-limitaciones.typ`)** [Meta: 7,3 $\rightarrow$ 8,3] `[PENDIENTE]`
 
