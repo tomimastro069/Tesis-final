@@ -70,7 +70,7 @@ La Figura 2 detalla cómo el orquestador coordina específicamente a las
 tres herramientas de escaneo y el enriquecimiento cruzado entre ellas.
 
 #align(center)[
-  #image("../media/media/image5.jpg", width: 78%)
+  #image("../media/media/image5.jpg", width: 62%)
 ]
 
 #text(size: 10pt)[#emph[Figura 2. Diagrama Orquestador-Seguridad: coordinación y
@@ -166,149 +166,37 @@ del frontend.
 #text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
   Elaboración propia \(véase versión ampliada en el Anexo H).]] <fig-4>
 
-#pagebreak()
+=== 11.5.1 Detalle de la Secuencia de Interacción
+<detalle-de-la-secuencia-de-interacción>
 
-#strong[EXPLICACIÓN GENERAL DEL DIAGRAMA:]
+El ciclo asíncrono representado en el diagrama comprende las siguientes etapas:
 
-1. Frontend → API: POST /scan
++ #strong[Frontend → API \(POST /scan):] el usuario inicia un escaneo desde el frontend enviando una petición HTTP `POST /scan` a FastAPI, incluyendo la URL objetivo y los parámetros de análisis.
 
-El usuario inicia un escaneo desde el frontend. El frontend envía una
-petición HTTP POST /scan a la API de FastAPI, incluyendo el objetivo y
-los parámetros configurados para el análisis.
++ #strong[API → Base de datos \(crear scan\_id):] la API genera un identificador único \(`scan_id`) y registra el escaneo en la base de datos junto con el objetivo, garantizando persistencia y trazabilidad.
 
-2. API → Base de datos: crear scan\_id
++ #strong[API → Pipeline \(ejecutar en segundo plano):] la API despacha `ejecutar_pipeline_segundo_plano()` como tarea en segundo plano. La API no espera la conclusión del escaneo para responder, desacoplando el tiempo de escaneo del ciclo de vida HTTP.
 
-La API genera un identificador único \(scan\_id) para ese escaneo y
-registra el nuevo análisis en la base de datos junto con el objetivo.
-Esto permite identificar y consultar posteriormente ese escaneo.
++ #strong[API → Frontend \(202 Accepted + scan\_id):] la API responde inmediatamente con código HTTP `202 Accepted` y el `scan_id`. El escaneo continúa ejecutándose de forma asíncrona; el cliente solo recibe el identificador para consultar el estado.
 
-3. API → Pipeline: ejecutar en segundo plano
++ #strong[Pipeline → ZAP \(ZAP Spider):] el pipeline inicia el spidering de OWASP ZAP para rastrear la aplicación web y recolectar las URLs accesibles del objetivo.
 
-La API programa ejecutar\_pipeline\_segundo\_plano\() como una tarea en
-segundo plano.
++ #strong[Pipeline → ffuf \(ffuf):] tras el spider, ffuf ejecuta un análisis de fuerza bruta mediante wordlists para descubrir rutas y directorios no vinculados directamente.
 
-Esto significa que #strong[la API no espera a que termine el escaneo
-  para responderle al frontend];. El pipeline continúa ejecutándose
-independientemente de la petición HTTP original.
++ #strong[Pipeline → ZAP \(inyectar rutas descubiertas):] las nuevas rutas halladas por ffuf son incorporadas al árbol de sitios de ZAP, ampliando la superficie de ataque.
 
-4. API → Frontend: 202 Accepted + scan\_id
++ #strong[Pipeline → ZAP \(ZAP Active Scan):] con las rutas consolidadas, ZAP ejecuta el escaneo activo atacando tanto las rutas del spider como las aportadas por ffuf para identificar vulnerabilidades.
 
-La API responde inmediatamente:
++ #strong[Pipeline → SQLMap:] concluido el Active Scan, el pipeline extrae las URLs candidatas y despacha SQLMap en segundo plano para corroborar vulnerabilidades de inyección SQL.
 
-202 Accepted
++ #strong[Pipeline → Base de datos \(guardar resultados):] durante la ejecución, el sistema persiste de forma incremental el estado y los hallazgos en la base de datos para mantener el historial.
 
-scan\_id
++ #strong[Frontend → API \(GET /scan/{id}/progress):] de forma desacoplada, el frontend consulta periódicamente el estado del escaneo enviando peticiones de polling a `GET /scan/{id}/progress` con el `scan_id` correspondiente.
 
-El código 202 Accepted indica que la solicitud fue aceptada y que el
-procesamiento continuará de forma asíncrona.
++ #strong[API → Frontend \(porcentaje de progreso):] la API responde con el avance relativo del pipeline \(`percentage: 100` y `"Analisis Completado"` al finalizar). El término "porcentaje" refleja estrictamente el avance secuencial de etapas del orquestador, no una métrica de cobertura ni de vulnerabilidades detectadas.
 
-#strong[El escaneo todavía no terminó en este punto.] El frontend
-solamente recibe el identificador con el que podrá consultar su estado.
++ #strong[Ciclo de Polling Periódico:] las consultas y respuestas de progreso se reiteran a intervalos regulares sin mantener abierta la conexión original de `POST /scan`.
 
-5. Pipeline → ZAP: ZAP Spider
++ #strong[Pipeline → API \(escaneo finalizado):] al concluir todas las herramientas integradas \(ZAP Spider, ffuf, ZAP Active Scan y SQLMap), el pipeline notifica a la API la finalización del trabajo.
 
-El pipeline inicia el Spider de OWASP ZAP.
-
-Su función dentro del flujo es recorrer el objetivo y obtener las URLs
-descubiertas. El pipeline espera a que termine y recupera esas URLs para
-continuar con las siguientes etapas.
-
-6. Pipeline → ffuf: ffuf
-
-Una vez finalizado el Spider, se ejecuta ffuf.
-
-ffuf utiliza una wordlist para buscar rutas adicionales en el objetivo.
-Las rutas nuevas encontradas se incorporan posteriormente al análisis de
-ZAP.
-
-7. Pipeline → ZAP: inyectar rutas descubiertas
-
-Las rutas nuevas encontradas por ffuf se agregan al árbol de sitios de
-ZAP.
-
-Esto permite que las rutas descubiertas mediante fuzzing también sean
-consideradas durante el Active Scan.
-
-8. Pipeline → ZAP: ZAP Active Scan
-
-Después de incorporar las rutas nuevas, se inicia el Active Scan de ZAP.
-
-Esta etapa realiza el análisis activo del objetivo y genera el reporte
-de vulnerabilidades detectadas.
-
-9. Pipeline → SQLMap
-
-Finalizado el Active Scan, el pipeline combina las URLs obtenidas
-mediante el Spider y ffuf y las utiliza como entrada para SQLMap.
-
-SQLMap analiza las URLs candidatas para detectar posibles
-vulnerabilidades de inyección SQL.
-
-10. Pipeline → Base de datos: guardar resultados
-
-Durante la ejecución, el sistema actualiza el estado y los resultados
-del escaneo en la base de datos.
-
-Esto permite conservar el historial del análisis y consultar
-posteriormente su información.
-
-11. Frontend → API: GET /scan/{id}/progress
-
-Mientras el pipeline continúa trabajando, el frontend realiza
-periódicamente una petición:
-
-GET /scan/{id}/progress
-
-El {id} corresponde al scan\_id recibido anteriormente.
-
-Esto se denomina #strong[polling];: el frontend pregunta periódicamente
-a la API cuál es el estado actual del escaneo.
-
-12. API → Frontend: porcentaje de progreso
-
-La API responde indicando el progreso del escaneo.
-
-Cuando todavía existe información de progreso en memoria, devuelve el
-porcentaje correspondiente. Si el escaneo ya está registrado como
-completado en la base de datos, devuelve:
-
-percentage: 100
-
-message: \"Analisis Completado\"
-
-Por eso, en el diagrama #strong[\"porcentaje\" significa el porcentaje
-  de avance del pipeline];, no un porcentaje de vulnerabilidades
-encontradas ni un porcentaje de cobertura.
-
-13. Polling periódico
-
-Las flechas:
-
-Frontend → API
-
-GET /scan/{id}/progress
-
-API → Frontend
-
-porcentaje
-
-se repiten mientras el escaneo está ejecutándose.
-
-El frontend #strong[no mantiene abierta la petición POST /scan]
-esperando varios minutos. Consulta separadamente el progreso mediante
-estas peticiones periódicas.
-
-14. Pipeline → API: escaneo finalizado
-
-Cuando todas las etapas del pipeline terminan —ZAP Spider, ffuf, ZAP
-Active Scan y SQLMap— el pipeline informa a la API que el análisis
-finalizó.
-
-15. API → n8n: webhook HTTP
-
-Finalmente, la API envía una notificación mediante un #strong[webhook
-  HTTP a n8n] para informar que el escaneo terminó.
-
-Esto permite que n8n continúe con los procesos asociados a la
-finalización del análisis, como las funcionalidades de sugerencias de
-mitigación.
++ #strong[API → n8n \(webhook HTTP):] finalmente, la API dispara una notificación vía webhook HTTP a n8n para informar la culminación del escaneo e iniciar los flujos automatizados de sugerencias de mitigación.

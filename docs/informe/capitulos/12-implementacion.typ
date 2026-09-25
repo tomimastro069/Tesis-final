@@ -68,6 +68,7 @@ como skipped si no hay palabras nuevas para probar. El comando se
 configura con -u, -w, -mc 200,302 y -of json/-o. Al finalizar, las
 palabras efectivamente probadas se persisten en la base de datos.
 
+#pagebreak()
 == 12.6 Módulo de Escaneo SQLMap
 <módulo-de-escaneo-sqlmap>
 El módulo app/scanners/sqlmap.py implementa la detección de inyecciones
@@ -112,7 +113,7 @@ se encontraron estos patrones porque no hay vulnerabilidad” y “no se
 encontraron estos patrones porque el mensaje cambió de forma”. Elia et
 al. \(2010) documentan precisamente este tipo de riesgo al comparar
 herramientas de detección de inyección SQL basadas en distintos
-mecanismos de análisis de salida \(Elia et al., 2010). Una alternativa
+mecanismos de análisis de salida. Una alternativa
 más robusta, no implementada en esta versión, sería inspeccionar el
 código de retorno del proceso junto con la salida en formato JSON que
 SQLMap puede producir de forma nativa, evitando así la dependencia de
@@ -133,6 +134,7 @@ bloque de resumen \(conteos agregados) y los resultados completos de
 cada herramienta. La función resultados\_prueba\_json\() persiste el
 resultado consolidado en un archivo JSON en output/raw/.
 
+#pagebreak()
 == 12.9 Autenticación Automática
 <autenticación-automática>
 El sistema implementa un flujo de login programático contra DVWA

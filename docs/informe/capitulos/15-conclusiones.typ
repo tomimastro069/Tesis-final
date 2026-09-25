@@ -60,7 +60,7 @@ no pudo sostenerse con ningún dato propio verificable y se retiró del
 informe en lugar de mantenerse con cifras sin base. Ambas limitaciones
 se declaran explícitamente como trabajo pendiente en 15.2, y no como
 comparaciones ya resueltas.
-
+#pagebreak()
 En relación directa con las preguntas de investigación formuladas en el
 capítulo 5, el proyecto arriba a las siguientes conclusiones
 específicas:

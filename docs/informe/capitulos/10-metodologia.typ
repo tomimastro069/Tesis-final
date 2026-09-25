@@ -85,20 +85,14 @@ ffuf, y los niveles de profundidad y riesgo configurados en SQLMap.
 
 == 10.4 Instrumentos
 <instrumentos>
-Los instrumentos utilizados en la investigación son los propios
-componentes del sistema desarrollado. Los contenedores Docker
-constituyen la infraestructura de ejecución que garantiza la
-reproducibilidad del entorno. El pipeline Python \(Python Software
-Foundation, 2024) actúa como el instrumento principal de recolección de
-datos, coordinando la ejecución de cada herramienta y registrando sus
-salidas crudas. Los parsers especializados funcionan como instrumentos
-de transformación, normalizando los datos heterogéneos en un formato
-homogéneo. El módulo de consolidación actúa como instrumento de
-síntesis, unificando los resultados en un único archivo JSON
-estructurado que constituye la fuente de datos para el análisis. El
-script test\_speed.py funciona como instrumento de medición de tiempo,
-comparando la duración de una primera ejecución de ffuf sin caché contra
-ejecuciones posteriores con caché activa sobre el mismo objetivo.
+Los instrumentos de la investigación corresponden a los componentes del
+sistema desarrollado. Los contenedores Docker proveen la infraestructura
+reproducible de ejecución. El pipeline en Python \(Python Software
+Foundation, 2024) recolecta los datos coordinando cada herramienta y sus
+salidas crudas; los parsers especializados normalizan los resultados
+heterogéneos, y el módulo de consolidación los sintetiza en el archivo
+JSON unificado de análisis. Asimismo, el script test\_speed.py actúa como
+instrumento de medición temporal para evaluar la caché de ffuf.
 
 == 10.5 Amenazas a la Validez
 <amenazas-a-la-validez>
@@ -111,18 +105,12 @@ ejecuciones posteriores con caché activa sobre el mismo objetivo.
   necesariamente generalizables a aplicaciones en producción con
   arquitecturas, frameworks o controles de seguridad distintos.
 
-- #strong[Confiabilidad:] no se verificó formalmente si ZAP y SQLMap
-  producen resultados idénticos entre ejecuciones repetidas sobre el
-  mismo objetivo sin cambios; el mecanismo de caché asume, pero no
-  confirma explícitamente, esta estabilidad. Esta amenaza dejó de ser
-  hipotética en esta entrega: al comparar la corrida documentada en el
-  capítulo 13 con corridas previas del mismo pipeline sobre el mismo
-  objetivo, se observaron diferencias en el número total de URLs y
-  alertas detectadas entre ejecuciones \(ver nota metodológica del
-  capítulo 13), lo cual confirma empíricamente que la reproducibilidad
-  exacta no está garantizada y refuerza la necesidad de declarar, en
-  cada reporte de resultados, la fecha y las condiciones puntuales de la
-  corrida que se está documentando.
+- #strong[Confiabilidad:] no se asume estabilidad absoluta entre
+  ejecuciones de ZAP y SQLMap. Las diferencias observadas en URLs y
+  alertas frente a corridas previas \(ver nota metodológica del capítulo
+  13) confirman empíricamente que la reproducibilidad exacta no está
+  garantizada, reforzando la exigencia de registrar fecha y condiciones
+  puntuales en cada reporte.
 
 == 10.6 Criterios de Validación
 <criterios-de-validación>
@@ -133,20 +121,13 @@ simultáneamente los siguientes criterios:
   del pipeline y produce una salida procesable por el parser
   correspondiente.
 
-- #strong[Reproducibilidad:] una ejecución posterior del pipeline sobre
-  el mismo objetivo produce resultados equivalentes en estructura y tipo
-  de hallazgos. Se considera reproducible si dos ejecuciones sucesivas,
-  sin cambios en la aplicación objetivo, coinciden en al menos el 90% de
-  los hallazgos detectados. Este criterio fue verificado empíricamente
-  en el benchmark de ejecuciones sucesivas documentado en la sección
-  14.3 \(Tabla 11), donde la coincidencia de alertas de seguridad de
-  OWASP ZAP y de vulnerabilidades de SQLMap alcanzó el 100%, y la
-  estabilidad en la superficie de URLs analizadas fue del 96,3%,
-  superando holgadamente el umbral de aceptación del 90%. La leve
-  variación en el número de URLs del spider responde a la naturaleza
-  dinámica del rastreo web analizada en la sección 10.5, mientras que el
-  núcleo de detección crítica de vulnerabilidades demostró una
-  estabilidad absoluta.
+- #strong[Reproducibilidad:] una ejecución posterior sobre el mismo
+  objetivo debe arrojar resultados equivalentes en estructura y tipo de
+  hallazgos, fijándose un umbral de coincidencia mínimo del 90%. Como se
+  verificó en la sección 14.3 \(Tabla 11), la coincidencia en alertas ZAP
+  y vulnerabilidades SQLMap alcanzó el 100%, y la superficie de URLs el
+  96,3% \(superando el umbral pese a la dinámica del spider señalada en
+  10.5).
 
 - #strong[Cobertura:] el sistema detecta vulnerabilidades pertenecientes
   a al menos tres categorías distintas del OWASP Top 10.
