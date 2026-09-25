@@ -1,92 +1,32 @@
 = 1. Introducción
 <introducción>
-Las aplicaciones web constituyen actualmente uno de los componentes más
-importantes de la infraestructura digital moderna. Empresas,
-instituciones educativas, organismos gubernamentales y plataformas
-comerciales dependen cada vez más de sistemas accesibles a través de
-internet para brindar servicios a usuarios finales.
 
-Esta dependencia creciente tiene un correlato directo en el panorama de
-amenazas: según el Data Breach Investigations Report 2025 de Verizon,
-los ataques básicos a aplicaciones web \(Basic Web Application Attacks)
-representaron el 12% de las brechas de seguridad analizadas en 2025,
-frente al 9% del año anterior, y el 88% de esos ataques involucró
-credenciales robadas \(Verizon, 2025). El Cost of a Data Breach Report
-2025 de IBM sitúa el costo global promedio de una brecha de seguridad en
-4,44 millones de dólares \(IBM, 2025). Estas cifras contextualizan, con
-datos verificables, la afirmación de que las aplicaciones web son un
-vector de riesgo relevante y creciente.
+== 1.1 Contexto Global y Panorama de Vulnerabilidades Web
+<contexto-global-panorama-vulnerabilidades>
 
-Entre las vulnerabilidades más comunes en este tipo de aplicaciones se
-encuentran las inyecciones SQL, el Cross Site Scripting \(XSS), las
-configuraciones de seguridad incorrectas, la autenticación débil y la
-exposición de endpoints internos. Estas categorías están ampliamente
-documentadas por la comunidad de seguridad informática, particularmente
-a través del proyecto OWASP Top 10, que identifica las categorías de
-riesgo más críticas para aplicaciones web.
+Las aplicaciones web constituyen uno de los pilares fundamentales de la infraestructura digital contemporánea. Organizaciones empresariales, organismos gubernamentales, instituciones académicas y plataformas de comercio electrónico gestionan volúmenes crecientes de información crítica y transaccional a través de sistemas accesibles públicamente mediante internet para interactuar de forma continua con usuarios finales.
 
-Tradicionalmente, la detección de estas vulnerabilidades se realiza
-mediante auditorías de seguridad manuales o mediante herramientas
-especializadas de escaneo dinámico \(DAST, Dynamic Application Security
-Testing), que analizan la aplicación en ejecución sin acceso a su código
-fuente \(Qadir et al., 2025). El uso individual de estas herramientas
-requiere conocimientos técnicos avanzados y un proceso manual de
-correlación de resultados entre herramientas heterogéneas. Frente a esta
-problemática surge la necesidad de soluciones que integren múltiples
-herramientas dentro de un flujo coordinado, un enfoque que en la
-industria se enmarca dentro de lo que se conoce como SOAR \(Security
-Orchestration, Automation and Response): la orquestación de herramientas
-de seguridad, la automatización de tareas repetitivas y la
-centralización de la respuesta ante hallazgos \(Kinyua & Awuah, 2021).
+Esta centralidad operativa tiene como contrapartida un incremento sistemático en la superficie de ataque y el volumen de incidentes informáticos. De acuerdo con el _2025 Data Breach Investigations Report_ \(DBIR) de Verizon, los ataques dirigidos a aplicaciones web \(_Basic Web Application Attacks_\) representaron el 12% del total de brechas de seguridad confirmadas a nivel global durante 2025, experimentando un ascenso frente al 9% registrado en el período precedente, con el agravante de que el 88% de estos incidentes involucró el uso indebido de credenciales comprometidas \(Verizon, 2025). En consonancia, el informe _Cost of a Data Breach Report 2025_ elaborado por IBM sitúa el costo económico promedio global de una vulneración de datos en 4,44 millones de dólares \(IBM, 2025). Estos indicadores cuantitativos evidencian que la debilidad en los perímetros web no constituye un problema periférico, sino un vector de riesgo crítico de elevado impacto patrimonial y reputacional.
 
-Este trabajo integra tres herramientas que, en conjunto, cubren vectores
-de ataque complementarios: OWASP ZAP realiza escaneo dinámico general
-\(pasivo y activo) sobre la aplicación en ejecución; ffuf se especializa
-en el descubrimiento de rutas, directorios y endpoints no enlazados
-mediante fuzzing de directorios \(Alsaedi et al., 2021); y SQLMap se
-enfoca específicamente en la detección y explotación de inyecciones SQL,
-un tipo de vulnerabilidad que los escáneres generales suelen identificar
-con menor profundidad que una herramienta dedicada \(Elia et al., 2010).
-La combinación de una herramienta de propósito general, una de
-descubrimiento de superficie de ataque y una especializada en un vector
-crítico busca maximizar la cobertura sin incurrir en la complejidad de
-plataformas comerciales de mayor escala.
+Entre las fallas de seguridad recurrentes en los ecosistemas web destacan la inyección de código SQL, las secuencias de comandos en sitios cruzados \(Cross-Site Scripting o XSS), las configuraciones de seguridad defectuosas o permisivas, los mecanismos de autenticación y gestión de sesiones débiles, y la exposición involuntaria de rutas o servicios internos. Estas amenazas se encuentran ampliamente categorizadas por la comunidad técnica internacional a través del estándar del proyecto _Open Web Application Security Project_ \(OWASP Top 10, 2021), que establece el consenso sobre los riesgos más severos a los que se enfrentan las arquitecturas web modernas.
 
-Trabajos previos sobre orquestación de seguridad se discuten en detalle
-en el Capítulo 7 \(Estado del Arte), donde se contrastan plataformas de
-código abierto orientadas a la gestión y orquestación de resultados de
-seguridad —Faraday, DefectDojo, TheHive y Shuffle— con la propuesta de
-este trabajo \(ver Tabla 1). La brecha específica que este proyecto
-busca cubrir es la ausencia, entre esas alternativas, de una opción
-liviana que no requiera infraestructura compleja de despliegue,
-orientada puntualmente al escaneo web interactivo mediante fuzzing y
-escaneo activo, y desplegable en su totalidad con un único comando de
-Docker Compose.
+== 1.2 La Necesidad de Orquestación: Paradigma SOAR y Enfoque DAST Integrado
+<necesidad-orquestacion-soar-dast>
 
-En este contexto se desarrolla el presente proyecto, cuyo objetivo es
-diseñar e implementar un orquestador automatizado de herramientas de
-seguridad web capaz de ejecutar distintos tipos de análisis, normalizar
-los resultados heterogéneos producidos por cada herramienta y generar
-reportes unificados de vulnerabilidades detectadas. A partir de esta
-base, el sistema se extendió hacia una arquitectura de servicio: una API
-REST que ejecuta los análisis de forma asíncrona, persiste el historial
-de escaneos y expone los resultados a un panel web, con soporte de
-autenticación automática para escanear secciones protegidas y de
-sugerencias de mitigación asistidas por inteligencia artificial. El
-sistema fue probado en un entorno de laboratorio controlado utilizando
-DVWA como aplicación objetivo, garantizando un marco ético y
-reproducible para la investigación.
+Frente a este escenario, la evaluación de seguridad tradicional recurre a dos modalidades primarias: auditorías manuales conducidas por analistas de penetración o la utilización aislada de herramientas automatizadas de escaneo dinámico \(DAST, _Dynamic Application Security Testing_\). El enfoque DAST permite examinar las aplicaciones en su estado de ejecución sin requerir acceso al código fuente, analizando el comportamiento de entradas y respuestas frente a solicitudes anómalas \(Qadir et al., 2025). Sin embargo, el empleo independiente y descoordinado de escáneres dinámicos introduce fricciones operativas notables: demanda una intervención humana reiterativa para la parametrización de cada consola, adolece de formatos de salida dispares que dificultan la consolidación de hallazgos y exige una ardua labor de correlación manual para filtrar falsos positivos o reconstruir el cuadro integral de riesgos.
 
-#strong[Estructura del documento:] El presente trabajo se encuentra
-articulado de la siguiente manera: las secciones 2 a 6 definen la
-problemática, justificación, metas, interrogantes e hipótesis
-orientadoras. Las bases teóricas y el estado del arte se examinan en las
-secciones 7 y 8, dando paso a la delimitación y metodología en los
-apartados 9 y 10. La arquitectura del sistema, el modelo de servicio y
-la implementación técnica del pipeline se detallan en los capítulos 11 y
-12. La presentación de hallazgos y su debate técnico se abordan en las
-secciones 13 y 14, condensando las conclusiones y líneas de
-investigación futuras en el capítulo 15. Por último, la sección 16
-aborda las consideraciones éticas y normativas, el capítulo 17
-profundiza el desarrollo experimental y los apartados 18 y 19 reúnen las
-fuentes bibliográficas y anexos técnicos.
+Con el propósito de mitigar esta sobrecarga y dotar de agilidad al diagnóstico, surge en la industria el paradigma SOAR \(_Security Orchestration, Automation and Response_\), orientado a la orquestación de herramientas heterogéneas, la automatización de flujos repetitivos y la centralización de los reportes de incidentes \(Kinyua & Awuah, 2021). No obstante, como se analiza en el Capítulo 7 \(Estado del Arte), las plataformas de referencia en este ámbito —tales como Faraday, DefectDojo, TheHive o Shuffle— presentan una marcada orientación hacia la gestión agregada a nivel corporativo o demandan una infraestructura de soporte y consumo de recursos considerablemente pesada \(ver Tabla 1). Emerge así una vacancia técnica específica: la necesidad de una solución de orquestación ágil, desacoplada y liviana, que combine el escaneo dinámico general con técnicas de fuzzing activo y explotación dirigida, empaquetada de manera integral bajo contenedores Docker Compose de despliegue directo.
+
+Para abordar dicha brecha, este proyecto implementa un pipeline articulado sobre tres herramientas complementarias de código abierto: OWASP ZAP, que realiza un escaneo dinámico de propósito general \(en sus fases pasiva y activa); ffuf, especializado en el descubrimiento de superficie oculta mediante _fuzzing_ de alta velocidad sobre directorios y rutas web \(Alsaedi et al., 2021); y SQLMap, orientado de manera especializada a la detección profunda y verificación de explotación sobre vulnerabilidades de inyección SQL \(Elia et al., 2010), un vector que los escáneres generalistas suelen subestimar o diagnosticar con menor alcance. La combinación estratégica de estas tres capas —descubrimiento de rutas no enlazadas, análisis transversal de vulnerabilidades y verificación exhaustiva de inyecciones— permite maximizar la cobertura global del diagnóstico sin incurrir en la sobrecarga operativa de las plataformas empresariales complejas.
+
+== 1.3 Propuesta de Valor, Alcance del Prototipo y Entorno Experimental
+<propuesta-valor-alcance-prototipo>
+
+En este marco metodológico y tecnológico, el presente trabajo final tiene por objetivo diseñar, implementar y validar un orquestador automatizado de herramientas de seguridad web capaz de ejecutar análisis dinámicos secuenciales, normalizar los esquemas sintácticos heterogéneos de cada componente y consolidar un reporte unificado de hallazgos. A partir de dicho núcleo de ejecución por consola, el sistema fue escalado hacia una arquitectura de servicio completa: una API REST asíncrona desarrollada en FastAPI que administra los análisis en segundo plano, persiste el historial de auditorías en base de datos relacional, implementa un módulo de autenticación automatizada para examinar secciones protegidas tras mecanismos de login, proporciona sugerencias de remediación estructuradas mediante inteligencia artificial y expone los resultados a través de un panel web interactivo para el analista.
+
+A efectos de garantizar el rigor metodológico, la reproducibilidad de los ensayos y un marco deontológico estricto, el sistema fue sometido a validación experimental sobre la plataforma vulnerable deliberada _Damn Vulnerable Web Application_ \(DVWA) desplegada en un entorno de red Docker aislado. Dicho esquema garantiza el pleno cumplimiento de la legislación nacional sobre delitos informáticos \(Ley 26.388) y los principios éticos internacionales de la profesión \(Código de Ética ACM), cuyas derivaciones jurídicas y operativas se examinan formalmente en el Capítulo 16.
+
+== 1.4 Estructura del Documento
+<estructura-del-documento>
+
+El presente trabajo se encuentra articulado de la siguiente manera: las secciones 2 a 6 definen la problemática, justificación, metas, interrogantes e hipótesis orientadoras. Las bases teóricas y el estado del arte se examinan en las secciones 7 y 8, dando paso a la delimitación y metodología en los apartados 9 y 10. La arquitectura del sistema, el modelo de servicio y la implementación técnica del pipeline se detallan en los capítulos 11 y 12. La presentación de hallazgos y su debate técnico se abordan en las secciones 13 y 14, condensando las conclusiones y líneas de investigación futuras en el capítulo 15. Por último, la sección 16 aborda las consideraciones éticas y normativas, el capítulo 17 profundiza el desarrollo experimental y los apartados 18 y 19 reúnen las fuentes bibliográficas y anexos técnicos.
