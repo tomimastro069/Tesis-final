@@ -208,9 +208,15 @@ Vulnerability Scanning, Docker, Python.
 
 #include "capitulos/04-objetivos.typ"
 
+#pagebreak()
+
 #include "capitulos/05-preguntas-investigacion.typ"
 
+#pagebreak()
+
 #include "capitulos/06-hipotesis.typ"
+
+#pagebreak()
 
 #include "capitulos/07-estado-del-arte.typ"
 
@@ -222,13 +228,19 @@ Vulnerability Scanning, Docker, Python.
 
 #include "capitulos/09-alcances-limitaciones.typ"
 
+#pagebreak()
+
 #include "capitulos/10-metodologia.typ"
 
 #pagebreak()
 
 #include "capitulos/11-arquitectura.typ"
 
+#pagebreak()
+
 #include "capitulos/12-implementacion.typ"
+
+#pagebreak()
 
 #include "capitulos/13-resultados.typ"
 
@@ -236,9 +248,15 @@ Vulnerability Scanning, Docker, Python.
 
 #include "capitulos/14-discusion.typ"
 
+#pagebreak()
+
 #include "capitulos/15-conclusiones.typ"
 
+#pagebreak()
+
 #include "capitulos/16-consideraciones-eticas.typ"
+
+#pagebreak()
 
 #include "capitulos/17-desarrollo-experimental.typ"
 

@@ -83,51 +83,53 @@ más complejas, y varias ofrecen sus funcionalidades avanzadas \(gestión
 de equipos, integraciones empresariales) bajo modelos de licenciamiento
 comercial.
 
-#pagebreak()
+
 
 #strong[Tabla 1. Comparación de plataformas de orquestación y gestión de
-vulnerabilidades] <tabla-1>
+  vulnerabilidades] <tabla-1>
 
 #figure(
-align(center)[#table(
-  columns: 5,
-  [Plataforma], [Alcance funcional], [Curva de instalación], [Costo],
-  [Automatización del pipeline],
-  [Faraday],
-  [Centraliza resultados de múltiples escáneres en un repositorio
-  colaborativo],
-  [Servidor dedicado y configuración de agentes/plugins],
-  [Community gratuito / Enterprise comercial],
-  [Centraliza resultados; no ejecuta ni coordina el escaneo en sí],
-  [DefectDojo],
-  [Gestión del ciclo de vida de vulnerabilidades, métricas por
-  proyecto],
-  [Despliegue vía Docker Compose; requiere configurar importadores por
-  herramienta],
-  [Community gratuito / Pro comercial],
-  [Importa resultados ya generados; no orquesta la ejecución de las
-  herramientas],
-  [TheHive / Shuffle],
-  [Automatización de respuesta a incidentes mediante playbooks
-  configurables],
-  [Infraestructura compuesta \(TheHive + Cortex + integraciones)],
-  [Community gratuito / soporte comercial],
-  [Alto en respuesta a incidentes; no está orientado a fuzzing ni
-  escaneo web],
-  [Orquestador de Seguridad \(este proyecto)],
-  [Orquestación end-to-end de ZAP, ffuf y SQLMap con enriquecimiento
-  cruzado entre herramientas],
-  [Un comando \(docker compose up)],
-  [Gratuito, sin licenciamiento por niveles],
-  [Alto: coordina, enriquece y consolida automáticamente todo el
-  pipeline de escaneo],
-)]
+  align(center)[#table(
+    columns: 5,
+    [Plataforma], [Alcance funcional], [Curva de instalación], [Costo], [Automatización del pipeline],
+    [Faraday],
+    [Centraliza resultados de múltiples escáneres en un repositorio
+      colaborativo],
+    [Servidor dedicado y configuración de agentes/plugins],
+    [Community gratuito / Enterprise comercial],
+    [Centraliza resultados; no ejecuta ni coordina el escaneo en sí],
+
+    [DefectDojo],
+    [Gestión del ciclo de vida de vulnerabilidades, métricas por
+      proyecto],
+    [Despliegue vía Docker Compose; requiere configurar importadores por
+      herramienta],
+    [Community gratuito / Pro comercial],
+    [Importa resultados ya generados; no orquesta la ejecución de las
+      herramientas],
+
+    [TheHive / Shuffle],
+    [Automatización de respuesta a incidentes mediante playbooks
+      configurables],
+    [Infraestructura compuesta \(TheHive + Cortex + integraciones)],
+    [Community gratuito / soporte comercial],
+    [Alto en respuesta a incidentes; no está orientado a fuzzing ni
+      escaneo web],
+
+    [Orquestador de Seguridad \(este proyecto)],
+    [Orquestación end-to-end de ZAP, ffuf y SQLMap con enriquecimiento
+      cruzado entre herramientas],
+    [Un comando \(docker compose up)],
+    [Gratuito, sin licenciamiento por niveles],
+    [Alto: coordina, enriquece y consolida automáticamente todo el
+      pipeline de escaneo],
+  )],
 )
 
 #text(size: 10pt)[#emph[Nota. Elaboración propia a partir de la documentación oficial de
-cada plataforma \(Faraday Security, 2025; DefectDojo, 2025; TheHive
-Project, 2025; Shuffle, 2025) y de la descripción funcional del sistema
-desarrollado.]]
+  cada plataforma \(Faraday Security, 2025; DefectDojo, 2025; TheHive
+  Project, 2025; Shuffle, 2025) y de la descripción funcional del sistema
+  desarrollado.]]
 
 Frente a este panorama, el proyecto presentado en este trabajo propone
 una alternativa de menor escala: un orquestador propio en Python que
