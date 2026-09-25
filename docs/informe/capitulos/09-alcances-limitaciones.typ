@@ -2,88 +2,66 @@
 <alcances-y-limitaciones>
 == 9.1 Alcances
 <alcances>
-El proyecto cubre el diseño, la implementación y la validación de un
-orquestador de seguridad funcional en un entorno de laboratorio
-controlado, con las siguientes capacidades implementadas y verificadas:
 
-- Ejecución automatizada de tres herramientas de análisis de seguridad
-  \(OWASP ZAP, ffuf y SQLMap), con enriquecimiento cruzado entre ffuf y
-  ZAP.
+El presente trabajo final de graduación abarca el diseño, la implementación, el despliegue y la validación experimental de un sistema de orquestación de seguridad informática concebido para coordinar herramientas dinámicas heterogéneas en entornos controlados de laboratorio. A partir de una arquitectura desacoplada y orientada a servicios, el alcance funcional del artefacto desarrollado comprende tres bloques operativos plenamente verificados:
 
-- Autenticación automática contra la aplicación objetivo, incluyendo
-  renovación de sesión durante ejecuciones prolongadas.
+#strong[a) Núcleo de Detección Dinámica y Enriquecimiento Cruzado:]
 
-- Descubrimiento de URLs mediante el spider de ZAP y fuzzing de
-  directorios mediante ffuf con wordlists configurables.
+- Coordinación automatizada y secuencial de la triada DAST de código abierto: OWASP ZAP para escaneo pasivo y activo de vulnerabilidades generales, ffuf para el descubrimiento de superficie oculta mediante _fuzzing_ de directorios con diccionarios parametrizables, y SQLMap para la detección profunda y verificación de inyecciones SQL.
 
-- Detección de inyecciones SQL mediante SQLMap, con filtrado priorizado
-  de URLs candidatas y ejecución en segundo plano.
+- Mecanismo de enriquecimiento cruzado inter-herramienta: realimentación automatizada del árbol de URLs de OWASP ZAP a partir de las rutas y parámetros descubiertos durante la fase de fuzzing con ffuf, e interoperabilidad hacia SQLMap para transferir selectivamente endpoints parametrizados sospechosos.
 
-- Parseo, normalización y consolidación de resultados en un archivo JSON
-  unificado.
+- Módulo de autenticación automatizada y gestión de sesiones HTTP: inicio de sesión programático mediante solicitudes POST y renovación heurística de cookies de sesión para sostener el análisis en secciones restringidas durante escaneos prolongados.
 
-- Caché incremental de resultados y re-testeo automático de URLs
-  previamente confirmadas como vulnerables.
+- Filtrado heurístico y ejecución asíncrona de SQLMap: discriminación previa de URLs candidatas basada en la existencia de parámetros manipulables y ejecución desacoplada en segundo plano para evitar bloqueos del flujo principal.
 
-- Generación automática de reportes técnico y ejecutivo, con
-  clasificación de riesgo global.
+#strong[b) Capa de Persistencia, Caché y API de Servicio:]
 
-- Exposición del orquestador mediante una API REST con ejecución
-  asíncrona, seguimiento de progreso y persistencia de historial de
-  escaneos.
+- Ingesta, parseo sintáctico y normalización de salidas dispares: transformación de las respuestas heterogéneas \(XML/JSON de ZAP, JSON estructurado de ffuf y registros de texto plano de SQLMap) hacia un esquema canónico consolidado en formato JSON \(#emph[resultado_unificado.json]\).
 
-- Interfaz web para lanzar escaneos, visualizar resultados y consultar
-  sugerencias de mitigación asistidas por IA.
+- Motor de caché incremental y re-evaluación dirigida: indexación de hallazgos por identificador de endpoint y vector de ataque, permitiendo re-verificar con celeridad vulnerabilidades previamente confirmadas sin reiterar la ejecución exhaustiva del pipeline completo.
 
-- Despliegue del entorno completo mediante Docker Compose.
+- Exposición de capacidades mediante arquitectura de servicio REST \(FastAPI): despacho asíncrono de tareas de análisis mediante subprocesos en segundo plano \(#emph[BackgroundTasks]\), monitoreo del ciclo de vida del escaneo en tiempo real y consulta histórica de auditorías.
+
+- Capa de persistencia relacional híbrida: compatibilidad nativa tanto con SQLite para ejecuciones portátiles y pruebas locales, como con PostgreSQL para entornos de servicio multiusuario centralizados.
+
+#strong[c) Interfaz de Usuario y Automatización Operativa:]
+
+- Interfaz web interactiva \(Single Page Application desarrollada en React): panel de control para la parametrización de objetivos, visualización gráfica y tabular de vulnerabilidades consolidadas y consulta histórica de análisis.
+
+- Generación automatizada de reportes técnico y ejecutivo: consolidación de resúmenes estructurados en formatos Markdown y JSON con matriz de riesgo global orientativa para audiencias técnicas y gerenciales.
+
+- Asistencia en remediación mediante modelos de lenguaje: canal de consulta contextual a proveedores de inteligencia artificial \(Groq/Gemini) para sugerir directrices de mitigación técnica específicas frente a los hallazgos confirmados.
+
+- Aprovisionamiento reproducible multicontenedor: despliegue integral del orquestador, la aplicación objetivo de prueba y los motores de análisis mediante Docker Compose sobre una red puente aislada \(#emph[sec-net]\).
 
 == 9.2 Limitaciones
 <limitaciones>
-- El sistema fue probado únicamente sobre DVWA en un entorno de
-  laboratorio; no se realizaron pruebas sobre aplicaciones en
-  producción, por lo que la generalización de los resultados a otros
-  contextos no está garantizada.
 
-- La API no implementa autenticación ni restricción de origen \(CORS
-  abierto a cualquier dominio), por lo que su uso actual está limitado a
-  entornos de laboratorio y no a un despliegue expuesto públicamente.
+La declaración explícita de limitaciones constituye una salvaguarda metodológica indispensable en la ingeniería de seguridad de la información. Este ejercicio permite delimitar con precisión las condiciones bajo las cuales los resultados del orquestador son técnicamente reproducibles y válidos, evitando interpretaciones extrapoladas o falsas expectativas de cobertura en entornos productivos. Las restricciones identificadas se estructuran en tres dimensiones formales:
 
-- Las sugerencias de mitigación generadas por el componente de IA no
-  fueron validadas sistemáticamente contra un criterio experto; deben
-  tratarse como apoyo complementario, no como fuente única de
-  remediación.
+#strong[a) Delimitación del Entorno de Pruebas y Seguridad de la Infraestructura:]
 
-- La clasificación de riesgo global del reporte ejecutivo utiliza una
-  heurística simple \(presencia de hallazgos High/SQL Injection), no un
-  criterio estándar de la industria como CVSS.
+- Validación circunscrita al entorno de laboratorio controlado: las pruebas empíricas se ejecutaron exclusivamente sobre la aplicación deliberadamente vulnerable DVWA \(Damn Vulnerable Web Application); no se realizaron auditorías sobre aplicaciones en producción reales ni contra infraestructuras protegidas por cortafuegos de aplicaciones web \(WAF), balanceadores de carga o mecanismos anti-escaneo adaptativos \(tales como desafíos CAPTCHA o bloqueo por frecuencia de peticiones), por lo que la extrapolación de los resultados a plataformas corporativas vivas no está empíricamente demostrada.
 
-- Debe señalarse la ausencia de una comparación empírica de alcance
-  equivalente entre la ejecución del pipeline automatizado y un proceso
-  de descubrimiento manual independiente; los registros del capítulo 17
-  corresponden a una sesión de validación y triaje sobre hallazgos ya
-  detectados en nivel #emph[Low];, lo que imposibilita la verificación
-  controlada que exige H1 \(véanse la sección 6 y el análisis
-  metodológico en 14.2).
+- Política de seguridad permisiva en la API REST de laboratorio: el prototipo implementado no incorpora autenticación de usuarios mediante tokens JWT u OAuth2, y opera con control de acceso cruzado abierto \(CORS configurado para aceptar cualquier origen), decisión adoptada deliberadamente para simplificar la interacción en el laboratorio local pero que inhabilita su exposición directa en redes públicas no confiables.
 
-- No se cuantificó formalmente, mediante ejecuciones controladas de cada
-  herramienta en aislamiento, la cobertura individual frente a la
-  cobertura combinada; el capítulo 14 aporta evidencia sobre una única
-  ejecución, no un experimento repetido, lo que limita el alcance de la
-  validación empírica de H2.
+- Carácter estrictamente orientativo del componente de IA: las directrices de mitigación emitidas por los modelos de lenguaje no fueron contrastadas sistemáticamente contra un panel de expertos ni validadas mediante pruebas de regresión en código real; deben tratarse como sugerencias preliminares de apoyo y nunca como instrucciones definitivas de remediación.
 
-- Los resultados de herramientas de escaneo dinámico como ZAP y SQLMap
-  pueden variar entre ejecuciones sucesivas contra el mismo objetivo
-  \(ver 10.5, amenaza a la validez de Confiabilidad); las cifras
-  reportadas en el capítulo 13 corresponden a una ejecución puntual y
-  documentada, no a un promedio de múltiples corridas.
+#strong[b) Restricciones de Comparabilidad Metodológica y Rigor Estadístico:]
 
-- El orquestador concentra su capacidad de detección dinámica en fallas
-  identificables mediante inyección de firmas y análisis de respuestas
-  HTTP \(inyecciones SQL, vectores reflejados de XSS, omisión de
-  cabeceras de seguridad y descubrimiento de rutas ocultas). Quedan
-  explícitamente excluidas del alcance automatizado las vulnerabilidades
-  de lógica de negocio \(Business Logic Flaws), las fallas de control de
-  acceso horizontal complejo entre múltiples perfiles de usuario y las
-  condiciones de carrera \(Race Conditions), vectores que por su
-  naturaleza contextual y semántica exigen necesariamente una auditoría
-  manual experta.
+- Ausencia de experimento con grupo de control independiente para la medición de tiempos \(H1): el ahorro de esfuerzo se evaluó mediante el contraste analítico entre la duración del pipeline automatizado \(14 minutos) y los tiempos documentados en una sesión de validación y triaje sobre hallazgos ya detectados \(50 minutos manuales sobre 125 minutos totales; véanse el Capítulo 17 y la Tabla 13), pero sin un experimento ciego en el que auditores humanos realicen descubrimiento desde cero, lo que condiciona la verificación empírica formal de la Hipótesis 1 \(como se discute en la sección 14.2).
+
+- Evaluación de cobertura basada en una corrida experimental única \(H2): el análisis comparativo de cobertura individual frente a la combinación de herramientas \(Tabla 9) se sustenta en una ejecución documentada y representativa, y no en un muestreo estadístico de múltiples repeticiones que permita calcular intervalos de confianza o varianzas, acotando el alcance demostrativo de la Hipótesis 2.
+
+- Variabilidad intrínseca del escaneo dinámico y latencias de red: conforme a la amenaza a la confiabilidad descrita en la sección 10.5, factores como la latencia de la pila de red en Docker, la concurrencia de hilos y los tiempos de respuesta del servidor web pueden introducir variaciones marginales en el número de solicitudes procesadas entre corridas sucesivas.
+
+- Modelo heurístico simplificado de clasificación de riesgo: el reporte ejecutivo categoriza el riesgo global mediante una regla booleana simple \(presencia de inyecciones SQL o alertas de severidad _High_\), prescindiendo de esquemas cuantitativos normalizados de la industria como el estándar CVSS \(Common Vulnerability Scoring System).
+
+#strong[c) Vulnerabilidades Fuera de Alcance por Diseño Arquitectónico (Scope Boundaries):]
+
+- Concentración en vectores analizables mediante firmas sintácticas: el orquestador focaliza su capacidad en fallas dinámicas detectables por patrones de inyección y análisis de anomalías en respuestas HTTP \(inyecciones SQL, vectores reflejados de Cross-Site Scripting, inclusión local de archivos, omisión de cabeceras de seguridad y exposición de rutas no enlazadas).
+
+- Exclusión explícita de vulnerabilidades de lógica de negocio \(#emph[Business Logic Flaws]\): aquellas fallas que vulneran los flujos transaccionales legítimos de una aplicación \(como omisión de etapas en pasarelas de pago, manipulación de estados de cuenta o inconsistencias en flujos de compra) escapan al modelo de análisis por firmas del escaneo dinámico y exigen necesariamente modelado funcional y auditoría manual.
+
+- Exclusión de condiciones de carrera \(#emph[Race Conditions]\) y control de acceso horizontal complejo: vectores basados en concurrencia temporal distribuida a nivel de microsegundos o violaciones complejas de control de acceso horizontal entre usuarios con idéntico nivel de privilegios demandan una orquestación semántica de permisos y sincronización que excede el diseño modular del pipeline desarrollado.

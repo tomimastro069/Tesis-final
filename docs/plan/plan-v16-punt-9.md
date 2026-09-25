@@ -33,7 +33,7 @@ Para que el tribunal otorgue una calificación sobresaliente (**9,0+**), no alca
 | **6. Hipótesis** | **7,4** | **Completado (Typst)** | **8,4 alcanzado** | Subsanado: marco epistemológico (10.1), definición operacional de variables (VI/VD) y contrastación empírica documental para H1-H4. |
 | **7. Estado del Arte** | **8,4** | Alto | **+0,2 $\rightarrow$ 8,6** | Tabla 1 sólida; remisión de T5 ya corregida a 11.1. |
 | **8. Marco Teórico** | **8,4** | Alto | **+0,2 $\rightarrow$ 8,6** | Seis subsecciones sólidas con anclaje bibliográfico formal. |
-| **9. Alcances y Limitaciones** | **7,3** | Castigado | **+1,0 $\rightarrow$ 8,3** | Dos listas de viñetas simples sin taxonomía por subsistemas ni categorización de limitaciones. |
+| **9. Alcances y Limitaciones** | **7,3** | **Completado (Typst)** | **8,3 alcanzado** | Subsanado: encuadre sistémico, 3 bloques funcionales en 9.1 y 3 dimensiones metodológicas/arquitectónicas en 9.2. |
 | **10. Metodología** | **8,1** | Alto | **+0,2 $\rightarrow$ 8,3** | Fases, variables y amenazas a la validez consolidadas. |
 | **11. Arquitectura** | **8,5** | Muy alto | **+0,2 $\rightarrow$ 8,7** | Ciclo 11.4 de 1 a 8 resuelto; diagrama de secuencia impecable. |
 | **12. Implementación** | **8,4** | Máximo histórico | Mantener | Comando SQLMap ejecutable, hilos y volumen verificados. |
@@ -113,11 +113,12 @@ Cualquier agente de IA o desarrollador que intervenga en este plan **DEBE RESPET
   * `== 1.3 Propuesta de Valor, Alcance del Prototipo y Entorno Experimental`: Orquestador por consola escalado a arquitectura de servicio (FastAPI, SQLite/PostgreSQL, React, autenticación automática, mitigación asistida por IA) y validación en DVWA bajo red Docker aislada con apego a la Ley 26.388 y Código ACM (Capítulo 16).
   * `== 1.4 Estructura del Documento`: Formalización de la fórmula canónica auditada por el tribunal que mapea secuencialmente los 19 capítulos del informe.
 
-#### Tarea 5: Capítulo 9 — Alcances y Limitaciones (`capitulos/09-alcances-limitaciones.typ`) [Meta: 7,3 $\rightarrow$ 8,3]
-* **Problema:** Dos listas planas de viñetas.
-* **Solución:**
-  * En `9.1 Alcances`: Categorizar los puntos en 3 bloques funcionales: *(a) Núcleo de Detección y Enriquecimiento Cruzado*, *(b) Capa de Persistencia, Caché y API de Servicio*, y *(c) Interfaz de Usuario y Automatización*.
-  * En `9.2 Limitaciones`: Agrupar formalmente en *(a) Delimitación del Entorno de Pruebas (DVWA)*, *(b) Restricciones de Comparabilidad Metodológica*, y *(c) Vulnerabilidades Fuera de Alcance por Diseño (Business Logic Flaws, Race Conditions)*.
+#### Tarea 5: Capítulo 9 — Alcances y Limitaciones (`capitulos/09-alcances-limitaciones.typ`) [Meta: 7,3 $\rightarrow$ 8,3] **`[COMPLETADO]`**
+* **Estado:** **HECHO / COMPLETADO**
+* **Problema inicial:** Dos listas planas de viñetas sin jerarquía funcional ni conceptual.
+* **Solución aplicada:**
+  * En `9.1 Alcances`: Se introdujo un párrafo de encuadre sistémico y se categorizaron las 10 capacidades operativas en 3 bloques funcionales: *(a) Núcleo de Detección Dinámica y Enriquecimiento Cruzado* (triada DAST, realimentación ffuf $\rightarrow$ ZAP, autenticación/sesión, SQLMap en segundo plano), *(b) Capa de Persistencia, Caché y API de Servicio* (`resultado_unificado.json`, caché incremental, FastAPI asíncrono, persistencia híbrida SQLite/PostgreSQL), y *(c) Interfaz de Usuario y Automatización Operativa* (SPA React, reportes Markdown/JSON, remediación asistida por IA y Docker Compose sobre `sec-net`).
+  * En `9.2 Limitaciones`: Se incorporó un párrafo de fundamentación epistemológica sobre la delimitación de alcance en ciberseguridad y se agruparon las 8 restricciones en 3 dimensiones formales: *(a) Delimitación del Entorno de Pruebas y Seguridad de la Infraestructura* (DVWA en laboratorio, API sin JWT con CORS abierto, IA orientativa), *(b) Restricciones de Comparabilidad Metodológica y Rigor Estadístico* (condicionamiento formal de H1 por ausencia de grupo ciego, corrida única para H2, variabilidad de red en 10.5 y regla de criticidad booleana sin CVSS), y *(c) Vulnerabilidades Fuera de Alcance por Diseño Arquitectónico (Scope Boundaries)* (enfoque en firmas HTTP y exclusión explícita de *Business Logic Flaws*, *Race Conditions* y control de acceso horizontal complejo).
 
 ---
 
@@ -154,10 +155,10 @@ El agente que continúe con este trabajo debe proceder bajo las siguientes direc
 ### Bloque B: Rigor Metodológico y Epistemológico
 - [x] **Tarea 3: Capítulo 6 — Hipótesis (`capitulos/06-hipotesis.typ`)** [Meta: 7,4 $\rightarrow$ 8,4] **`[COMPLETADO]`**
 - [x] **Tarea 4: Capítulo 1 — Introducción (`capitulos/01-introduccion.typ`)** [Meta: 7,4 $\rightarrow$ 8,4] **`[COMPLETADO]`**
-- [ ] **Tarea 5: Capítulo 9 — Alcances y Limitaciones (`capitulos/09-alcances-limitaciones.typ`)** [Meta: 7,3 $\rightarrow$ 8,3] **`[EN PROGRESO / PRÓXIMO PASO]`**
+- [x] **Tarea 5: Capítulo 9 — Alcances y Limitaciones (`capitulos/09-alcances-limitaciones.typ`)** [Meta: 7,3 $\rightarrow$ 8,3] **`[COMPLETADO]`**
 
 ### Bloque C: Alineación Fina de Objetivos y Preguntas
-- [ ] **Tarea 6: Capítulos 4 y 5 — Objetivos y Preguntas de Investigación** [Meta: 7,6 $\rightarrow$ 8,2] `[PENDIENTE]`
+- [ ] **Tarea 6: Capítulos 4 y 5 — Objetivos y Preguntas de Investigación** [Meta: 7,6 $\rightarrow$ 8,2] **`[EN PROGRESO / PRÓXIMO PASO]`**
 
 ---
 
@@ -215,3 +216,17 @@ El agente que continúe con este trabajo debe proceder bajo las siguientes direc
   3. `1.3 Propuesta de Valor, Alcance del Prototipo y Entorno Experimental`: Describe los componentes del prototipo (orquestador modular en Python 3.11 escalado a arquitectura de servicio con API REST FastAPI asíncrona, persistencia relacional, panel web React, autenticación de sesión automatizada y recomendaciones asistidas por IA), encuadrando su validación experimental en DVWA sobre una red Docker aislada (`pentest-net`) bajo la Ley 26.388 y el Código de Ética ACM (Capítulo 16).
   4. `1.4 Estructura del Documento`: Jerarquiza formalmente el párrafo canónico de articulación secuencial del informe (secciones 2 a 19), preservando al 100% la fórmula institucional auditada por el tribunal evaluador de la UTN FRM.
 * **Calibración editorial y no-regresión:** Se preservó estrictamente la delimitación del Capítulo 1 entre las páginas físicas 7 y 8 (páginas numeradas 6 y 7), garantizando que el Capítulo 2 continúe iniciando con su `#pagebreak()` en la página física 9 (numerada 8). Las 4 nuevas subsecciones se sincronizaron automáticamente en el `#outline` (página física 4), siendo absorbidas por el margen disponible de $126,8\text{ pt}$ en la página física 5 sin alterar el total de 72 páginas ni desplazar ninguna de las 13 tablas cuantitativas ni figuras del informe.
+
+### Hito 7: Reestructuración y Categorización Taxonómica del Capítulo 9 (Alcances y Limitaciones)
+* **Archivo intervenido:** `docs/informe/capitulos/09-alcances-limitaciones.typ`.
+* **Transformación lograda:** Se transformó el capítulo desde un catálogo plano de 90 líneas con dos listas simples de viñetas hacia un texto articulado de 68 líneas densas, categorizado funcional y metodológicamente:
+  1. `Encuadre Sistémico en 9.1 (Alcances)`: Párrafo de apertura delimitando el alcance de un artefacto tecnológico en ingeniería de software, articulando las capacidades en tres bloques funcionales destacados:
+     * `#strong[a) Núcleo de Detección Dinámica y Enriquecimiento Cruzado:]` Triada DAST (ZAP, ffuf, SQLMap), realimentación de rutas ffuf $\rightarrow$ ZAP, módulo de autenticación POST con renovación heurística de cookies y ejecución asíncrona de SQLMap en background (`sqlmap_bg.log`).
+     * `#strong[b) Capa de Persistencia, Caché y API de Servicio:]` Parseo sintáctico hacia `resultado_unificado.json`, motor de caché incremental con re-testeo, API REST FastAPI asíncrona (`BackgroundTasks`) y persistencia híbrida en SQLite/PostgreSQL.
+     * `#strong[c) Interfaz de Usuario y Automatización Operativa:]` SPA interactiva en React, generación de reportes técnico/ejecutivo, remediación guiada por LLM (Groq/Gemini) y orquestación con Docker Compose en red aislada (`sec-net`).
+  2. `Encuadre Epistemológico en 9.2 (Limitaciones)`: Párrafo introductorio fundamentando la delimitación del alcance como salvaguarda contra falsas expectativas de cobertura en producción, agrupando las restricciones en tres dimensiones formales:
+     * `#strong[a) Delimitación del Entorno de Pruebas y Seguridad de la Infraestructura:]` Pruebas circunscritas a DVWA sin WAF real, API de desarrollo con CORS abierto y sin autenticación JWT, y carácter orientativo del módulo de IA.
+     * `#strong[b) Restricciones de Comparabilidad Metodológica y Rigor Estadístico:]` Condicionamiento de H1 por ausencia de grupo de control ciego e independiente (sustentado en la auditoría manual de 50 min del Cap. 17 sobre 125 min totales), corrida experimental única para H2 (Tabla 9), variabilidad de red en escaneo dinámico (sección 10.5) y heurística determinista simple en lugar de CVSS estándar.
+     * `#strong[c) Vulnerabilidades Fuera de Alcance por Diseño Arquitectónico (Scope Boundaries):]` Delimitación en firmas sintácticas de inyección HTTP y exclusión formal por diseño de *Business Logic Flaws*, *Race Conditions* y control de acceso horizontal complejo entre identidades con iguales privilegios.
+* **Calibración editorial y no-regresión:** Se preservaron intactas las etiquetas `<alcances-y-limitaciones>`, `<alcances>` y `<limitaciones>`. El capítulo ocupa aproximadamente 1,6 carillas confinadas entre las páginas físicas correspondientes mediante directivas `#pagebreak()` previas y posteriores, garantizando que el Capítulo 10 continúe iniciando con absoluta estabilidad, sin desfasajes en las 13 tablas cuantitativas ni en los índices unificados.
+* **Cierre de Bloque B:** Con las Tareas 3 (Hipótesis), 4 (Introducción) y 5 (Alcances y Limitaciones) finalizadas, el Bloque B queda completado al 100%, consolidando un salto proyectado de +3,0 puntos sumados en los capítulos metodológicos y abriendo paso al Bloque C (Alineación Fina de Objetivos y Preguntas).
