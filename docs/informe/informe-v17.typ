@@ -194,6 +194,7 @@ Vulnerability Scanning, Docker, Python.
   [Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con caché], pagina(<tabla-11>),
   [Tabla 12. Verificación de cumplimiento por objetivo específico], pagina(<tabla-12>),
   [Tabla 13. Distribución temporal de la sesión de auditoría manual del capítulo 17], pagina(<tabla-13>),
+  [Tabla 14. Estructura narrativa, marcas temporales y desglose visual del video demostrativo], pagina(<tabla-14>),
 )
 
 #pagebreak()

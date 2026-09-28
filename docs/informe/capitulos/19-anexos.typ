@@ -518,6 +518,8 @@ A continuación, se detalla la estructura narrativa y el desglose visual por blo
 
 #pagebreak()
 
+#strong[Tabla 14. Estructura narrativa, marcas temporales y desglose visual del video demostrativo] <tabla-14>
+
 #[
   #set text(size: 8.8pt)
   #set par(leading: 0.52em)
@@ -560,5 +562,8 @@ A continuación, se detalla la estructura narrativa y el desglose visual por blo
   [Conclusiones finales sobre la viabilidad del orquestador SOAR liviano, balance costo-beneficio de la caché incremental y agradecimientos protocolares a los directores de tesis y al tribunal evaluador de la UTN FRM.]
 )
 ]
+
+#v(0.3em)
+#text(size: 9.5pt)[#emph[Nota. Elaboración propia a partir del guion técnico y registro audiovisual del proyecto (Mastropietro et al., 2026).]]
 
 
