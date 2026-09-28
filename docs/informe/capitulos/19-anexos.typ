@@ -431,23 +431,19 @@ entorno de laboratorio autorizado \(DVWA).
 == Anexo H — Diagramas en Tamaño Ampliado
 <anexo-h-diagramas-en-tamaño-ampliado>
 Este anexo reproduce a mayor tamaño, para su mejor observación, las
-Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.4 y
+Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.2, 11.4 y
 11.5: Figura 1 \(Diagrama de Arquitectura de Servicio), Figura 2
 \(Diagrama Orquestador-Seguridad), Figura 3 \(Diagrama de Pipeline de
 ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 /scan).
 
-
-
-#v(0.5em)
-
-#align(center)[
-  #image("../media/media/image2.png", width: 88%)
-  #v(0.6em)
-  #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]] <fig-1-ampliada>
+#page(flipped: true)[
+  #align(center + horizon)[
+    #image("../media/media/image2.png", width: 100%, height: 84%, fit: "contain")
+    #v(0.6em)
+    #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]] <fig-1-ampliada>
+  ]
 ]
-
-#pagebreak()
 
 #align(center + horizon)[
   #image("../media/media/image1.jpg", width: 92%)
@@ -460,15 +456,15 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 #align(center + horizon)[
   #image("../media/media/image4.jpg", width: 92%)
   #v(0.8em)
-  #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama del Pipeline de Ejecución. Elaboración propia.]] <fig-3-ampliada>
+  #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama de Pipeline de ejecución. Elaboración propia.]] <fig-3-ampliada>
 ]
 
-#pagebreak()
-
-#align(center + horizon)[
-  #image("../media/media/image3.png", width: 92%)
-  #v(0.8em)
-  #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML. Elaboración propia.]] <fig-4-ampliada>
+#page(flipped: true)[
+  #align(center + horizon)[
+    #image("../media/media/image3.png", width: 100%, height: 84%, fit: "contain")
+    #v(0.8em)
+    #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML. Elaboración propia.]] <fig-4-ampliada>
+  ]
 ]
 
 

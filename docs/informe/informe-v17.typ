@@ -168,7 +168,7 @@ Vulnerability Scanning, Docker, Python.
   [Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan], pagina(<fig-4>),
   [Figura 1 (ampliada). Diagrama de Arquitectura de Servicio], pagina(<fig-1-ampliada>),
   [Figura 2 (ampliada). Diagrama Orquestador-Seguridad], pagina(<fig-2-ampliada>),
-  [Figura 3 (ampliada). Diagrama del Pipeline de Ejecución], pagina(<fig-3-ampliada>),
+  [Figura 3 (ampliada). Diagrama de Pipeline de ejecución], pagina(<fig-3-ampliada>),
   [Figura 4 (ampliada). Diagrama de secuencia UML], pagina(<fig-4-ampliada>),
 )
 
