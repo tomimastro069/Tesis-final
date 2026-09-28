@@ -160,7 +160,7 @@ El frontend, desarrollado en React, consume estos endpoints para ofrecer
 un panel de dominios escaneados, un formulario de lanzamiento de
 escaneos, una tabla de vulnerabilidades y un componente de sugerencias
 de mitigación que consulta un endpoint adicional de análisis asistido
-por IA expuesto a través del router de n8n.
+por IA expuesto a través del router de n8n. El código fuente integral de estos componentes y el registro audiovisual de demostración en tiempo real se encuentran documentados para su verificación en el Anexo I.
 
 #strong[Nota sobre pruebas.] Los scripts `test_parsers.py`,
 `test_speed.py`, `test_zap.py` y `test_sqlmap.py` son scripts de
