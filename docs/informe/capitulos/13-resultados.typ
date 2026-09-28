@@ -158,7 +158,7 @@ SQLMap se ejecutó sobre las URLs con parámetros descubiertas por el
 spider y por ffuf. En esta corrida se confirmó como vulnerable el
 parámetro username del formulario de fuerza bruta
 \(/vulnerabilities/brute/), mediante las cuatro técnicas configuradas
-\(--technique\=BEUST), lo que totaliza los 4 hallazgos individuales del
+`(--technique=BEUST)`, lo que totaliza los 4 hallazgos individuales del
 resumen consolidado. El payload real registrado para la técnica
 boolean-based blind fue: username\=SCVZ\' RLIKE \(SELECT \(CASE WHEN
 \(4201\=4201) THEN 0x5343565a ELSE 0x28 END))--

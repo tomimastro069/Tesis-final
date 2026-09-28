@@ -1,33 +1,35 @@
 ---
 name: tarea
 description: >-
-  Trigger: '/tarea', '/plan-capitulo', 'tarea', 'plan-capitulo'. Planifica e implementa tareas individuales del plan maestro de excelencia de tesina en docs/plan/plan-v16-punt-9.md, auditando el texto plano, garantizando cero invención de datos bajo normas APA 7.ª y reglas institucionales UTN FRM.
+  Trigger: '/tarea', '/plan-capitulo', 'tarea', 'plan-capitulo'. Planifica e implementa tareas individuales del plan de subsanación y defensa en docs/plan/plan-28-09-2026.md, auditando el texto plano, garantizando cero invención de datos bajo normas APA 7.ª y reglas institucionales UTN FRM.
 ---
 
 # Procedimiento de Planificación e Implementación de Tarea (`/tarea`, `/plan-capitulo`)
 **Universidad Tecnológica Nacional — Facultad Regional Mendoza**  
 *Tecnicatura Universitaria en Programación (TUP)*  
-**Documento Fuente:** `docs/plan/plan-v16-punt-9.md`
+**Documento Fuente:** `docs/plan/plan-28-09-2026.md`
 
-Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para tomar una tarea individual del plan de escalado a calificación sobresaliente (**9,0 a 10,0**), auditar el texto plano existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
+Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para tomar una tarea individual del plan de subsanación atómica hacia la calificación sobresaliente (**8,8 a 9,0+ / defensa oral**), auditar el código Typst existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
 
 ---
 
 ## 1. Entrada y Detección de la Tarea
 
 1. **Parseo del Comando:**
-   * El usuario invoca `/tarea [N]` o `/plan-capitulo [N]` (ejemplos: `/tarea 2`, `/tarea 3`, `/plan-capitulo 2`).
-   * Si el usuario **no especifica número** (solo escribe `/tarea`), el asistente debe inspeccionar la **Sección 5 (Checklist de Tareas)** de `docs/plan/plan-v16-punt-9.md` e identificar la primera tarea marcada como `[ ] [EN PROGRESO / PRÓXIMO PASO]` o `[ ] [PENDIENTE]`.
+   * El usuario invoca `/tarea [N]` o `/plan-capitulo [N]` (ejemplos: `/tarea 1`, `/tarea 2`, `/plan-capitulo 1`).
+   * Si el usuario **no especifica número** (solo escribe `/tarea`), el asistente debe inspeccionar la **Sección 5 (Checklist de Tareas)** de `docs/plan/plan-28-09-2026.md` e identificar la primera tarea marcada como `[ ] [EN PROGRESO / PRÓXIMO PASO]` o `[ ] [PENDIENTE]`.
 2. **Localización de los Metadatos en el Plan:**
-   * Abrir y leer `docs/plan/plan-v16-punt-9.md` en la sección correspondiente:
-     * **Bloque A:** Tarea 1 (Capítulo 3 — Justificación) o Tarea 2 (Capítulo 2 — Planteo del Problema).
-     * **Bloque B:** Tarea 3 (Capítulo 6 — Hipótesis), Tarea 4 (Capítulo 1 — Introducción) o Tarea 5 (Capítulo 9 — Alcances y Limitaciones).
-     * **Bloque C:** Tarea 6 (Capítulos 4 y 5 — Objetivos y Preguntas de Investigación).
+   * Abrir y leer `docs/plan/plan-28-09-2026.md` en la sección correspondiente:
+     * **Tarea 1:** Subsanación de V1 (Parte 1: Flags y Comandos SQLMap en Capítulos 12, 13 y 14).
+     * **Tarea 2:** Subsanación de V1 (Parte 2: Payload SQL Continuo en Cap. 13, Comillas en Cap. 15 y Monoespaciada Extendida).
+     * **Tarea 3:** Subsanación de V2 y V3 (Anexo H: Páginas Apaisadas para Figuras 1 y 4, Remisión y Epígrafe).
+     * **Tarea 4:** Subsanación de V4 (Residuos de Acabado en Capítulos 3, 13, 14 y Anexo A.3).
+     * **Tarea 5:** Auditoría Integral de Compilación, Sincronización de Índices y Preparación para la Defensa.
    * Identificar:
-     * Archivo físico afectado (`docs/informe/capitulos/{NN}-{nombre}.typ`).
-     * Meta de calificación (ej. `6,9 -> 8,3`).
-     * Diagnóstico del problema identificado por el tribunal evaluador.
-     * Esquema de solución requerida (subsecciones `== X.Y`, variables, taxonomías, etc.).
+     * Archivos físicos afectados (`docs/informe/capitulos/{NN}-{nombre}.typ`).
+     * Meta de calificación y recuperación técnica.
+     * Diagnóstico del problema identificado por el tribunal evaluador en el Dictamen 9 oficial.
+     * Esquema de solución requerida (bloques de código Typst, backticks, orientación apaisada, etc.).
 
 ---
 

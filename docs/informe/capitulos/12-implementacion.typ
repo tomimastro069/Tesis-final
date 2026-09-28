@@ -76,8 +76,8 @@ SQL \(SQLMap Project, 2024). La función
 filtrar\_urls\_con\_parametros\() prioriza las URLs con parámetros GET y
 rutas .php de formularios interactivos conocidos, excluyendo rutas
 estáticas o de configuración. El comando de SQLMap se ejecuta con
---batch, --flush-session, --forms, --dbms\=MySQL, --level\=1, --risk\=3,
---threads\=10, --smart, --technique\=BEUST y -o. La función
+`--batch`, `--flush-session`, `--forms`, `--dbms=MySQL`, `--level=1`, `--risk=3`,
+`--threads=10`, `--smart`, `--technique=BEUST` y `-o`. La función
 run\_sqlmap\_batch\() separa las URLs candidatas en tres grupos según el
 historial en base de datos: las marcadas como vulnerables se re-testean
 siempre; las ya analizadas sin hallazgos se omiten; las nuevas se
@@ -102,22 +102,23 @@ injection”, “payload:”, “type:”, “database names are:”, “current
 is:”, “fetched data logged to text files” y “available databases”. Es,
 en consecuencia, un parser de coincidencia de texto sobre salida en
 lenguaje natural, no un parser que se apoye en el código de retorno del
-proceso ni en una salida estructurada \(por ejemplo,
---output-format\=json). Esto lo hace dependiente del formato exacto de
-los mensajes que SQLMap imprime por consola, un formato que no está
-garantizado entre versiones de la herramienta: un cambio de redacción en
-una futura versión de SQLMap podría hacer que una URL efectivamente
-vulnerable no sea reconocida como tal \(falso negativo), sin que el
-pipeline reporte ningún error, ya que el parser no distingue entre “no
-se encontraron estos patrones porque no hay vulnerabilidad” y “no se
-encontraron estos patrones porque el mensaje cambió de forma”. Elia et
-al. \(2010) documentan precisamente este tipo de riesgo al comparar
-herramientas de detección de inyección SQL basadas en distintos
-mecanismos de análisis de salida. Una alternativa
-más robusta, no implementada en esta versión, sería inspeccionar el
-código de retorno del proceso junto con la salida en formato JSON que
-SQLMap puede producir de forma nativa, evitando así la dependencia de
-cadenas de texto en lenguaje natural.
+proceso ni en una salida estructurada en formato JSON \(como la que expone
+la API REST oficial de SQLMap a través de `sqlmapapi.py`). Esto lo hace
+dependiente del formato exacto de los mensajes que SQLMap imprime por
+consola, un formato que no está garantizado entre versiones de la
+herramienta: un cambio de redacción en una futura versión de SQLMap
+podría hacer que una URL efectivamente vulnerable no sea reconocida como
+tal \(falso negativo), sin que el pipeline reporte ningún error, ya que el
+parser no distingue entre “no se encontraron estos patrones porque no hay
+vulnerabilidad” y “no se encontraron estos patrones porque el mensaje
+cambió de forma”. Elia et al. \(2010) documentan precisamente este tipo de
+riesgo al comparar herramientas de detección de inyección SQL basadas en
+distintos mecanismos de análisis de salida. Una alternativa más robusta,
+no implementada en esta versión, sería inspeccionar el código de retorno
+del proceso e interactuar directamente con la API REST \(`sqlmapapi.py`),
+la cual genera respuestas nativas en formato JSON estructurado, evitando
+así la dependencia de cadenas de texto en lenguaje natural impresas en
+la consola.
 
 Los tres parsers comparten un patrón de diseño consistente: reciben un
 diccionario o lista cruda, aplican transformaciones y filtrado, eliminan

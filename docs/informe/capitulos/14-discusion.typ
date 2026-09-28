@@ -259,7 +259,7 @@ verificación de tokens anti-CSRF). Esto se corrigió aumentando a 20
 hilos concurrentes, fijando un límite de 1 minuto por regla y un techo
 de 10 minutos para el escaneo activo completo, y desactivando la
 verificación de tokens CSRF. De forma análoga, SQLMap se configuró con
---threads\=10 y la bandera --smart, que descarta parámetros no
+`--threads=10` y la bandera `--smart`, que descarta parámetros no
 inyectables en segundos en lugar de forzarlos. El pipeline sigue siendo
 secuencial por diseño —ffuf debe completarse antes del escaneo activo de
 ZAP para poder inyectarle las rutas descubiertas, y SQLMap necesita las

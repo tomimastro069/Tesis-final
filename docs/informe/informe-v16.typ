@@ -138,7 +138,11 @@ Vulnerability Scanning, Docker, Python.
 #pagebreak()
 
 #heading(level: 1, outlined: false)[Índice] <índice>
-#outline(title: none, indent: auto)
+#[
+  #set text(size: 10.5pt)
+  #set par(leading: 0.58em)
+  #outline(title: none, indent: auto)
+]
 
 #let pagina(etiqueta) = context {
   let elems = query(etiqueta)
