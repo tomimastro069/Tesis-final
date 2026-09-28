@@ -157,6 +157,8 @@ verificables contra los archivos `resultado_sin_cache.json` y
 `resultado_con_cache.json` del directorio `output/raw/benchmarks/` del
 repositorio del proyecto.
 
+#pagebreak()
+
 #strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental] <tabla-10>
 
 #figure(
@@ -210,6 +212,8 @@ corrida del capítulo 13 fue un evento puntual de esa pasada —probablemente
 ligado al conjunto de URLs parametrizadas que el spider y ffuf le
 entregaron a SQLMap en ese momento— y no un cambio estructural del
 comportamiento del sistema.
+
+#pagebreak()
 
 #strong[Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y
   con caché] <tabla-11>

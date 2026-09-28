@@ -185,15 +185,15 @@ username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 EN
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `sqlmap_bg.log` y
   `resultado_unificado.json`.]]
 
-#strong[Tabla 7. Datos extraídos a través de Sql Injection – corrida del
-  5 de agosto del 2026] <tabla-7>
+#strong[Tabla 7. Datos extraídos a través de SQL Injection – corrida del
+  5 de agosto de 2026] <tabla-7>
 
 #figure(
   align(center)[#table(
     columns: 5,
     align: (col, row) => (auto, auto, auto, auto, auto).at(col),
     inset: 6pt,
-    [User\_id], [User], [Password], [last\_name], [first\_name],
+    [User ID], [Usuario], [Password (hash MD5)], [Apellido], [Nombre],
     [1], [admin], [903a98d709fa4683aaaa036b84c125a6], [admin], [admin],
     [2], [gordonb], [e99a18c428cb38d5f260853678922e03], [Brown], [Gordon],
     [3], [1337], [8d3533d75ae2c3966d7e0d4fcc69216b], [Me], [Hack],

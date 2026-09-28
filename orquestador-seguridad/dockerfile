@@ -12,8 +12,10 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 ARG FFUF_VERSION=2.2.1
+ARG FFUF_URL=https://github.com/ffuf/ffuf/releases/download/v${FFUF_VERSION}
 
-RUN wget https://github.com/ffuf/ffuf/releases/download/v${FFUF_VERSION}/ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
+RUN wget \
+        ${FFUF_URL}/ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
     && tar -xzf ffuf_${FFUF_VERSION}_linux_amd64.tar.gz \
     && mv ffuf /usr/local/bin/ffuf \
     && chmod +x /usr/local/bin/ffuf \

@@ -187,7 +187,7 @@ Vulnerability Scanning, Docker, Python.
   [Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo], pagina(<tabla-4>),
   [Tabla 5. Rutas descubiertas por fuzzing de directorios (ffuf)], pagina(<tabla-5>),
   [Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del 5 de agosto de 2026], pagina(<tabla-6>),
-  [Tabla 7. Datos extraídos a través de Sql Injection – corrida del 5 de agosto del 2026], pagina(<tabla-7>),
+  [Tabla 7. Datos extraídos a través de SQL Injection – corrida del 5 de agosto de 2026], pagina(<tabla-7>),
   [Tabla 8. Hallazgos clasificados por categoría OWASP Top 10], pagina(<tabla-8>),
   [Tabla 9. Cobertura por herramienta en solitario frente al pipeline combinado], pagina(<tabla-9>),
   [Tabla 10. Tiempo total del pipeline con y sin caché incremental], pagina(<tabla-10>),
