@@ -6,7 +6,7 @@ Primero, el sistema evolucionó de un pipeline secuencial simple a un
 servicio completo: una API REST que ejecuta el escaneo en segundo plano,
 reporta progreso, persiste resultados e historial, y se integra con n8n
 mediante webhooks. Esto confirma que la arquitectura modular original
-\(runners, scanners, parsers, workflow) es lo suficientemente flexible
+\(`runners/`, `scanners/`, `parsers/`, `workflow/`) es lo suficientemente flexible
 como para sostener una capa de servicio y una interfaz web sin
 reescribir la lógica de escaneo.
 
@@ -84,7 +84,7 @@ específicas:
   Mediante el desarrollo de parsers especializados e independientes, se
   logró transformar las salidas dispares de ZAP \(JSON jerárquico), ffuf
   \(JSON plano) y SQLMap \(texto plano y volcados de BD) en un único
-  esquema estructurado \(resultado\_unificado.json), validando la
+  esquema estructurado \(`resultado_unificado.json`), validando la
   hipótesis H3.
 
 - #strong[Respuesta a PI4 \(Extensibilidad y reproducibilidad):] La
@@ -124,13 +124,13 @@ uno de los nueve objetivos específicos definidos en la sección 4.2.
     [OE2],
     [Arquitectura modular extensible],
     [Cumplido],
-    [Sección 12 completa; paquetes runners/scanners/parsers/workflow],
+    [Sección 12 completa; paquetes `runners/`, `scanners/`, `parsers/`, `workflow/`],
 
     [OE3], [Parsers especializados que normalicen resultados heterogéneos], [Cumplido], [Sección 12.7],
     [OE4],
     [Despliegue contenerizado y reproducible con Docker],
     [Cumplido],
-    [Sección 12.1; docker-compose.yml \(5 servicios)],
+    [Sección 12.1; `docker-compose.yml` \(5 servicios)],
 
     [OE5],
     [Evaluar el sistema contra los criterios de validación de 10.6],
@@ -144,7 +144,7 @@ uno de los nueve objetivos específicos definidos en la sección 4.2.
     [OE8],
     [Generar reportes técnico y ejecutivo con clasificación de riesgo],
     [Cumplido],
-    [reporte\_seguridad.md, reporte\_cliente.md],
+    [`reporte_seguridad.md`, `reporte_cliente.md`],
 
     [OE9], [Interfaz web para lanzar y consultar escaneos sin línea de comandos], [Cumplido], [Anexo G; frontend React],
   )],
@@ -171,8 +171,8 @@ efectivamente falta:
   contrastar H1 contra una línea de base real en lugar de una estimación
   sin sustento.
 
-+ #strong[Seguridad de la API:] actualmente api.py habilita CORS para
-  cualquier origen \(allow\_origins\=\[“\*”\]) y no requiere
++ #strong[Seguridad de la API:] actualmente `api.py` habilita CORS para
+  cualquier origen (`allow_origins=["*"]`) y no requiere
   autenticación para lanzar o consultar escaneos; se recomienda
   restringir el origen y agregar un mecanismo de autenticación antes de
   exponer la API fuera de un entorno de laboratorio.

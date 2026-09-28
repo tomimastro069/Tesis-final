@@ -3,17 +3,17 @@
 Los resultados de este capítulo corresponden a la ejecución del pipeline
 completo contra DVWA \(DVWA Project, 2024) registrada el 5 de agosto de
 2026 a las 19:53 \(hora local del entorno), y son verificables
-directamente contra los archivos resultado\_unificado.json,
-reporte\_seguridad.md y sqlmap\_bg.log del repositorio del proyecto.
+directamente contra los archivos `resultado_unificado.json`,
+`reporte_seguridad.md` y `sqlmap_bg.log` del repositorio del proyecto.
 
 #strong[Nota metodológica sobre la fuente de estos datos.] Una versión
 preliminar de este capítulo citaba cifras \(61 URLs, 55 del spider, 56
-alertas de ZAP) extraídas de un archivo test\_resultado\_final.json que
+alertas de ZAP) extraídas de un archivo `test_resultado_final.json` que
 no se conserva en el repositorio del proyecto, por lo que no pudieron
 verificarse contra ninguna corrida real disponible. Esta versión
 reemplaza esas cifras por los datos de la ejecución más reciente y
 verificable del pipeline \(5 de agosto de 2026), trazable directamente a
-resultado\_unificado.json, reporte\_seguridad.md y sqlmap\_bg.log. Cabe
+`resultado_unificado.json`, `reporte_seguridad.md` y `sqlmap_bg.log`. Cabe
 aclarar que ZAP y SQLMap son herramientas de escaneo dinámico cuyo
 comportamiento no es estrictamente determinístico entre corridas —el
 orden de exploración del spider, los tiempos de respuesta del servidor y
@@ -28,12 +28,12 @@ entre corridas.
 Evidencia adicional de esta variabilidad: esta misma corrida del 5 de
 agosto ofrece un ejemplo concreto del fenómeno descripto arriba. Una
 ejecución previa registrada el 2 de agosto de 2026 había confirmado
-inyección SQL tanto en el parámetro id de /vulnerabilities/sqli/ como en
-el parámetro username de /vulnerabilities/brute/ \(8 hallazgos
+inyección SQL tanto en el parámetro `id` de `/vulnerabilities/sqli/` como en
+el parámetro `username` de `/vulnerabilities/brute/` \(8 hallazgos
 individuales, 4 técnicas × 2 endpoints). En la corrida del 5 de agosto
 documentada en este capítulo, SQLMap solo confirmó el segundo punto
-\(/vulnerabilities/brute/, parámetro username, 4 hallazgos
-individuales); el endpoint /vulnerabilities/sqli/ no volvió a reportarse
+\(`/vulnerabilities/brute/`, parámetro `username`, 4 hallazgos
+individuales); el endpoint `/vulnerabilities/sqli/` no volvió a reportarse
 como vulnerable en esta pasada, pese a no haberse modificado el objetivo
 entre ambas corridas. Spider, ZAP y ffuf se mantuvieron estables entre
 ambas ejecuciones. Este contraste entre dos corridas reales —no
@@ -61,14 +61,14 @@ punto de datos en la sección 14.3.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json \(campo
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json` \(campo
   resumen). El total de 34 URLs únicas no es la simple suma de spider
   \(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
   del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
   de autenticación automática \(#link("http://dvwa/login.php") con
   parámetros de sesión), incorporadas al conjunto unificado antes de la
-  deduplicación por el módulo consolidar\_resultados\() y no
-  contabilizadas en los campos spider.resultados ni ffuf.rutas del JSON
+  deduplicación por el módulo `consolidar_resultados()` y no
+  contabilizadas en los campos `spider.resultados` ni `ffuf.rutas` del JSON
   crudo.]]
 
 == 13.2 Vulnerabilidades Detectadas por OWASP ZAP
@@ -78,7 +78,7 @@ seguridad. La Tabla 4 sintetiza los tipos de alerta detectados y su
 cantidad de ocurrencias.
 
 #strong[Cómo leer la columna Severidad.] Cada valor sigue el formato
-Riesgo \(Confianza) que expone el campo riskdesc de la API de ZAP: el
+Riesgo \(Confianza) que expone el campo `riskdesc` de la API de ZAP: el
 primer término \(High, Medium, Low o Informational) es el nivel de
 riesgo de la vulnerabilidad, y el término entre paréntesis es el nivel
 de confianza — qué tan seguro está ZAP de que el hallazgo es real y no
@@ -117,8 +117,8 @@ priorizarse con más certeza aunque su impacto sea menor.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json /
-  reporte\_seguridad.md. La severidad reproduce el campo riskdesc de ZAP
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json` /
+  `reporte_seguridad.md`. La severidad reproduce el campo `riskdesc` de ZAP
   en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
 
 La distribución de las 37 alertas por nivel de severidad base es la
@@ -149,21 +149,22 @@ esta entrega provienen de SQLMap \(sección 13.4).
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de resultado\_unificado.json, campo
-  ffuf.rutas.]]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json`, campo
+  `ffuf.rutas`.]]
 
 == 13.4 Análisis Automatizado con SQLMap
 <análisis-automatizado-con-sqlmap>
 SQLMap se ejecutó sobre las URLs con parámetros descubiertas por el
 spider y por ffuf. En esta corrida se confirmó como vulnerable el
-parámetro username del formulario de fuerza bruta
-\(/vulnerabilities/brute/), mediante las cuatro técnicas configuradas
+parámetro `username` del formulario de fuerza bruta
+(`/vulnerabilities/brute/`), mediante las cuatro técnicas configuradas
 `(--technique=BEUST)`, lo que totaliza los 4 hallazgos individuales del
 resumen consolidado. El payload real registrado para la técnica
-boolean-based blind fue: username\=SCVZ\' RLIKE \(SELECT \(CASE WHEN
-\(4201\=4201) THEN 0x5343565a ELSE 0x28 END))--
+boolean-based blind fue:
 
-RmAL&password\=Fqvd&Login\=Login.
+```text
+username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 END))-- RmAL&password=Fqvd&Login=Login
+```
 
 #strong[Tabla 6. Endpoints confirmados como vulnerables por SQLMap —
   corrida del 5 de agosto de 2026] <tabla-6>
@@ -181,8 +182,8 @@ RmAL&password\=Fqvd&Login\=Login.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
-  resultado\_unificado.json.]]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `sqlmap_bg.log` y
+  `resultado_unificado.json`.]]
 
 #strong[Tabla 7. Datos extraídos a través de Sql Injection – corrida del
   5 de agosto del 2026] <tabla-7>
@@ -201,8 +202,8 @@ RmAL&password\=Fqvd&Login\=Login.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de sqlmap\_bg.log y
-  resultado\_unificado.json. Además, se evitaron columnas como «avatar»,
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `sqlmap_bg.log` y
+  `resultado_unificado.json`. Además, se evitaron columnas como «avatar»,
   «last\_login» o «failed\_login» debido a que no aportan información
   relevante para el análisis presentado en este informe. Los valores
   mostrados son las credenciales por defecto de DVWA, una aplicación
@@ -212,22 +213,22 @@ RmAL&password\=Fqvd&Login\=Login.
 
 A partir de la explotación exitosa, SQLMap identificó el motor de base
 de datos como MySQL/MariaDB, enumeró la base de datos activa \(dvwa) y
-extrajo el contenido de las tablas users \(5 registros) y guestbook \(1
+extrajo el contenido de las tablas `users` \(5 registros) y `guestbook` \(1
 registro), replicando el conjunto de datos por defecto de DVWA. Los
-timestamps last\_login de la tabla users \(2026-08-05 19:50:13)
+timestamps `last_login` de la tabla `users` \(2026-08-05 19:50:13)
 coinciden con el horario de esta corrida, confirmando que el volcado
 corresponde a una extracción en vivo y no a datos de ejemplo
 reutilizados. El volcado completo está disponible en
-reporte\_seguridad.md y sqlmap\_bg.log.
+`reporte_seguridad.md` y `sqlmap_bg.log`.
 
-Sobre el endpoint /vulnerabilities/sqli/ \(parámetro id): en la corrida
+Sobre el endpoint `/vulnerabilities/sqli/` \(parámetro `id`): en la corrida
 del 2 de agosto de 2026 este endpoint también se había confirmado como
 vulnerable, con las mismas cuatro técnicas. En la corrida del 5 de
 agosto no fue reportado por SQLMap. No se modificó el código de la
 aplicación objetivo entre ambas fechas; la explicación más plausible es
 que, en esta pasada puntual, el conjunto de URLs con parámetros que el
 spider y ffuf le entregaron a SQLMap no incluyó una variante de
-/vulnerabilities/sqli/ con un parámetro id explícito en la forma que
+`/vulnerabilities/sqli/` con un parámetro `id` explícito en la forma que
 SQLMap necesita para reconocerlo como candidato, o bien el mecanismo de
 re-testeo priorizó otro orden de ataque dentro del tiempo disponible.
 Esta explicación se retoma y refuerza con un tercer punto de datos en la
@@ -245,12 +246,12 @@ sección 14.3.
     [Categoría OWASP], [Vulnerabilidades detectadas], [Herramienta],
     [A01:2021 – Broken Access Control],
     [Directory Browsing \(5 instancias); rutas administrativas
-      \(/setup.php, /security.php) descubiertas por ffuf],
+      \(`/setup.php`, `/security.php`) descubiertas por ffuf],
     [ZAP, ffuf],
 
     [A03:2021 – Injection],
-    [SQL Injection confirmada en /vulnerabilities/brute/ \(username);
-      confirmada también en /vulnerabilities/sqli/ \(id) en la corrida
+    [SQL Injection confirmada en `/vulnerabilities/brute/` \(`username`);
+      confirmada también en `/vulnerabilities/sqli/` \(`id`) en la corrida
       previa del 2 de agosto de 2026],
     [SQLMap],
 

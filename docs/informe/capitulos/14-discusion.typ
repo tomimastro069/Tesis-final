@@ -5,13 +5,13 @@ implementar un sistema de orquestación de herramientas de seguridad web
 utilizando exclusivamente tecnologías open source y un desarrollo propio
 en Python. El pipeline automatizado logró detectar vulnerabilidades en
 múltiples categorías del OWASP Top 10, y el reporte técnico generado el
-5 de agosto de 2026 \(output/reports/reporte\_seguridad.md) constituye
+5 de agosto de 2026 \(`output/reports/reporte_seguridad.md`) constituye
 evidencia de una ejecución real contra el entorno DVWA, con hostnames
 reales del entorno Docker en lugar de datos de ejemplo.
 
 El sistema evolucionó considerablemente respecto al diseño original de
 tres módulos independientes \(ZAP, ffuf, SQLMap) hacia una arquitectura
-de servicio: una API REST \(api.py, FastAPI) que ejecuta el pipeline en
+de servicio: una API REST \(`api.py`, FastAPI) que ejecuta el pipeline en
 segundo plano, expone el progreso del escaneo en tiempo real, persiste
 el historial de análisis en base de datos y notifica su finalización
 mediante webhooks a un flujo de n8n. Sobre esta API se construyó además
@@ -80,7 +80,7 @@ pipeline combinado.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de resultado\_unificado.json.
+#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de `resultado_unificado.json`.
   Las filas «ZAP» y «ffuf» reflejan lo que cada herramienta aporta dentro
   de la corrida combinada, no una ejecución separada de cada una contra el
   objetivo; SQLMap en aislamiento total es una limitación arquitectónica
@@ -95,8 +95,8 @@ las conclusiones del capítulo 15 y como línea de trabajo futuro en 15.2,
 en lugar de darse por resuelta.
 
 Bajo este esquema, ZAP en solitario no descubre por sí mismo las rutas
-administrativas que ffuf sí encuentra \(por ejemplo, /setup.php o
-/security.php), y SQLMap no puede operar sin que otra herramienta le
+administrativas que ffuf sí encuentra \(por ejemplo, `/setup.php` o
+`/security.php`), y SQLMap no puede operar sin que otra herramienta le
 aporte URLs parametrizadas. La orquestación combinada amplía por
 construcción la superficie cubierta: no es solo que se sumen los
 hallazgos de cada herramienta, sino que los hallazgos de una habilitan
@@ -105,16 +105,16 @@ el trabajo de la siguiente.
 == 14.2 Reducción de esfuerzo manual \(H1)
 <reducción-de-esfuerzo-manual-h1>
 El sistema incorpora un mecanismo de caché incremental respaldado en
-SQLite/PostgreSQL \(app/db/database.py) que registra qué palabras de
+SQLite/PostgreSQL \(`app/db/database.py`) que registra qué palabras de
 wordlist y qué URLs con parámetros ya fueron analizadas contra un
 objetivo determinado. Según la documentación de optimización del
-proyecto \(OPTIMIZACION\_ZAP.md) y las pruebas de test\_speed.py, una
+proyecto \(`OPTIMIZACION_ZAP.md`) y las pruebas de `test_speed.py`, una
 segunda ejecución de ffuf sobre un mismo objetivo sin palabras nuevas se
 resuelve en milisegundos, y SQLMap omite en menos de un segundo las URLs
 ya analizadas sin hallazgos. La sección 14.3 amplía esta evidencia con
 una medición del pipeline completo \(no solo de ffuf en aislamiento):
 esa medición cuantifica el efecto del caché sobre el propio sistema
-automatizado, pero —al igual que test\_speed.py— no constituye una
+automatizado, pero —al igual que `test_speed.py`— no constituye una
 comparación contra un proceso manual, que es específicamente lo que
 exige H1 en su formulación original.
 
@@ -153,8 +153,8 @@ SQLMap), obtenida ejecutando dos corridas consecutivas contra DVWA: una
 con el caché deshabilitado \(análisis completo desde cero) y otra con el
 caché incremental activo. Ambas corridas se realizaron el 6 de agosto de
 2026, entre las 09:14 y las 09:41 \(hora local del entorno), y son
-verificables contra los archivos resultado\_sin\_cache.json y
-resultado\_con\_cache.json del directorio output/raw/benchmarks/ del
+verificables contra los archivos `resultado_sin_cache.json` y
+`resultado_con_cache.json` del directorio `output/raw/benchmarks/` del
 repositorio del proyecto.
 
 #strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental] <tabla-10>
@@ -201,11 +201,11 @@ Sobre las 8 vulnerabilidades de SQLMap reportadas en ambas corridas de
 este benchmark, frente a las 4 de la corrida de referencia del capítulo
 13: la diferencia es consistente con lo señalado en la sección 13.4.
 Ambas corridas de este benchmark confirmaron inyección tanto en
-/vulnerabilities/brute/ \(username) como en /vulnerabilities/sqli/
-\(id), de forma coincidente con la corrida del 2 de agosto documentada
+`/vulnerabilities/brute/` \(`username`) como en `/vulnerabilities/sqli/`
+\(`id`), de forma coincidente con la corrida del 2 de agosto documentada
 en 13.4, mientras que la corrida de referencia del 5 de agosto del
 capítulo 13 solo confirmó el primer endpoint. Este tercer punto de datos
-refuerza la lectura de que la no detección de /vulnerabilities/sqli/ en la
+refuerza la lectura de que la no detección de `/vulnerabilities/sqli/` en la
 corrida del capítulo 13 fue un evento puntual de esa pasada —probablemente
 ligado al conjunto de URLs parametrizadas que el spider y ffuf le
 entregaron a SQLMap en ese momento— y no un cambio estructural del
@@ -230,13 +230,13 @@ comportamiento del sistema.
 
 #text(size: 10pt)[#emph[Nota. Medición propia reportada por los autores. Los campos se
   interpretan según la estructura del bloque «resumen» de
-  resultado\_unificado.json, consistente con las Tablas 3 a 8. Al igual
+  `resultado_unificado.json`, consistente con las Tablas 3 a 8. Al igual
   que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
   excede la suma de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
   en cada caso corresponde a la URL semilla y a las URLs derivadas del
   proceso de autenticación y de re-testeo automático de los dos endpoints
-  marcados como vulnerables \(/vulnerabilities/brute/ y
-  /vulnerabilities/sqli/), incorporadas al conjunto unificado de la misma
+  marcados como vulnerables \(`/vulnerabilities/brute/` y
+  `/vulnerabilities/sqli/`), incorporadas al conjunto unificado de la misma
   forma señalada en la nota de la Tabla 3.]]
 
 Estos resultados proveen respaldo empírico directo para corroborar la
@@ -272,15 +272,15 @@ ZAP) fue acotado explícitamente en lugar de dejarse sin control.
 El sistema de re-testeo automático de URLs vulnerables agrega una
 dimensión no contemplada en las hipótesis originales: las URLs donde se
 confirmó una vulnerabilidad se excluyen deliberadamente del caché y se
-vuelven a atacar en cada ejecución, registrando primera\_vez y
-última\_vez de detección. Esto permite usar el sistema como herramienta
+vuelven a atacar en cada ejecución, registrando `primera_vez` y
+`última_vez` de detección. Esto permite usar el sistema como herramienta
 de seguimiento longitudinal —si un equipo de desarrollo corrige una
-falla, el campo última\_vez deja de actualizarse—, una capacidad más
+falla, el campo `última_vez` deja de actualizarse—, una capacidad más
 cercana a una plataforma de gestión de vulnerabilidades que a un escáner
 de una sola pasada.
 
 La incorporación de un componente de sugerencias de mitigación asistidas
-por IA \(expuesto en el frontend mediante useAiAnalysis, que consulta un
+por IA \(expuesto en el frontend mediante `useAiAnalysis`, que consulta un
 endpoint de n8n) constituye una extensión funcional relevante, pero debe
 presentarse con cautela: las sugerencias generadas por el modelo no
 fueron validadas sistemáticamente contra un criterio experto, por lo que
@@ -327,7 +327,7 @@ ofensiva:
 2. #strong[Ampliación de la superficie de ataque mediante fuzzing
     \(Alsaedi et al., 2021):] El descubrimiento de ocho rutas no
   identificadas por el rastreo de ZAP —incluyendo endpoints de
-  administración clave como /setup.php y /security.php— confirma
+  administración clave como `/setup.php` y `/security.php`— confirma
   empíricamente que el fuzzing de directorios resulta indispensable para
   complementar el escaneo activo.
 
