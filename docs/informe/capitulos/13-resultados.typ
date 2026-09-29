@@ -3,8 +3,14 @@
 Los resultados de este capítulo corresponden a la ejecución del pipeline
 completo contra DVWA \(DVWA Project, 2024) registrada el 5 de agosto de
 2026 a las 19:53 \(hora local del entorno), y son verificables
-directamente contra los archivos `resultado_unificado.json`,
-`reporte_seguridad.md` y `sqlmap_bg.log` del repositorio del proyecto.
+directamente contra el archivo `reporte_seguridad.md` conservado en el
+directorio `orquestador-seguridad/output/reports/` y respaldado como
+evidencia primaria en `docs/evidencia/reporte_seguridad.md`. Cabe aclarar
+que, debido a la política de exclusión de archivos temporales en el entorno
+de desarrollo \(regla `output/raw/*` en `.gitignore`), los registros crudos
+intermedios generados por las herramientas en dicha pasada no fueron
+preservados en el control de versiones, constituyendo el reporte consolidado
+el artefacto documental maestro de auditoría para esta ejecución.
 
 #strong[Nota metodológica sobre la fuente de estos datos.] Una versión
 preliminar de este capítulo citaba cifras \(61 URLs, 55 del spider, 56
@@ -13,7 +19,7 @@ no se conserva en el repositorio del proyecto, por lo que no pudieron
 verificarse contra ninguna corrida real disponible. Esta versión
 reemplaza esas cifras por los datos de la ejecución más reciente y
 verificable del pipeline \(5 de agosto de 2026), trazable directamente a
-`resultado_unificado.json`, `reporte_seguridad.md` y `sqlmap_bg.log`. Cabe
+`reporte_seguridad.md`. Cabe
 aclarar que ZAP y SQLMap son herramientas de escaneo dinámico cuyo
 comportamiento no es estrictamente determinístico entre corridas —el
 orden de exploración del spider, los tiempos de respuesta del servidor y
@@ -61,15 +67,13 @@ punto de datos en la sección 14.3.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json` \(campo
-  resumen). El total de 34 URLs únicas no es la simple suma de spider
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
+  Estadísticas Generales). El total de 34 URLs únicas no es la simple suma de spider
   \(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
   del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
   de autenticación automática \(#link("http://dvwa/login.php") con
   parámetros de sesión), incorporadas al conjunto unificado antes de la
-  deduplicación por el módulo `consolidar_resultados()` y no
-  contabilizadas en los campos `spider.resultados` ni `ffuf.rutas` del JSON
-  crudo.]]
+  deduplicación por el módulo `consolidar_resultados()` del pipeline.]]
 
 == 13.2 Vulnerabilidades Detectadas por OWASP ZAP
 <vulnerabilidades-detectadas-por-owasp-zap>
@@ -149,8 +153,8 @@ esta entrega provienen de SQLMap \(sección 13.4).
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json`, campo
-  `ffuf.rutas`.]]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
+  Rutas descubiertas por ffuf).]]
 
 == 13.4 Análisis Automatizado con SQLMap
 <análisis-automatizado-con-sqlmap>
@@ -182,8 +186,8 @@ username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 EN
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de `sqlmap_bg.log` y
-  `resultado_unificado.json`.]]
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
+  Detalles Técnicos: Inyecciones SQL).]]
 
 #strong[Tabla 7. Datos extraídos a través de SQL Injection – corrida del
   5 de agosto de 2026] <tabla-7>
@@ -202,8 +206,8 @@ username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 EN
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de `sqlmap_bg.log` y
-  `resultado_unificado.json`. Además, se evitaron columnas como «avatar»,
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
+  Volcado de Tabla: dvwa.users). Además, se evitaron columnas como «avatar»,
   «last\_login» o «failed\_login» debido a que no aportan información
   relevante para el análisis presentado en este informe. Los valores
   mostrados son las credenciales por defecto de DVWA, una aplicación
@@ -219,7 +223,7 @@ timestamps `last_login` de la tabla `users` \(2026-08-05 19:50:13)
 coinciden con el horario de esta corrida, confirmando que el volcado
 corresponde a una extracción en vivo y no a datos de ejemplo
 reutilizados. El volcado completo está disponible en
-`reporte_seguridad.md` y `sqlmap_bg.log`.
+`reporte_seguridad.md`.
 
 Sobre el endpoint `/vulnerabilities/sqli/` \(parámetro `id`): en la corrida
 del 2 de agosto de 2026 este endpoint también se había confirmado como

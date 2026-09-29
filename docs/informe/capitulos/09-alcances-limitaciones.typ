@@ -58,6 +58,8 @@ La declaración explícita de limitaciones constituye una salvaguarda metodológ
 
 - Modelo heurístico simplificado de clasificación de riesgo: el reporte ejecutivo categoriza el riesgo global mediante una regla booleana simple \(presencia de inyecciones SQL o alertas de severidad _High_\), prescindiendo de esquemas cuantitativos normalizados de la industria como el estándar CVSS \(Common Vulnerability Scoring System).
 
+- Disponibilidad de artefactos crudos de benchmark y trazabilidad en repositorio: Las mediciones cronometradas y de estabilidad asociadas a la evaluación del impacto del caché incremental \(Hipótesis 4, Tablas 10 y 11) se basan en los registros cuantitativos consolidados por los autores durante la experimentación de laboratorio del 6 de agosto de 2026. Debido a la política de exclusión de artefactos volátiles configurada en el archivo `.gitignore` del entorno de desarrollo \(`output/raw/*`), los volcados JSON crudos intermedios \(`resultado_sin_cache.json` y `resultado_con_cache.json`) no fueron preservados en el control de versiones del repositorio Git. Esta condición limita la auditabilidad retrospectiva independiente de dichos archivos crudos por parte de terceros, sustentándose la validez de H4 en las métricas cronometradas consolidadas en el presente informe.
+
 #strong[c) Vulnerabilidades Fuera de Alcance por Diseño Arquitectónico (Scope Boundaries):]
 
 - Concentración en vectores analizables mediante firmas sintácticas: el orquestador focaliza su capacidad en fallas dinámicas detectables por patrones de inyección y análisis de anomalías en respuestas HTTP \(inyecciones SQL, vectores reflejados de Cross-Site Scripting, inclusión local de archivos, omisión de cabeceras de seguridad y exposición de rutas no enlazadas).

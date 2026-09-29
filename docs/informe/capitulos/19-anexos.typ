@@ -262,9 +262,14 @@ def parsear_zap(dato_dict_crudo):
 == Anexo D — Ejemplo del JSON Unificado Final (corrida del 5 de agosto de 2026)
 <anexo-d-ejemplo-del-json-unificado-final-corrida-del-5-de-agosto-de-2026>
 
-El siguiente extracto reproduce el campo resumen del archivo
-resultado_unificado.json de la ejecución documentada en el capítulo 13,
-verificable directamente en el repositorio del proyecto.
+El siguiente extracto reproduce la estructura canónica del bloque resumen
+del esquema JSON unificado generado por el módulo de consolidación del
+pipeline para la ejecución documentada en el capítulo 13 \(corrida del 5 de
+agosto de 2026), cuyos valores concuerdan íntegramente con los documentados
+en `reporte_seguridad.md`. Se presenta con fines de especificación de la
+arquitectura de interoperabilidad homogénea \(validando la hipótesis H3),
+dado que los volcados crudos generados en `output/raw/` no se preservaron en el
+control de versiones debido a las reglas de exclusión del repositorio.
 
 ```json
 {

@@ -80,7 +80,7 @@ pipeline combinado.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de `resultado_unificado.json`.
+#text(size: 10pt)[#emph[Nota. Elaboración propia a partir de `reporte_seguridad.md` \(corrida del 5 de agosto de 2026).
   Las filas «ZAP» y «ffuf» reflejan lo que cada herramienta aporta dentro
   de la corrida combinada, no una ejecución separada de cada una contra el
   objetivo; SQLMap en aislamiento total es una limitación arquitectónica
@@ -152,10 +152,17 @@ cuenta con una medición propia del pipeline completo \(ZAP + ffuf +
 SQLMap), obtenida ejecutando dos corridas consecutivas contra DVWA: una
 con el caché deshabilitado \(análisis completo desde cero) y otra con el
 caché incremental activo. Ambas corridas se realizaron el 6 de agosto de
-2026, entre las 09:14 y las 09:41 \(hora local del entorno), y son
-verificables contra los archivos `resultado_sin_cache.json` y
-`resultado_con_cache.json` del directorio `output/raw/benchmarks/` del
-repositorio del proyecto.
+2026, entre las 09:14 y las 09:41 \(hora local del entorno). Conforme a la
+política de exclusión de artefactos volátiles configurada en el control de
+versiones del proyecto \(regla `output/raw/*` en el archivo `.gitignore`),
+los archivos JSON crudos intermedios generados durante estas pruebas
+\(`resultado_sin_cache.json` y `resultado_con_cache.json` en
+`output/raw/benchmarks/`) no fueron preservados en el historial del repositorio.
+Por consiguiente, y como se declara formalmente en la sección 9.2 de limitaciones,
+la contrastación cuantitativa de H4 se sustenta en los registros cronometrados
+consolidados por los autores y volcados en las Tablas 10 y 11, constituyendo
+una medición cuyos artefactos intermedios crudos no pueden ser auditados de
+manera retrospectiva e independiente en el árbol de Git.
 
 #pagebreak()
 
@@ -173,8 +180,9 @@ repositorio del proyecto.
 )
 
 #text(size: 10pt)[#emph[Nota. Medición propia sobre una ejecución real del pipeline
-  completo contra DVWA, reportada por los autores, corridas del 6 de
-  agosto de 2026 \(ver referencia de archivos arriba). El panel de caché
+  completo contra DVWA, reportada por los autores a partir de las corridas del 6 de
+  agosto de 2026 \(véase la advertencia metodológica en el texto precedente sobre la
+  no conservación de los volcados crudos en el repositorio). El panel de caché
   de la corrida con caché activo registró: ffuf 0 de 207.628 palabras
   probadas \(207.628 omitidas por caché); SQLMap 3 de 8 URLs re-testeadas
   \(5 omitidas por caché, 3 re-testeadas por haber sido vulnerables en una
@@ -233,8 +241,8 @@ comportamiento del sistema.
 )
 
 #text(size: 10pt)[#emph[Nota. Medición propia reportada por los autores. Los campos se
-  interpretan según la estructura del bloque «resumen» de
-  `resultado_unificado.json`, consistente con las Tablas 3 a 8. Al igual
+  interpretan según la estructura canónica del bloque «resumen» del esquema de
+  orquestación, consistente con las métricas del reporte de seguridad. Al igual
   que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
   excede la suma de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
   en cada caso corresponde a la URL semilla y a las URLs derivadas del
