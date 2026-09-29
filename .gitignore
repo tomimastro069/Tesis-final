@@ -15,3 +15,8 @@ orquestador-seguridad/app/__pycache__/__init__.cpython-313.pyc
 .vscode/
 docs/informe/informe-v15.docx
 docs/informe/referencia/*.docx
+
+# Documentación interna de evaluación y trabajo de tesis
+docs/dictamen/
+docs/audit/
+docs/plan/

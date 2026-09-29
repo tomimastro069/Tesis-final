@@ -15,7 +15,7 @@
         "**/Thumbs.db": true,
         "frontend/": true,
         "n8n/": true,
-        "orquestador-seguridad/": true,
+        "orquestador-seguridad/": false,
         "assets/": true,
     }
 }
