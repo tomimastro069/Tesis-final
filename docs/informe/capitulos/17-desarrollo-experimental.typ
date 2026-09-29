@@ -5,8 +5,10 @@
   \(Low), realizada el 4 de agosto de 2026 mediante exploración e
   interacción directa con el navegador, y por lo tanto distinta de la
   corrida automatizada y documentada del 5 de agosto de 2026 que se
-  reporta en el capítulo 13 \(nivel de seguridad medium, sin intervención
-  manual). Al tratarse de un alcance más amplio —incluye rutas y vectores
+  reporta en el capítulo 13 \(la cual se ejecutó con el nivel de seguridad
+  `low` de DVWA fijado por `establecer_sesion_automatica()`, y con perfil
+  de diccionario mediano `medium` en ffuf, sin intervención manual). Al
+  tratarse de un alcance más amplio —incluye rutas y vectores
   confirmados manualmente en el navegador, no solo los reportados por las
   herramientas automatizadas— los hallazgos de severidad alta descritos
   aquí \(ejecución remota de comandos, XSS reflejado e inclusión local de

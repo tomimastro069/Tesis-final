@@ -504,7 +504,7 @@ docker compose up -d --build
 === I.2 Registro Audiovisual de Demostración y Pruebas Empíricas (YouTube)
 <i.2-registro-audiovisual-de-demostración-y-pruebas-empíricas>
 
-Aprobado por la Dirección del Trabajo Final, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap nivel 3), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental.
+Aprobado por la Dirección del Trabajo Final, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap en modo de extracción completa `full_dump`), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental.
 
 #align(center)[
   #rect(stroke: 0.5pt + luma(150), inset: (x: 15pt, y: 10pt), radius: 4pt)[

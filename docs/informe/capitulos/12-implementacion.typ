@@ -77,12 +77,20 @@ SQL \(SQLMap Project, 2024). La función
 rutas `.php` de formularios interactivos conocidos, excluyendo rutas
 estáticas o de configuración. El comando de SQLMap se ejecuta con
 `--batch`, `--flush-session`, `--forms`, `--dbms=MySQL`, `--level=1`, `--risk=3`,
-`--threads=10`, `--smart`, `--technique=BEUST` y `-o`. La función
-`run_sqlmap_batch()` separa las URLs candidatas en tres grupos según el
-historial en base de datos: las marcadas como vulnerables se re-testean
-siempre; las ya analizadas sin hallazgos se omiten; las nuevas se
-encolan. El escaneo se ejecuta en segundo plano mediante un script bash
-generado dinámicamente.
+`--threads=5`, `--technique=BEUST` y `-o`. La bandera `--smart` fue
+retirada intencionalmente del pipeline debido a que, en aplicaciones como
+DVWA, las respuestas base homogéneas ante cualquier parámetro provocaban
+que la heurística de descarte rápido omitiera en silencio endpoints
+vulnerables. La función `run_sqlmap_batch()` separa las URLs candidatas en
+tres grupos según el historial en base de datos: las marcadas como
+vulnerables se re-testean siempre; las ya analizadas sin hallazgos se omiten;
+las nuevas se encolan. El escaneo se ejecuta en segundo plano mediante un
+script bash generado dinámicamente. Asimismo, la función `run_sqlmap()` admite
+el parámetro `sqlmap_level`, el cual modula el alcance de explotación en tres
+modalidades: `basic` \(detección y confirmación con el comando base),
+`fast_evidence` \(incorpora `--dbs`, `--tables` y `--current-user` para recabar
+evidencia del esquema sin volcar datos) y `full_dump` \(añade `--dump` para
+extraer íntegramente las tablas vulnerables confirmadas).
 
 == 12.7 Sistema de Parseo
 <sistema-de-parseo>
@@ -151,11 +159,14 @@ escaneo activo de ZAP.
 == 12.10 API REST y Frontend
 <api-rest-y-frontend>
 El módulo `api.py` \(FastAPI) expone el pipeline como servicio: `POST /scan`
-lanza un escaneo en segundo plano; `GET /scan/{id}/progress` permite
-consultar el porcentaje de avance; `GET /scans` lista el historial
-persistido; `GET /scan/{id}` devuelve el detalle de un escaneo puntual;
-`DELETE /scan/{id}` realiza un borrado lógico. Al finalizar un escaneo, la
-API notifica su finalización mediante un webhook HTTP a un flujo de n8n.
+lanza un escaneo en segundo plano, admitiendo los parámetros opcionales
+`sqlmap_level: str` \(`basic`, `fast_evidence` o `full_dump`) y `clean_cache: bool`
+\(el cual purga el historial en base de datos para forzar una ejecución limpia sin
+reutilización de caché); `GET /scan/{id}/progress` permite consultar el porcentaje
+de avance; `GET /scans` lista el historial persistido; `GET /scan/{id}` devuelve el
+detalle de un escaneo puntual; `DELETE /scan/{id}` realiza un borrado lógico. Al
+finalizar un escaneo, la API notifica su finalización mediante un webhook HTTP a un
+flujo de n8n.
 El frontend, desarrollado en React, consume estos endpoints para ofrecer
 un panel de dominios escaneados, un formulario de lanzamiento de
 escaneos, una tabla de vulnerabilidades y un componente de sugerencias

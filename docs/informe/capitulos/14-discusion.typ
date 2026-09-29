@@ -262,14 +262,17 @@ hilos concurrentes, sin límite de tiempo por regla ni por escaneo,
 verificación de tokens anti-CSRF). Esto se corrigió aumentando a 20
 hilos concurrentes, fijando un límite de 1 minuto por regla y un techo
 de 10 minutos para el escaneo activo completo, y desactivando la
-verificación de tokens CSRF. De forma análoga, SQLMap se configuró con
-`--threads=10` y la bandera `--smart`, que descarta parámetros no
-inyectables en segundos en lugar de forzarlos. El pipeline sigue siendo
-secuencial por diseño —ffuf debe completarse antes del escaneo activo de
-ZAP para poder inyectarle las rutas descubiertas, y SQLMap necesita las
-URLs combinadas de spider y ffuf además de una sesión recién
-refrescada—, pero el cuello de botella real \(la duración del escaneo de
-ZAP) fue acotado explícitamente en lugar de dejarse sin control.
+verificación de tokens CSRF. De forma análoga, SQLMap se optimizó con
+`--threads=5` y el flag `-o` \(Keep-Alive), prescindiendo de la bandera
+`--smart` —la cual fue descartada durante la fase de experimentación
+porque su heurística pasaba por alto parámetros vulnerables en DVWA—,
+priorizando la exhaustividad de comprobación mediante `--technique=BEUST`.
+El pipeline sigue siendo secuencial por diseño —ffuf debe completarse
+antes del escaneo activo de ZAP para poder inyectarle las rutas
+descubiertas, y SQLMap necesita las URLs combinadas de spider y ffuf
+además de una sesión recién refrescada—, pero el cuello de botella real
+\(la duración del escaneo de ZAP) fue acotado explícitamente en lugar de
+dejarse sin control.
 
 == 14.5 Seguimiento longitudinal y sugerencias de mitigación por IA
 <seguimiento-longitudinal-y-sugerencias-de-mitigación-por-ia>
