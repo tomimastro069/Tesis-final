@@ -495,6 +495,7 @@ El código fuente integral del orquestador, los parsers sintácticos de segurida
 # Clonación del repositorio oficial
 git clone https://github.com/tomimastro069/Tesis-final.git
 cd Tesis-final
+cd orquestador-seguridad
 
 # Despliegue de la infraestructura multicontenedor (DVWA, ZAP, App, DB, n8n)
 docker compose up -d --build
