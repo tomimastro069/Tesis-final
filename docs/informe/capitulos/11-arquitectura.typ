@@ -160,7 +160,7 @@ según el estado del caché— no comprometa la responsividad de la API ni
 del frontend.
 
 #align(center)[
-  #image("../media/media/image3.png", width: 78%)
+  #image("../media/media/image3.png", width: 85%)
 ]
 
 #text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.

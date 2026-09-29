@@ -468,8 +468,8 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 
 #page(flipped: true)[
   #align(center + horizon)[
-    #image("../media/media/image3.png", width: 100%, height: 84%, fit: "contain")
-    #v(0.8em)
+    #image("../media/media/image3.png", width: 100%, height: 88%, fit: "contain")
+    #v(0.6em)
     #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia — ciclo de vida de POST /scan. Elaboración propia.]] <fig-4-ampliada>
   ]
 ]

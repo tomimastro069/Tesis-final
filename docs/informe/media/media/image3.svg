@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 960" width="1440" height="960" font-family="Calibri, Arial, DejaVu Sans, sans-serif">
+    <defs>
+      <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+      </filter>
+      <!-- Flechas rellenas estándar -->
+      <marker id="arrow-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+      </marker>
+      <!-- Flechas abiertas de retorno -->
+      <marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/>
+      </marker>
+      <!-- Flechas temáticas por componente -->
+      <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+      </marker>
+      <marker id="arrow-blue-ret" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/>
+      </marker>
+      <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+      </marker>
+      <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#ea580c"/>
+      </marker>
+      <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+      </marker>
+      <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
+      </marker>
+      <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+      </marker>
+      <style>
+        .halo-text {
+          paint-order: stroke fill;
+          stroke: #ffffff;
+          stroke-width: 4px;
+          stroke-linejoin: round;
+        }
+      </style>
+    </defs>
+    <rect width="1440" height="960" fill="#ffffff"/><rect x="15" y="15" width="1410" height="930" rx="12" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+    <g transform="translate(40, 42)">
+      <rect x="0" y="-18" width="6" height="26" rx="3" fill="#2563eb"/>
+      <text x="16" y="2" font-size="18" font-weight="bold" fill="#0f172a">Diagrama de Secuencia UML — Ciclo de Vida de POST /scan</text>
+      <text x="16" y="20" font-size="12" fill="#64748b">Desacoplamiento asíncrono HTTP (FastAPI), ejecución secuencial multicapa (ZAP, ffuf, SQLMap), persistencia y SOAR (n8n)</text>
+    </g>
+    <line x1="105" y1="147" x2="105" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="275" y1="147" x2="275" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="445" y1="147" x2="445" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="625" y1="147" x2="625" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="805" y1="147" x2="805" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="975" y1="147" x2="975" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="1145" y1="147" x2="1145" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><line x1="1335" y1="147" x2="1335" y2="900" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="6,6"/><rect x="98" y="170" width="14" height="725" rx="3" fill="#bae6fd" stroke="#475569" stroke-width="1"/><rect x="268" y="170" width="14" height="135" rx="3" fill="#bfdbfe" stroke="#475569" stroke-width="1"/><rect x="268" y="665" width="14" height="110" rx="3" fill="#bfdbfe" stroke="#475569" stroke-width="1"/><rect x="268" y="820" width="14" height="75" rx="3" fill="#bfdbfe" stroke="#475569" stroke-width="1"/><rect x="438" y="200" width="14" height="35" rx="3" fill="#e2e8f0" stroke="#475569" stroke-width="1"/><rect x="438" y="610" width="14" height="40" rx="3" fill="#e2e8f0" stroke="#475569" stroke-width="1"/><rect x="618" y="248" width="14" height="585" rx="3" fill="#a7f3d0" stroke="#475569" stroke-width="1"/><rect x="798" y="325" width="14" height="50" rx="3" fill="#fed7aa" stroke="#475569" stroke-width="1"/><rect x="798" y="470" width="14" height="60" rx="3" fill="#fed7aa" stroke="#475569" stroke-width="1"/><rect x="968" y="380" width="14" height="45" rx="3" fill="#fde68a" stroke="#475569" stroke-width="1"/><rect x="1138" y="545" width="14" height="50" rx="3" fill="#fecaca" stroke="#475569" stroke-width="1"/><rect x="1328" y="855" width="14" height="40" rx="3" fill="#ddd6fe" stroke="#475569" stroke-width="1"/>
+        <g filter="url(#shadow)">
+          <rect x="43.0" y="95" width="124" height="52" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+          <text x="105" y="117" font-size="13" font-weight="bold" fill="#0284c7" text-anchor="middle">Frontend</text>
+          <text x="105" y="134" font-size="10" fill="#475569" text-anchor="middle">React / Vite</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="43.0" y="900" width="124" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+          <text x="105" y="920" font-size="12" font-weight="bold" fill="#0284c7" text-anchor="middle">Frontend</text>
+          <text x="105" y="934" font-size="9" fill="#475569" text-anchor="middle">React / Vite</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="213.0" y="95" width="124" height="52" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <text x="275" y="117" font-size="13" font-weight="bold" fill="#2563eb" text-anchor="middle">API REST</text>
+          <text x="275" y="134" font-size="10" fill="#475569" text-anchor="middle">FastAPI</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="213.0" y="900" width="124" height="42" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+          <text x="275" y="920" font-size="12" font-weight="bold" fill="#2563eb" text-anchor="middle">API REST</text>
+          <text x="275" y="934" font-size="9" fill="#475569" text-anchor="middle">FastAPI</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="383.0" y="95" width="124" height="52" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+          <text x="445" y="117" font-size="13" font-weight="bold" fill="#475569" text-anchor="middle">Base de Datos</text>
+          <text x="445" y="134" font-size="10" fill="#475569" text-anchor="middle">SQLite / SQLAlchemy</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="383.0" y="900" width="124" height="42" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.8"/>
+          <text x="445" y="920" font-size="12" font-weight="bold" fill="#475569" text-anchor="middle">Base de Datos</text>
+          <text x="445" y="934" font-size="9" fill="#475569" text-anchor="middle">SQLite / SQLAlchemy</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="563.0" y="95" width="124" height="52" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+          <text x="625" y="117" font-size="13" font-weight="bold" fill="#059669" text-anchor="middle">Pipeline</text>
+          <text x="625" y="134" font-size="10" fill="#475569" text-anchor="middle">Orquestador Python</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="563.0" y="900" width="124" height="42" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.8"/>
+          <text x="625" y="920" font-size="12" font-weight="bold" fill="#059669" text-anchor="middle">Pipeline</text>
+          <text x="625" y="934" font-size="9" fill="#475569" text-anchor="middle">Orquestador Python</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="743.0" y="95" width="124" height="52" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+          <text x="805" y="117" font-size="13" font-weight="bold" fill="#ea580c" text-anchor="middle">OWASP ZAP</text>
+          <text x="805" y="134" font-size="10" fill="#475569" text-anchor="middle">Spider & Active Scan</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="743.0" y="900" width="124" height="42" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.8"/>
+          <text x="805" y="920" font-size="12" font-weight="bold" fill="#ea580c" text-anchor="middle">OWASP ZAP</text>
+          <text x="805" y="934" font-size="9" fill="#475569" text-anchor="middle">Spider & Active Scan</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="913.0" y="95" width="124" height="52" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="975" y="117" font-size="13" font-weight="bold" fill="#d97706" text-anchor="middle">ffuf</text>
+          <text x="975" y="134" font-size="10" fill="#475569" text-anchor="middle">Fuzzing de Rutas</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="913.0" y="900" width="124" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+          <text x="975" y="920" font-size="12" font-weight="bold" fill="#d97706" text-anchor="middle">ffuf</text>
+          <text x="975" y="934" font-size="9" fill="#475569" text-anchor="middle">Fuzzing de Rutas</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="1083.0" y="95" width="124" height="52" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+          <text x="1145" y="117" font-size="13" font-weight="bold" fill="#dc2626" text-anchor="middle">SQLMap</text>
+          <text x="1145" y="134" font-size="10" fill="#475569" text-anchor="middle">Inyección SQL</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="1083.0" y="900" width="124" height="42" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.8"/>
+          <text x="1145" y="920" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">SQLMap</text>
+          <text x="1145" y="934" font-size="9" fill="#475569" text-anchor="middle">Inyección SQL</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="1273.0" y="95" width="124" height="52" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+          <text x="1335" y="117" font-size="13" font-weight="bold" fill="#7c3aed" text-anchor="middle">n8n</text>
+          <text x="1335" y="134" font-size="10" fill="#475569" text-anchor="middle">Webhook / SOAR</text>
+        </g>
+        
+        <g filter="url(#shadow)">
+          <rect x="1273.0" y="900" width="124" height="42" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8"/>
+          <text x="1335" y="920" font-size="12" font-weight="bold" fill="#7c3aed" text-anchor="middle">n8n</text>
+          <text x="1335" y="934" font-size="9" fill="#475569" text-anchor="middle">Webhook / SOAR</text>
+        </g>
+        
+    <line x1="112" y1="175" x2="268" y2="175" stroke="#1e293b" stroke-width="1.8" marker-end="url(#arrow-solid)"/>
+    <text class="halo-text" x="190" y="168" font-size="11.5" font-weight="bold" fill="#0f172a" text-anchor="middle">1. POST /scan (target, nivel, cookies)</text>
+    
+    <line x1="282" y1="205" x2="438" y2="205" stroke="#1e293b" stroke-width="1.8" marker-end="url(#arrow-solid)"/>
+    <text class="halo-text" x="360" y="198" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">2. create_scan(scan_id, target)</text>
+    
+    <line x1="282" y1="250" x2="618" y2="250" stroke="#059669" stroke-width="1.8" marker-end="url(#arrow-green)"/>
+    <text class="halo-text" x="450" y="242" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">3. add_task(ejecutar_pipeline_segundo_plano)</text>
+    
+    <line x1="268" y1="285" x2="112" y2="285" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#arrow-blue-ret)"/>
+    <text class="halo-text" x="190" y="278" font-size="11" font-weight="bold" fill="#1d4ed8" text-anchor="middle">4. 202 Accepted {scan_id, status}</text>
+    
+    <g transform="translate(625, 308)">
+      <rect x="-180" y="-11" width="360" height="22" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="0" y="4" font-size="10.5" font-weight="bold" fill="#475569" text-anchor="middle">Fase de Escaneo en Segundo Plano (4 a 14 min según caché)</text>
+    </g>
+    
+    <line x1="632" y1="335" x2="798" y2="335" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arrow-orange)"/>
+    <text class="halo-text" x="715" y="328" font-size="11" font-weight="bold" fill="#c2410c" text-anchor="middle">5. iniciar_spider(target) / esperar</text>
+    <line x1="798" y1="357" x2="632" y2="357" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-return)"/>
+    <text class="halo-text" x="715" y="352" font-size="10" fill="#475569" text-anchor="middle">URLs descubiertas (árbol web)</text>
+    
+    <line x1="632" y1="390" x2="968" y2="390" stroke="#d97706" stroke-width="1.8" marker-end="url(#arrow-amber)"/>
+    <text class="halo-text" x="800" y="383" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">6. run_ffuf(target, wordlist)</text>
+    <line x1="968" y1="412" x2="632" y2="412" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-return)"/>
+    <text class="halo-text" x="800" y="407" font-size="10" fill="#475569" text-anchor="middle">rutas descubiertas por fuerza bruta</text>
+    
+    <line x1="632" y1="445" x2="798" y2="445" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arrow-orange)"/>
+    <text class="halo-text" x="715" y="438" font-size="11" font-weight="bold" fill="#c2410c" text-anchor="middle">7. agregar_urls_a_zap(rutas_ffuf)</text>
+    
+    <line x1="632" y1="485" x2="798" y2="485" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arrow-orange)"/>
+    <text class="halo-text" x="715" y="478" font-size="11" font-weight="bold" fill="#c2410c" text-anchor="middle">8. iniciar_escaneo_activo() / esperar</text>
+    <line x1="798" y1="507" x2="632" y2="507" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-return)"/>
+    <text class="halo-text" x="715" y="502" font-size="10" fill="#475569" text-anchor="middle">alertas y vulnerabilidades DAST</text>
+    
+    <line x1="632" y1="550" x2="1138" y2="550" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+    <text class="halo-text" x="885" y="543" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">9. run_sqlmap_batch(urls_candidatas, --threads=5)</text>
+    <line x1="1138" y1="572" x2="632" y2="572" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-return)"/>
+    <text class="halo-text" x="885" y="567" font-size="10" fill="#475569" text-anchor="middle">vulnerabilidades SQLi confirmadas y tablas extraídas</text>
+    
+    <line x1="618" y1="618" x2="452" y2="618" stroke="#1e293b" stroke-width="1.8" marker-end="url(#arrow-solid)"/>
+    <text class="halo-text" x="535" y="611" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">10. save_scan_results() / save_vulnerable_url()</text>
+    
+    <!-- Caja del Loop Polling (Paso 13) -->
+    <g>
+      <rect x="75" y="665" width="405" height="130" rx="6" fill="#f8fafc" fill-opacity="0.9" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- Etiqueta loop pentagonal -->
+      <path d="M 75 665 L 205 665 L 220 679 L 205 689 L 75 689 Z" fill="#0284c7"/>
+      <text x="140" y="681" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">13. loop [polling]</text>
+      <text x="235" y="682" font-size="10.5" font-style="italic" fill="#0369a1">Consultas periódicas cada 3 a 5 seg</text>
+    </g>
+    
+    <line x1="112" y1="710" x2="268" y2="710" stroke="#0284c7" stroke-width="1.8" marker-end="url(#arrow-blue)"/>
+    <text class="halo-text" x="190" y="703" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">11. GET /scan/{id}/progress</text>
+    
+    <line x1="268" y1="757" x2="112" y2="757" stroke="#0284c7" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#arrow-blue-ret)"/>
+    <text class="halo-text" x="190" y="750" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">12. 200 OK {percentage, message}</text>
+    <text class="halo-text" x="190" y="771" font-size="9" fill="#64748b" text-anchor="middle">(atendido desde memoria scan_progress_store / BD)</text>
+    
+    <line x1="618" y1="835" x2="282" y2="835" stroke="#059669" stroke-width="1.8" marker-end="url(#arrow-green)"/>
+    <text class="halo-text" x="450" y="828" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">14. Notificar escaneo finalizado (status: "completed")</text>
+    
+    <line x1="282" y1="875" x2="1328" y2="875" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-purple)"/>
+    <text class="halo-text" x="805" y="867" font-size="11.5" font-weight="bold" fill="#6d28d9" text-anchor="middle">15. Webhook HTTP POST callback_url (scan_id, reportes técnicos/ejecutivos, estado)</text>
+    <line x1="1328" y1="895" x2="282" y2="895" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-return)"/>
+    <text class="halo-text" x="805" y="891" font-size="10" fill="#64748b" text-anchor="middle">200 OK (disparo de flujos de mitigación automatizada en n8n)</text>
+    </svg>
