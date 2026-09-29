@@ -503,7 +503,7 @@ docker compose up -d --build
 === I.2 Registro Audiovisual de Demostración y Pruebas Empíricas (YouTube)
 <i.2-registro-audiovisual-de-demostración-y-pruebas-empíricas>
 
-Aprobado por la Dirección de Tesis, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap nivel 3), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental.
+Aprobado por la Dirección del Trabajo Final, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap nivel 3), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental.
 
 #align(center)[
   #rect(stroke: 0.5pt + luma(150), inset: (x: 15pt, y: 10pt), radius: 4pt)[
@@ -521,46 +521,46 @@ A continuación, se detalla la estructura narrativa y el desglose visual por blo
 #strong[Tabla 14. Estructura narrativa, marcas temporales y desglose visual del video demostrativo] <tabla-14>
 
 #[
-  #set text(size: 8.8pt)
-  #set par(leading: 0.52em)
-  #table(
-    columns: (0.85fr, 1.45fr, 2.7fr),
-    stroke: 0.5pt + luma(180),
-    inset: (x: 6pt, y: 3.2pt),
-    fill: (col, row) => if row == 0 { luma(235) } else { none },
-    align: (center + horizon, left + horizon, left + top),
-    [*Bloque y Tiempo*], [*Apartado Visual en Pantalla*], [*Descripción Técnica y Contenido Demostrado*],
-  
-  [#strong[Bloque 1]\ 00:00 – 00:50\ (50 s)],
-  [Pantalla principal de la interfaz de usuario retro (estilo Windows 98) con el asistente interactivo #emph[«Acerca del Proyecto»] desplegado. El cursor recorre sucesivamente las pestañas: #emph[Bienvenida], #emph[El Proyecto], #emph[Cómo Funciona] y #emph[Tecnología].],
-  [Presentación formal del proyecto ante la UTN FRM. Planteo de la problemática del pentesting web manual, justificación técnica del orquestador y presentación del stack tecnológico integrando OWASP ZAP, ffuf y SQLMap en contenedores Docker coordinados por Python.],
+  #set text(size: 8.5pt)
+  #set par(leading: 0.50em)
+  #figure(
+    align(center)[#table(
+      columns: (0.85fr, 1.45fr, 2.7fr),
+      inset: (x: 6pt, y: 3.6pt),
+      align: (center + horizon, left + horizon, left + top),
+      [Bloque y Tiempo], [Apartado Visual en Pantalla], [Descripción Técnica y Contenido Demostrado],
+    
+      [Bloque 1\ 00:00 – 00:50\ (50 s)],
+      [Pantalla principal de la interfaz de usuario retro (estilo Windows 98) con el asistente interactivo #emph[«Acerca del Proyecto»] desplegado. El cursor recorre sucesivamente las pestañas: #emph[Bienvenida], #emph[El Proyecto], #emph[Cómo Funciona] y #emph[Tecnología].],
+      [Presentación formal del proyecto ante la UTN FRM. Planteo de la problemática del pentesting web manual, justificación técnica del orquestador y presentación del stack tecnológico integrando OWASP ZAP, ffuf y SQLMap en contenedores Docker coordinados por Python.],
 
-  [#strong[Bloque 2]\ 00:50 – 02:20\ (1 min 30 s)],
-  [Apertura de la ventana #emph[«Analizador de Seguridad»]. Selección de la opción #emph[«Limpiar caché»], nivel de análisis #emph[«Profundo»] y SQLMap en #emph[«3 - Extracción Completa»]. Al accionar #emph[«Comenzar Análisis»], emerge la consola #emph[MS-DOS Prompt] mostrando el flujo de registros de escaneo acelerado a $16 times$.],
-  [Ejecución del primer escaneo completo sin caché (13 minutos de duración real: 18:33 a 18:46). Demostración del flujo: autenticación automatizada en DVWA con obtención de cookie de sesión, rastreo con Spider de ZAP, fuzzing de directorios con ffuf e inyección dinámica de rutas hacia ZAP activo y SQLMap.],
+      [Bloque 2\ 00:50 – 02:20\ (1 min 30 s)],
+      [Apertura de la ventana #emph[«Analizador de Seguridad»]. Selección de la opción #emph[«Limpiar caché»], nivel de análisis #emph[«Profundo»] y SQLMap en #emph[«3 - Extracción Completa»]. Al accionar #emph[«Comenzar Análisis»], emerge la consola #emph[MS-DOS Prompt] mostrando el flujo de registros de escaneo acelerado a $16 times$.],
+      [Ejecución del primer escaneo completo sin caché (13 minutos de duración real: 18:33 a 18:46). Demostración del flujo: autenticación automatizada en DVWA con obtención de cookie de sesión, rastreo con Spider de ZAP, fuzzing de directorios con ffuf e inyección dinámica de rutas hacia ZAP activo y SQLMap.],
 
-  [#strong[Bloque 3]\ 02:20 – 04:50\ (2 min 30 s)],
-  [02:20: #emph[Explorador de Reportes] y ventana #emph[System Properties] con tarjeta verde de estado. \
-  03:00: Pestaña #emph[Device Manager] con el listado exhaustivo de vulnerabilidades por severidad. \
-  03:45: Inspección de vulnerabilidad, selección de pestaña #emph[AI Analysis] y activación del botón #emph[«Analyze with AI»]. \
-  04:10: Pestaña #emph[Performance] con gráficos de barras. \
-  04:30: Pestaña #emph[ODBC Data Sources] con las tablas `dvwa.users` y `dvwa.guestbook`.],
-  [Consolidación y auditoría de resultados: resumen métrico de 59 URLs analizadas (54 descubiertas por Spider, 48 alertas de ZAP y 8 hallazgos de SQLMap). Clasificación de criticidad en Device Manager, generación interactiva de guías de remediación con fragmentos de código mediante IA y comprobación de la extracción efectiva de datos relacionales con hashes MD5.],
+      [Bloque 3\ 02:20 – 04:50\ (2 min 30 s)],
+      [02:20: #emph[Explorador de Reportes] y ventana #emph[System Properties] con tarjeta verde de estado. \
+      03:00: Pestaña #emph[Device Manager] con el listado exhaustivo de vulnerabilidades por severidad. \
+      03:45: Inspección de vulnerabilidad, selección de pestaña #emph[AI Analysis] y activación del botón #emph[«Analyze with AI»]. \
+      04:10: Pestaña #emph[Performance] con gráficos de barras. \
+      04:30: Pestaña #emph[ODBC Data Sources] con las tablas `dvwa.users` y `dvwa.guestbook`.],
+      [Consolidación y auditoría de resultados: resumen métrico de 59 URLs analizadas (54 descubiertas por Spider, 48 alertas de ZAP y 8 hallazgos de SQLMap). Clasificación de criticidad en Device Manager, generación interactiva de guías de remediación con fragmentos de código mediante IA y comprobación de la extracción efectiva de datos relacionales con hashes MD5.],
 
-  [#strong[Bloque 4]\ 04:50 – 06:40\ (1 min 50 s)],
-  [Apertura de la utilidad de contraste #emph[WinDiff - dvwa vs dvwa]. Visualización comparativa a doble panel: panel izquierdo (amarillo) correspondiente a la ejecución #emph[«Con Caché»] y panel derecho (verde) al análisis basal #emph[«Sin Caché»].],
-  [Evaluación analítica del impacto del motor de caché: demostración de más de 207.000 palabras omitidas por ffuf al no detectar alteraciones en la superficie y descarte inteligente en SQLMap de URLs sin hallazgos previos re-testeando únicamente endpoints vulnerables, manteniendo 100% de coincidencia en vulnerabilidades críticas.],
+      [Bloque 4\ 04:50 – 06:40\ (1 min 50 s)],
+      [Apertura de la utilidad de contraste #emph[WinDiff - dvwa vs dvwa]. Visualización comparativa a doble panel: panel izquierdo (amarillo) correspondiente a la ejecución #emph[«Con Caché»] y panel derecho (verde) al análisis basal #emph[«Sin Caché»].],
+      [Evaluación analítica del impacto del motor de caché: demostración de más de 207.000 palabras omitidas por ffuf al no detectar alteraciones en la superficie y descarte inteligente en SQLMap de URLs sin hallazgos previos re-testeando únicamente endpoints vulnerables, manteniendo 100% de coincidencia en vulnerabilidades críticas.],
 
-  [#strong[Bloque 5]\ 06:40 – 08:20\ (1 min 40 s)],
-  [06:40: Configuración de nuevo escaneo con la casilla de limpiar caché desmarcada. \
-  07:00: Ejecución en consola acelerada ($16 times$) con rótulo temporal: #emph[«Análisis con caché: 19:15 - 19:18»]. \
-  07:40: Apertura de reportes con la tarjeta amarilla distintiva de análisis optimizado por caché.],
-  [Verificación empírica de reducción de tiempos en vivo: conclusión del pipeline completo en solo 3 minutos frente a los 13 minutos iniciales, certificando una reducción del tiempo total superior al 68% sin pérdida de cobertura ni hallazgos.],
+      [Bloque 5\ 06:40 – 08:20\ (1 min 40 s)],
+      [06:40: Configuración de nuevo escaneo con la casilla de limpiar caché desmarcada. \
+      07:00: Ejecución en consola acelerada ($16 times$) con rótulo temporal: #emph[«Análisis con caché: 19:15 - 19:18»]. \
+      07:40: Apertura de reportes con la tarjeta amarilla distintiva de análisis optimizado por caché.],
+      [Verificación empírica de reducción de tiempos en vivo: conclusión del pipeline completo en solo 3 minutos frente a los 13 minutos iniciales, certificando una reducción del tiempo total superior al 68% sin pérdida de cobertura ni hallazgos.],
 
-  [#strong[Bloque 6]\ 08:20 – 09:00\ (40 s)],
-  [Pantalla de cierre formal del proyecto con el logotipo oficial de la Universidad Tecnológica Nacional (UTN) y los datos institucionales de la tesina.],
-  [Conclusiones finales sobre la viabilidad del orquestador SOAR liviano, balance costo-beneficio de la caché incremental y agradecimientos protocolares a los directores de tesis y al tribunal evaluador de la UTN FRM.]
-)
+      [Bloque 6\ 08:20 – 09:00\ (40 s)],
+      [Pantalla de cierre formal del proyecto con el logotipo oficial de la Universidad Tecnológica Nacional (UTN) y los datos institucionales del trabajo final.],
+      [Conclusiones finales sobre la viabilidad del orquestador SOAR liviano, balance costo-beneficio de la caché incremental y agradecimientos protocolares a los directores del trabajo final y al tribunal evaluador de la UTN FRM.]
+    )],
+  )
 ]
 
 #v(0.3em)
