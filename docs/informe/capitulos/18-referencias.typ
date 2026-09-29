@@ -69,6 +69,14 @@ Automation and Soft Computing, 28];\(2), 527–545.
 Martin, R. C. \(2003). #emph[Agile software development: Principles,
 patterns, and practices];. Prentice Hall.
 
+Mastropietro, T., Krahulik, C., & Segura, J. \(2026a). #emph[Orquestador
+de Seguridad: Fuzzing Automatizado de Aplicaciones Web] \[Repositorio de
+software\]. GitHub. #link("https://github.com/tomimastro069/Tesis-final")
+
+Mastropietro, T., Krahulik, C., & Segura, J. \(2026b, 25 de septiembre).
+#emph[Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web]
+\[Video\]. YouTube. #link("https://www.youtube.com/watch?v=UA0rolg9ZKI")
+
 OWASP Foundation. \(2021). #emph[OWASP Top 10:2021];.
 #link("https://owasp.org/Top10/")
 

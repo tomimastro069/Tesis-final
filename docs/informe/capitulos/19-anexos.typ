@@ -509,7 +509,7 @@ docker compose up -d --build
 === I.2 Registro Audiovisual de Demostración y Pruebas Empíricas (YouTube)
 <i.2-registro-audiovisual-de-demostración-y-pruebas-empíricas>
 
-Aprobado por la Dirección del Trabajo Final, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap en modo de extracción completa `full_dump`), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental.
+Aprobado por la Dirección del Trabajo Final, se elaboró un registro audiovisual demostrativo formal con una duración exacta de 9:00 minutos en resolución de alta definición (1080p FHD). El material documenta de manera continua el despliegue del entorno, la ejecución autónoma del pipeline secuencial de escaneo (ZAP, ffuf y SQLMap en modo de extracción completa `full_dump` y nivel de seguridad `low`), la interacción con el asistente de remediación basado en inteligencia artificial y la validación empírica del ahorro temporal provisto por el motor de caché incremental. Dicha demostración refleja una sesión independiente grabada el 15 de septiembre de 2026 (18:33 a 18:46 para la corrida basal y 19:15 a 19:18 para la optimizada) y publicada el 25 de septiembre de 2026, cuya concordancia y diferencias horarias respecto al benchmark formal del 6 de agosto (Tabla 10) se analizan en la sección 14.3.
 
 #align(center)[
   #rect(stroke: 0.5pt + luma(150), inset: (x: 15pt, y: 10pt), radius: 4pt)[
@@ -560,7 +560,7 @@ A continuación, se detalla la estructura narrativa y el desglose visual por blo
       [06:40: Configuración de nuevo escaneo con la casilla de limpiar caché desmarcada. \
       07:00: Ejecución en consola acelerada ($16 times$) con rótulo temporal: #emph[«Análisis con caché: 19:15 - 19:18»]. \
       07:40: Apertura de reportes con la tarjeta amarilla distintiva de análisis optimizado por caché.],
-      [Verificación empírica de reducción de tiempos en vivo: conclusión del pipeline completo en solo 3 minutos frente a los 13 minutos iniciales, certificando una reducción del tiempo total superior al 68% sin pérdida de cobertura ni hallazgos.],
+      [Demostración empírica de reducción de tiempos en vivo: conclusión del pipeline completo en 3 minutos frente a los 13 minutos iniciales de la sesión grabada el 15 de septiembre de 2026, evidenciando una reducción temporal aproximada del 77% (10 minutos economizados) sin degradación de cobertura ni alteración de hallazgos, en consonancia cualitativa con el 68,9% documentado formalmente en la Tabla 10.],
 
       [Bloque 6\ 08:20 – 09:00\ (40 s)],
       [Pantalla de cierre formal del proyecto con el logotipo oficial de la Universidad Tecnológica Nacional (UTN) y los datos institucionales del trabajo final.],
@@ -570,6 +570,6 @@ A continuación, se detalla la estructura narrativa y el desglose visual por blo
 ]
 
 #v(0.3em)
-#text(size: 9.5pt)[#emph[Nota. Elaboración propia a partir del guion técnico y registro audiovisual del proyecto (Mastropietro et al., 2026).]]
+#text(size: 9.5pt)[#emph[Nota. Elaboración propia a partir del guion técnico y registro audiovisual del proyecto (Mastropietro et al., 2026b).]]
 
 

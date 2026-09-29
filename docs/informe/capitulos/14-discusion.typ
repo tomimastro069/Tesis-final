@@ -164,6 +164,8 @@ consolidados por los autores y volcados en las Tablas 10 y 11, constituyendo
 una medición cuyos artefactos intermedios crudos no pueden ser auditados de
 manera retrospectiva e independiente en el árbol de Git.
 
+Asimismo, esta contrastación se complementa cualitativamente con el registro audiovisual demostrativo documentado en el Anexo I.2 (Tabla 14), correspondiente a una ejecución independiente filmada el 15 de septiembre de 2026 en horario vespertino (18:33–18:46 sin caché y 19:15–19:18 con caché). Dicha demostración registró una disminución temporal del 76,9% (de 13 a 3 minutos) preservando los hallazgos basales (59 URLs y 8 vulnerabilidades SQLMap), aportando un punto de corroboración adicional en favor de H4 obtenido con posterioridad al benchmark formal del 6 de agosto.
+
 #pagebreak()
 
 #strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental] <tabla-10>
