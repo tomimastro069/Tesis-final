@@ -77,7 +77,7 @@ SQL \(SQLMap Project, 2024). La función
 rutas `.php` de formularios interactivos conocidos, excluyendo rutas
 estáticas o de configuración. El comando de SQLMap se ejecuta con
 `--batch`, `--flush-session`, `--forms`, `--dbms=MySQL`, `--level=1`, `--risk=3`,
-`--threads=5`, `--technique=BEUST` y `-o`. La bandera `--smart` fue
+#box[`--threads=5`], `--technique=BEUST` y `-o`. La bandera `--smart` fue
 retirada intencionalmente del pipeline debido a que, en aplicaciones como
 DVWA, las respuestas base homogéneas ante cualquier parámetro provocaban
 que la heurística de descarte rápido omitiera en silencio endpoints

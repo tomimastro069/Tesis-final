@@ -166,9 +166,17 @@ parámetro `username` del formulario de fuerza bruta
 resumen consolidado. El payload real registrado para la técnica
 boolean-based blind fue:
 
-```text
-username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 END))-- RmAL&password=Fqvd&Login=Login
-```
+#block(
+  fill: rgb("#f8f9fa"),
+  stroke: 0.5pt + rgb("#d0d7de"),
+  inset: (x: 5pt, y: 5pt),
+  radius: 3pt,
+  width: 100%,
+  [
+    #show raw.where(block: false): set text(font: ("Consolas", "DejaVu Sans Mono"), size: 6.3pt)
+    `username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 END))-- RmAL&password=Fqvd&Login=Login`
+  ],
+)
 
 #strong[Tabla 6. Endpoints confirmados como vulnerables por SQLMap —
   corrida del 5 de agosto de 2026] <tabla-6>
