@@ -92,12 +92,12 @@ honorarios que oscilan entre 50 y 150 USD por hora en el mercado especializado
 Bajo un escenario estándar representativo de 30 horas profesionales a una
 tarifa media conservadora de 100 USD por hora:
 
-$ C_(#text("auditoría")) = 30 #text(" horas") times 100 #text("USD") / #text("hora") = 3.000 #text(" USD") $
+$ C_(#text(font: "Calibri")[auditoría]) = 30 #text(font: "Calibri")[ horas] times 100 #text(font: "Calibri")[ USD] / #text(font: "Calibri")[hora] = 3.000 #text(font: "Calibri")[ USD] $
 
 Para una organización que implemente un esquema básico de revisiones
 trimestrales, el costo operativo anual directo asciende a:
 
-$ C_(#text("anual")) = 3.000 #text(" USD") times 4 #text(" revisiones") = 12.000 #text(" USD/año") $
+$ C_(#text(font: "Calibri")[anual]) = 3.000 #text(font: "Calibri")[ USD] times 4 #text(font: "Calibri")[ revisiones] = 12.000 #text(font: "Calibri")[ USD/año] $
 
 Este volumen de erogación resulta económicamente inviable para pequeñas y
 medianas empresas \(PyMEs), centros académicos o proyectos emergentes,
