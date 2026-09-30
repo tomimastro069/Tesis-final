@@ -3,8 +3,8 @@
 
 [![Universidad](https://img.shields.io/badge/UTN-FRM-003366?style=for-the-badge&logo=institution&logoColor=white)](https://www.frm.utn.edu.ar/)
 [![Carrera](https://img.shields.io/badge/TUP-Tecnicatura_Universitaria_en_Programación-005BA1?style=for-the-badge)](https://www.frm.utn.edu.ar/)
-[![Trabajo Final](https://img.shields.io/badge/Modalidad-Trabajo_Final_de_Graduación-2E7D32?style=for-the-badge)]()
-[![Estado](https://img.shields.io/badge/Estado-Aprobada_Sobresaliente_(Dictamen_9)-1B5E20?style=for-the-badge)]()
+[![Trabajo Final](https://img.shields.io/badge/Modalidad-Trabajo_Final_de_Graduación-2E7D32?style=for-the-badge)](#-ficha-institucional-del-trabajo-final)
+[![Estado](https://img.shields.io/badge/Estado-Aprobada_para_Defensa_Oral-1B5E20?style=for-the-badge)](#-ficha-institucional-del-trabajo-final)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose_v2-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -23,8 +23,8 @@
 * **Autores:** Tomas Mastropietro · Cristian Krahulik · Juan Segura.
 * **Directores del Trabajo Final:** Alberto Cortez · Ariel Enferrel.
 * **Año Académico:** 2026.
-* **Documentación Oficial:** [informe-v17.pdf](docs/informe/informe-v17.pdf) (74 páginas numeradas, compuesto en Typst 0.15.1).
-* **Dictamen de Evaluación:** Aprobada con Calificación Sobresaliente (Dictamen de Novena Corrección oficial).
+* **Documentación Oficial:** [informe-v17.pdf](docs/informe/informe-v17.pdf) (76 páginas numeradas + portada, compuesto en Typst).
+* **Estado Académico:** Aprobada para Defensa Oral con recomendación de calificación sobresaliente.
 
 ---
 
@@ -89,7 +89,7 @@ La arquitectura está construida bajo un modelo modular desacoplado en cuatro ca
 2. **Reconocimiento con ZAP Spider:** Rastreo de hipervínculos, formularios y componentes web expuestos.
 3. **Fuzzing de Directorios con ffuf:** Descubrimiento por fuerza bruta de rutas ocultas (`/vulnerabilities/`, backups, archivos sensibles), consultando la base de datos de historial para omitir palabras ya probadas.
 4. **Escaneo Activo con OWASP ZAP:** Análisis heurístico profundo inyectando las rutas descubiertas por ffuf.
-5. **Comprobación y Explotación con SQLMap:** Verificación de inyección SQL sobre endpoints candidatos empleando 9 flags ejecutables (`--batch`, `--flush-session`, `--forms`, `--dbms=MySQL`, `--level=1`, `--risk=3`, `--threads=10`, `--smart`, `--technique=BEUST`) e interactuando mediante `sqlmapapi.py`.
+5. **Comprobación y Explotación con SQLMap:** Verificación de inyección SQL sobre endpoints candidatos empleando los flags ejecutables (`--batch`, `--flush-session`, `--forms`, `--dbms=MySQL`, `--level=1`, `--risk=3`, `--threads=5`, `--technique=BEUST` y `-o`, habiéndose desestimado `--smart` para garantizar cobertura analítica completa sobre DVWA) e interactuando mediante `sqlmapapi.py`.
 6. **Consolidación de Hallazgos:** Los parsers especializados (`zap_parser.py`, `ffuf_parser.py`, `sqlmap_parser.py`) normalizan las salidas y generan `resultado_unificado.json` y `reporte_seguridad.md`.
 
 ---
@@ -170,19 +170,21 @@ Tesis-final/
 ├── docs/                               # Documentación académica e institucional
 │   ├── informe/                        # Trabajo Final modular en Typst y PDF compilado
 │   │   ├── informe-v17.typ             # Documento maestro (metadatos, índices, includes)
-│   │   ├── informe-v17.pdf             # Entregable oficial compilado (74 páginas + portada)
+│   │   ├── informe-v17.pdf             # Entregable oficial compilado (76 páginas + portada)
 │   │   └── capitulos/                  # Los 19 capítulos desacoplados (01 a 19)
-│   ├── dictamen/                       # Dictámenes oficiales de corrección de la UTN FRM
-│   ├── plan/                           # Planes de acción atómica y subsanación
-│   └── audit/                          # Minutas y scripts de auditoría algorítmica
+│   ├── evidencia/                      # Evidencia física canónica (reporte_seguridad.md y README)
+│   ├── dictamen/                       # Dictámenes docentes (excluidos de Git por privacidad)
+│   ├── plan/                           # Planes de acción internos (en .gitignore)
+│   └── audit/                          # Minutas de auditoría algorítmica (en .gitignore)
 ├── orquestador-seguridad/              # Backend Python y orquestador central
 │   ├── app/                            # Módulos del orquestador (scanners, parsers, workflow, db)
 │   ├── api.py                          # Servicio web FastAPI asíncrono
 │   ├── main.py                         # Punto de entrada interactivo por consola
 │   ├── docker-compose.yml              # Configuración multicontenedor (5 servicios)
-│   └── dockerfile                      # Imagen contenerizada del orquestador
+│   └── Dockerfile                      # Imagen contenerizada del orquestador
 ├── frontend/                           # Panel web retro interactivo (React 18 + Vite)
 ├── n8n/                                # Flujos automatizados y puente con Gemini AI
+├── LICENSE                             # Licencia de código abierto MIT
 └── README.md                           # Ficha técnica y guía principal del repositorio
 ```
 
