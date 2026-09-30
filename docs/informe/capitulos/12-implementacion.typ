@@ -133,7 +133,7 @@ diccionario o lista cruda, aplican transformaciones y filtrado, eliminan
 duplicados e incluyen manejo de excepciones \(`KeyError`, `TypeError`) que
 devuelven estructuras vacías en caso de error, evitando que un fallo en
 el parseo de una herramienta interrumpa el pipeline completo.
-
+#pagebreak()
 == 12.8 Consolidación de Resultados
 <consolidación-de-resultados>
 El módulo `app/utils/results.py` implementa la función
@@ -143,7 +143,7 @@ bloque de resumen \(conteos agregados) y los resultados completos de
 cada herramienta. La función `resultados_prueba_json()` persiste el
 resultado consolidado en un archivo JSON en `output/raw/`.
 
-#pagebreak()
+
 == 12.9 Autenticación Automática
 <autenticación-automática>
 El sistema implementa un flujo de login programático contra DVWA

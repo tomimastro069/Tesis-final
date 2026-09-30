@@ -50,29 +50,24 @@ respuesta del servidor local.
 <procedimientos-de-descubrimiento-y-validación-manual-por-vector-de-ataque>
 === 17.2.1 Fase de Reconocimiento y Mapeo de Superficie \(ZAP Spider y ffuf)
 <fase-de-reconocimiento-y-mapeo-de-superficie-zap-spider-y-ffuf>
-La fase preliminar de identificación y relevamiento de superficie
-demandó un tiempo acumulado de #strong[30 minutos];, distribuidos entre
-el análisis manual de sesión, el rastreo pasivo y el #emph[fuzzing] de
-rutas. Inicialmente, se emplearon #strong[10 minutos] en una inspección
-artesanal a través de las herramientas de desarrollo \(#emph[DevTools];)
-del navegador, con el fin de auditar las cookies y los identificadores
-de sesión requeridos para la validación de identidad inicial.
+La fase preliminar de relevamiento de superficie demandó un tiempo
+acumulado de #strong[30 minutos];, distribuidos entre el análisis manual
+de sesión, el rastreo pasivo y el #emph[fuzzing] de rutas. Inicialmente,
+se emplearon #strong[10 minutos] en una inspección mediante las herramientas
+de desarrollo \(#emph[DevTools];) del navegador para auditar las cookies y
+parámetros de sesión requeridos para la autenticación inicial.
 
-Posteriormente, el reconocimiento mediante procesos automatizados
-insumió #strong[15 minutos];: el componente #emph[OWASP ZAP Spider]
-destinó #strong[5 minutos] a la indexación de hipervínculos y a la
-reconstrucción del árbol del sitio, mientras que la utilidad #emph[ffuf]
-realizó una búsqueda basada en diccionarios durante #strong[10 minutos];,
-logrando localizar endpoints que devolvieron códigos de estado 200 y 302.
+Posteriormente, el reconocimiento automatizado insumió #strong[15 minutos];:
+#emph[OWASP ZAP Spider] destinó #strong[5 minutos] a la indexación del árbol
+del sitio, mientras que #emph[ffuf] ejecutó la búsqueda por diccionario
+durante #strong[10 minutos];, localizando endpoints con códigos de estado 200 y 302.
 
-Finalmente, la validación y el triaje de los hallazgos del #emph[fuzzer]
-requirieron #strong[5 minutos] adicionales de exploración directa. El
-auditor verificó la consistencia de las rutas reportadas \(Tabla 5) y
-detectó, mediante navegación proactiva, recursos críticos como
-/config/config.inc.php, lo que permitió confirmar la exposición de
-parámetros de configuración y la accesibilidad de archivos internos del
+Finalmente, el triaje y validación manual de estos hallazgos requirió
+#strong[5 minutos] adicionales: el auditor verificó las rutas reportadas
+\(Tabla 5) e inspeccionó recursos críticos como /config/config.inc.php,
+confirmando la exposición de parámetros de configuración y archivos internos del
 servidor.
-
+#pagebreak()
 === 17.2.2 Inyección de Comandos del Sistema Operativo \(ZAP Active Scan)
 <inyección-de-comandos-del-sistema-operativo-zap-active-scan>
 El módulo de escaneo dinámico #emph[ZAP Active Scan] dedicó una fracción
