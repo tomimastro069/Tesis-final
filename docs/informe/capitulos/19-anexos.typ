@@ -444,9 +444,9 @@ Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.2, 11.4 y
 ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
 /scan).
 
-#page(flipped: true)[
+#page(flipped: true, margin: (top: 2cm, bottom: 1.8cm, x: 2.5cm))[
   #align(center + horizon)[
-    #image("../media/media/image2.png", width: 100%, height: 84%, fit: "contain")
+    #image("../media/media/image2.png", width: 100%, height: 92%, fit: "contain")
     #v(0.6em)
     #text(size: 10pt)[#emph[Figura 1 (ampliada). Diagrama de Arquitectura de Servicio. Elaboración propia.]] <fig-1-ampliada>
   ]
@@ -466,9 +466,9 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
   #text(size: 10pt)[#emph[Figura 3 (ampliada). Diagrama de Pipeline de ejecución. Elaboración propia.]] <fig-3-ampliada>
 ]
 
-#page(flipped: true)[
+#page(flipped: true, margin: (top: 2cm, bottom: 1.8cm, x: 2.5cm))[
   #align(center + horizon)[
-    #image("../media/media/image3.png", width: 100%, height: 88%, fit: "contain")
+    #image("../media/media/image3.png", width: 100%, height: 92%, fit: "contain")
     #v(0.6em)
     #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia — ciclo de vida de POST /scan. Elaboración propia.]] <fig-4-ampliada>
   ]
