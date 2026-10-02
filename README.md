@@ -4,7 +4,7 @@
 [![Universidad](https://img.shields.io/badge/UTN-FRM-003366?style=for-the-badge&logo=institution&logoColor=white)](https://www.frm.utn.edu.ar/)
 [![Carrera](https://img.shields.io/badge/TUP-Tecnicatura_Universitaria_en_Programación-005BA1?style=for-the-badge)](https://www.frm.utn.edu.ar/)
 [![Trabajo Final](https://img.shields.io/badge/Modalidad-Trabajo_Final_de_Graduación-2E7D32?style=for-the-badge)](#-ficha-institucional-del-trabajo-final)
-[![Estado](https://img.shields.io/badge/Estado-Aprobada_para_Defensa_Oral-1B5E20?style=for-the-badge)](#-ficha-institucional-del-trabajo-final)
+[![Estado](https://img.shields.io/badge/Estado-En_Evaluación_Académica-005BA1?style=for-the-badge)](#-ficha-institucional-del-trabajo-final)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose_v2-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -23,8 +23,8 @@
 * **Autores:** Tomas Mastropietro · Cristian Krahulik · Juan Segura.
 * **Directores del Trabajo Final:** Alberto Cortez · Ariel Enferrel.
 * **Año Académico:** 2026.
-* **Documentación Oficial:** [informe-v17.pdf](docs/informe/informe-v17.pdf) (76 páginas numeradas + portada, compuesto en Typst).
-* **Estado Académico:** Aprobada para Defensa Oral con recomendación de calificación sobresaliente.
+* **Documentación Oficial:** [docs/informe/](docs/informe/) (Código fuente modular en Typst y PDF de la última versión entregada).
+* **Estado Académico:** Trabajo Final de Graduación presentado ante el Tribunal Evaluador (UTN FRM).
 
 ---
 
@@ -169,13 +169,10 @@ Para asegurar la transparencia experimental y dar cumplimiento a los requerimien
 Tesis-final/
 ├── docs/                               # Documentación académica e institucional
 │   ├── informe/                        # Trabajo Final modular en Typst y PDF compilado
-│   │   ├── informe-v17.typ             # Documento maestro (metadatos, índices, includes)
-│   │   ├── informe-v17.pdf             # Entregable oficial compilado (76 páginas + portada)
+│   │   ├── informe-v{N}.typ            # Documento maestro de la entrega oficial (metadatos, índices, includes)
+│   │   ├── informe-v{N}.pdf            # Entregable oficial compilado en Typst
 │   │   └── capitulos/                  # Los 19 capítulos desacoplados (01 a 19)
 │   ├── evidencia/                      # Evidencia física canónica (reporte_seguridad.md y README)
-│   ├── dictamen/                       # Dictámenes docentes (excluidos de Git por privacidad)
-│   ├── plan/                           # Planes de acción internos (en .gitignore)
-│   └── audit/                          # Minutas de auditoría algorítmica (en .gitignore)
 ├── orquestador-seguridad/              # Backend Python y orquestador central
 │   ├── app/                            # Módulos del orquestador (scanners, parsers, workflow, db)
 │   ├── api.py                          # Servicio web FastAPI asíncrono
