@@ -121,8 +121,8 @@ priorizarse con más certeza aunque su impacto sea menor.
   )],
 )
 
-#text(size: 10pt)[#emph[Nota. Datos extraídos de `resultado_unificado.json` /
-  `reporte_seguridad.md`. La severidad reproduce el campo `riskdesc` de ZAP
+#text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
+  Alertas de Seguridad: OWASP ZAP). La severidad reproduce el campo `riskdesc` de ZAP
   en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
 
 La distribución de las 37 alertas por nivel de severidad base es la
