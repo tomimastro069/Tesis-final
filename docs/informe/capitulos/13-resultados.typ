@@ -179,12 +179,13 @@ boolean-based blind fue:
 #block(
   fill: rgb("#f8f9fa"),
   stroke: 0.5pt + rgb("#d0d7de"),
-  inset: (x: 5pt, y: 5pt),
+  inset: (x: 8pt, y: 7pt),
   radius: 3pt,
   width: 100%,
   [
-    #show raw.where(block: false): set text(font: ("Consolas", "DejaVu Sans Mono"), size: 6.3pt)
-    `username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 END))-- RmAL&password=Fqvd&Login=Login`
+    #show raw.where(block: false): set text(font: ("Consolas", "DejaVu Sans Mono"), size: 7.5pt)
+    `username=SCVZ' RLIKE (SELECT (CASE WHEN (4201=4201) THEN 0x5343565a ELSE 0x28 END))-- RmAL&` \
+    `password=Fqvd&Login=Login`
   ],
 )
 

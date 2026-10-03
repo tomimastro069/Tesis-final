@@ -130,15 +130,19 @@ vectores críticos.
 
 A pesar de que este registro no representa una prueba a ciegas de
 exploración manual independiente sobre toda la superficie —limitación
-expresamente declarada en la sección 9.2—, las métricas presentadas en
-el capítulo 17 aportan respaldo empírico a H1: efectuar de forma
-artesanal el mapeo de 34 endpoints, el fuzzing de más de 200.000
-palabras y la evaluación de entradas insumiría numerosas horas de labor
-especializada \(SANS Institute, 2024). En contraposición, el pipeline
-automatizado efectúa la fase integral de reconocimiento y ataque en un
-intervalo de entre 4 y 14 minutos \(Tabla 10), circunscribiendo la tarea
-del auditor a una revisión final de hallazgos y sustituyendo múltiples
-ejecuciones desarticuladas por un único comando desatendido.
+expresamente declarada en la sección 9.2—, las métricas documentadas aportan
+respaldo empírico a H1 en dos planos complementarios. Por un lado, en la corrida
+de referencia del 5 de agosto \(Capítulo 13), el sistema automatizado resolvió
+de punta a punta el descubrimiento de 34 endpoints unificados, el fuzzing
+exhaustivo con más de 200.000 palabras de diccionario y la comprobación de
+inyecciones SQL; tareas que, ejecutadas de forma artesanal y aislada, insumirían
+múltiples horas de labor técnica especializada \(SANS Institute, 2024). Por otro
+lado, en el benchmark experimental del 6 de agosto \(desarrollado sobre una
+superficie de 59 endpoints, Tabla 10), el pipeline completó la totalidad del ciclo de
+reconocimiento, rastreo y explotación en una ventana acotada de entre 4 y 14
+minutos \(según el estado de la caché), circunscribiendo la dedicación del auditor a
+la validación final de alertas y sustituyendo múltiples herramientas desarticuladas
+por un único flujo desatendido.
 
 Los datos, tablas y el detalle completo de esta sesión de validación
 manual se desarrollan en el capítulo 17 \(Desarrollo experimental y
@@ -164,7 +168,7 @@ consolidados por los autores y volcados en las Tablas 10 y 11, constituyendo
 una medición cuyos artefactos intermedios crudos no pueden ser auditados de
 manera retrospectiva e independiente en el árbol de Git.
 
-Asimismo, esta contrastación se complementa cualitativamente con el registro audiovisual demostrativo documentado en el Anexo I.2 (Tabla 14), correspondiente a una ejecución independiente filmada el 15 de septiembre de 2026 en horario vespertino (18:33–18:46 sin caché y 19:15–19:18 con caché). Dicha demostración registró una disminución temporal del 76,9% (de 13 a 3 minutos) preservando los hallazgos basales (59 URLs y 8 vulnerabilidades SQLMap), aportando un punto de corroboración adicional en favor de H4 obtenido con posterioridad al benchmark formal del 6 de agosto.
+Asimismo, esta contrastación se complementa cualitativamente con el registro audiovisual demostrativo documentado en el Anexo I.2 \(Tabla 14), correspondiente a una ejecución independiente filmada el 15 de septiembre de 2026 en horario vespertino \(18:33–18:46 sin caché y 19:15–19:18 con caché). Dicha demostración registró una disminución temporal del 76,9% \(de 13 a 3 minutos) y arrojó una coincidencia cuantitativa exacta en sus cuatro métricas basales con la corrida sin caché de la Tabla 11 \(59 URLs analizadas, 54 descubiertas por Spider, 48 alertas de ZAP y 8 vulnerabilidades confirmadas por SQLMap), aportando un punto de corroboración empírica independiente en favor de H4 obtenido con posterioridad al benchmark formal del 6 de agosto.
 
 
 #strong[Tabla 10. Tiempo total del pipeline con y sin caché incremental] <tabla-10>
@@ -243,7 +247,10 @@ orquestación. Esta corroboración se ve ratificada de manera externa por la
 demostración experimental grabada en video el 15 de septiembre de 2026
 \(Anexo I.2 y Tabla 14), la cual, ejecutada con el pipeline completo en vivo y
 con posterioridad al benchmark, registró una reducción del 76,9% \(de 13 a 3
-minutos) preservando idénticos hallazgos basales.
+minutos) reproduciendo con exactitud matemática idénticas 4 cifras basales
+que la corrida sin caché de la Tabla 11: 59 URLs totales analizadas, 54 rutas
+descubiertas por el Spider, 48 alertas reportadas por ZAP y 8 fallas confirmadas
+por SQLMap.
 
 Sobre las 8 vulnerabilidades de SQLMap reportadas en ambas corridas de
 este benchmark, frente a las 4 de la corrida de referencia del capítulo
@@ -307,11 +314,17 @@ hilos concurrentes, sin límite de tiempo por regla ni por escaneo,
 verificación de tokens anti-CSRF). Esto se corrigió aumentando a 20
 hilos concurrentes, fijando un límite de 1 minuto por regla y un techo
 de 10 minutos para el escaneo activo completo, y desactivando la
-verificación de tokens CSRF. De forma análoga, SQLMap se optimizó con
-`--threads=5` y el flag `-o` \(Keep-Alive), prescindiendo de la bandera
-`--smart` —la cual fue descartada durante la fase de experimentación
-porque su heurística pasaba por alto parámetros vulnerables en DVWA—,
-priorizando la exhaustividad de comprobación mediante `--technique=BEUST`.
+verificación de tokens CSRF. De forma análoga, SQLMap se optimizó con `--threads=5` y el flag consolidado `-o`,
+el cual activa simultáneamente tres optimizaciones críticas de red y procesamiento:
+conexiones persistentes HTTP \(`--keep-alive`), evitando la sobrecarga de aperturas y
+cierres de sockets TCP; conexiones nulas \(`--null-connection`), que obtienen la longitud
+de las respuestas sin descargar el cuerpo HTML completo mediante peticiones de cabecera
+o de rango \(acelerando sustancialmente las técnicas de inferencia blind); y predicción
+heurística de salida \(`--predict-output`), que anticipa caracteres comunes basándose en
+secuencias estadísticas previas. Asimismo, se prescindió deliberadamente de la bandera
+`--smart` —la cual fue descartada durante la fase de experimentación porque su heurística
+pasaba por alto parámetros vulnerables en DVWA—, priorizando la exhaustividad de
+comprobación mediante `--technique=BEUST`.
 El pipeline sigue siendo secuencial por diseño —ffuf debe completarse
 antes del escaneo activo de ZAP para poder inyectarle las rutas
 descubiertas, y SQLMap necesita las URLs combinadas de spider y ffuf

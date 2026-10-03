@@ -1,9 +1,10 @@
 # Evidencia Primaria de Pruebas Experimentales
 **Universidad Tecnológica Nacional — Facultad Regional Mendoza**  
 *Tecnicatura Universitaria en Programación (TUP)*  
-**Trabajo Final de Graduación:** *Desarrollo de un Orquestador de Seguridad Web Automatizado mediante la Integración de Herramientas DAST de Código Abierto (OWASP ZAP, ffuf, SQLMap)*  
-**Autores:** Tomás Mastropietro, Cristian Krahulik  
-**Directores:** Lic. Alberto Cortez, Ing. Ariel Enferrel  
+**Trabajo Final de Graduación:** *Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web*  
+**Subtítulo:** *Sistema de orquestación para análisis automatizado de vulnerabilidades web mediante fuzzing y escaneo activo*  
+**Autores:** Tomás Mastropietro, Cristian Krahulik, Juan Segura  
+**Directores de Tesina:** Lic. Alberto Cortez, Ing. Ariel Enferrel  
 
 ---
 
@@ -35,8 +36,7 @@ Este directorio se encuentra expresamente excluido de las reglas de omisión de 
 
 ## 3. Aclaración Metodológica sobre Artefactos Crudos Intermedios
 
-En el entorno de desarrollo del orquestador, el archivo `.gitignore` contiene la regla `output/raw/*` para evitar la sobrecarga del repositorio Git con archivos temporales y volcados volátiles generados dinámicamente durante las pruebas de integración continua.
-
-Como consecuencia de dicha política:
-1. **Volcados crudos del 5 de agosto:** Los archivos intermedios de texto plano (`sqlmap_bg.log` crudo y el archivo temporal `resultado_unificado.json` en `output/raw/`) no fueron versionados en Git en esa pasada, quedando consolidados de manera definitiva y reproducible en el informe `reporte_seguridad.md`.
-2. **Archivos de benchmark de caché del 6 de agosto:** Los volcados intermedios `resultado_sin_cache.json` y `resultado_con_cache.json` generados durante los ensayos de evaluación del impacto del caché incremental (Tablas 10 y 11 del Capítulo 14) no se conservaron en el repositorio. Conforme a lo declarado en las secciones 14.3 y 9.2 del informe, la contrastación de la Hipótesis 4 se sustenta en los registros cronometrados documentados por los autores en el informe escrito.
+En el ciclo de desarrollo y prueba del orquestador, el directorio `orquestador-seguridad/output/raw/` resguarda registros de pruebas de integración continua y verificación técnica:
+1. **Registros de corridas históricas previas:** Los archivos crudos versionados en el repositorio (`sqlmap_bg.log` de fecha 02/08/2026, `resultado_unificado.json`, etc.) documentan ejecuciones de calibración del sistema. Específicamente, `sqlmap_bg.log` es citado en la sección 13.4 del informe como testimonio empírico de la variabilidad natural de SQLMap frente a parametrizaciones dinámicas.
+2. **Corrida maestra del 5 de agosto de 2026:** Los archivos volátiles de esa ejecución puntual no requirieron preservación redundante en `output/raw/`, dado que fueron consolidados de forma íntegra, canónica y estructurada en el reporte final `reporte_seguridad.md` alojado en este directorio.
+3. **Ensayos de benchmark de caché del 6 de agosto de 2026:** Los volcados intermedios `resultado_sin_cache.json` y `resultado_con_cache.json` generados durante los ensayos de evaluación del motor de caché incremental (Tablas 10 y 11 del Capítulo 14) no se conservaron en el repositorio. Conforme a lo declarado en las secciones 14.3 y 9.2 del informe, la contrastación de la Hipótesis 4 se sustenta en los registros cronometrados reportados por los autores y ratificados de forma independiente por el registro audiovisual del 15 de septiembre de 2026 (Anexo I.2, Tabla 14).

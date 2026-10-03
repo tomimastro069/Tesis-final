@@ -143,7 +143,8 @@ Las Figuras 1 a 3 documentan la arquitectura estática del sistema y el
 flujo interno del pipeline de escaneo, pero no el comportamiento
 asíncrono de la API frente al cliente. La Figura 4 completa esa
 descripción con un diagrama de secuencia UML del ciclo de vida completo
-de una petición POST /scan, desde que el frontend la dispara hasta que
+de una petición POST /scan \(cuya visualización ampliada a página completa
+se incluye en el Anexo H), desde que el frontend la dispara hasta que
 la API notifica su finalización a n8n.
 
 El diagrama distingue explícitamente entre la respuesta inmediata de la

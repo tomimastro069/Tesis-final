@@ -159,13 +159,20 @@ escaneo activo de ZAP.
 == 12.10 API REST y Frontend
 <api-rest-y-frontend>
 El módulo `api.py` \(FastAPI) expone el pipeline como servicio: `POST /scan`
-lanza un escaneo en segundo plano, admitiendo los parámetros opcionales
-`sqlmap_level: str` \(`basic`, `fast_evidence` o `full_dump`) y `clean_cache: bool`
-\(el cual purga el historial en base de datos para forzar una ejecución limpia sin
-reutilización de caché); `GET /scan/{id}/progress` permite consultar el porcentaje
-de avance; `GET /scans` lista el historial persistido; `GET /scan/{id}` devuelve el
-detalle de un escaneo puntual; `DELETE /scan/{id}` realiza un borrado lógico. Al
-finalizar un escaneo, la API notifica su finalización mediante un webhook HTTP a un
+lanza un escaneo en segundo plano mediante `ejecutar_pipeline_segundo_plano()`,
+admitiendo los parámetros de configuración: `target: str` \(URL objetivo),
+`nivel: str` \(`"medium"` por defecto, que admite `"small"` o `"medium"` y selecciona el
+diccionario de rutas para el fuzzing de ffuf), `sqlmap_level: str` \(`"basic"`, `"fast_evidence"`
+o `"full_dump"`, determinando la profundidad de extracción de base de datos) y
+`clean_cache: bool` \(`false` por defecto). Respecto a este último parámetro, debe
+advertirse que al configurarse en `true` ejecuta la función `limpiar_cache_completa()`,
+la cual no solo purga los registros de ffuf y SQLMap para forzar una ejecución limpia,
+sino que vacía íntegramente la tabla de URLs vulnerables históricas \(`vulnerable_urls`),
+reiniciando a cero la base de conocimiento que sustenta el seguimiento longitudinal de fallas
+descrito en la sección 14.5; `GET /scan/{id}/progress` permite consultar el porcentaje
+de avance en tiempo real; `GET /scans` lista el historial persistido; `GET /scan/{id}` devuelve el
+detalle consolidado de un escaneo puntual; `DELETE /scan/{id}` realiza un borrado lógico. Al
+finalizar un escaneo, la API despacha una notificación mediante un webhook HTTP a un
 flujo de n8n.
 El frontend, desarrollado en React, consume estos endpoints para ofrecer
 un panel de dominios escaneados, un formulario de lanzamiento de
