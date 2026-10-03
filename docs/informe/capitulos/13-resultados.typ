@@ -5,12 +5,17 @@ completo contra DVWA \(DVWA Project, 2024) registrada el 5 de agosto de
 2026 a las 19:53 \(hora local del entorno), y son verificables
 directamente contra el archivo `reporte_seguridad.md` conservado en el
 directorio `orquestador-seguridad/output/reports/` y respaldado como
-evidencia primaria en `docs/evidencia/reporte_seguridad.md`. Cabe aclarar
+evidencia primaria en `docs/evidencia/reporte_seguridad.md` dentro del
+repositorio público del proyecto \(Mastropietro et al., 2026a). Cabe aclarar
 que, debido a la política de exclusión de archivos temporales en el entorno
 de desarrollo \(regla `output/raw/*` en `.gitignore`), los registros crudos
 intermedios generados por las herramientas en dicha pasada no fueron
 preservados en el control de versiones, constituyendo el reporte consolidado
-el artefacto documental maestro de auditoría para esta ejecución.
+el artefacto documental maestro de auditoría para esta ejecución. No obstante,
+en el directorio `orquestador-seguridad/output/raw/` del repositorio se
+preservan archivos crudos de corridas históricas previas \(tales como
+`resultado_unificado.json` del 26 de junio y `sqlmap_bg.log` del 2 de agosto
+de 2026), los cuales aportan evidencia complementaria de trazabilidad técnica.
 
 #strong[Nota metodológica sobre la fuente de estos datos.] Una versión
 preliminar de este capítulo citaba cifras \(61 URLs, 55 del spider, 56
@@ -33,9 +38,10 @@ entre corridas.
 
 Evidencia adicional de esta variabilidad: esta misma corrida del 5 de
 agosto ofrece un ejemplo concreto del fenómeno descripto arriba. Una
-ejecución previa registrada el 2 de agosto de 2026 había confirmado
-inyección SQL tanto en el parámetro `id` de `/vulnerabilities/sqli/` como en
-el parámetro `username` de `/vulnerabilities/brute/` \(8 hallazgos
+ejecución previa registrada el 2 de agosto de 2026 —cuyo registro crudo
+se encuentra preservado en `orquestador-seguridad/output/raw/sqlmap_bg.log`—
+había confirmado inyección SQL tanto en el parámetro `id` de `/vulnerabilities/sqli/`
+como en el parámetro `username` de `/vulnerabilities/brute/` \(8 hallazgos
 individuales, 4 técnicas × 2 endpoints). En la corrida del 5 de agosto
 documentada en este capítulo, SQLMap solo confirmó el segundo punto
 \(`/vulnerabilities/brute/`, parámetro `username`, 4 hallazgos
@@ -126,7 +132,7 @@ priorizarse con más certeza aunque su impacto sea menor.
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
-  Alertas de Seguridad: OWASP ZAP). La severidad reproduce el campo `riskdesc` de ZAP
+  «Detalles Técnicos: Alertas de ZAP»). La severidad reproduce el campo `riskdesc` de ZAP
   en formato «Nivel de Riesgo \(Nivel de Confianza)».]]
 
 La distribución de las 37 alertas por nivel de severidad base es la
@@ -158,7 +164,7 @@ esta entrega provienen de SQLMap \(sección 13.4).
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
-  Rutas descubiertas por ffuf).]]
+  «Detalles Técnicos: Rutas Ocultas o Sensibles (FFUF)»).]]
 
 == 13.4 Análisis Automatizado con SQLMap
 <análisis-automatizado-con-sqlmap>
@@ -199,7 +205,7 @@ boolean-based blind fue:
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
-  Detalles Técnicos: Inyecciones SQL).]]
+  «Detalles Técnicos: Inyecciones SQL (SQLMap)»).]]
 
 #strong[Tabla 7. Datos extraídos a través de SQL Injection – corrida del
   5 de agosto de 2026] <tabla-7>
@@ -219,7 +225,7 @@ boolean-based blind fue:
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
-  Volcado de Tabla: dvwa.users). Además, se evitaron columnas como «avatar»,
+  «Tablas Extraídas de la Base de Datos», tabla `dvwa.users`). Además, se evitaron columnas como «avatar»,
   «last\_login» o «failed\_login» debido a que no aportan información
   relevante para el análisis presentado en este informe. Los valores
   mostrados son las credenciales por defecto de DVWA, una aplicación
@@ -238,8 +244,11 @@ reutilizados. El volcado completo está disponible en
 `reporte_seguridad.md`.
 
 Sobre el endpoint `/vulnerabilities/sqli/` \(parámetro `id`): en la corrida
-del 2 de agosto de 2026 este endpoint también se había confirmado como
-vulnerable, con las mismas cuatro técnicas. En la corrida del 5 de
+del 2 de agosto de 2026 —documentada en el archivo físico
+`orquestador-seguridad/output/raw/sqlmap_bg.log` preservado en el repositorio— este endpoint
+también se había confirmado como vulnerable, con las mismas cuatro técnicas
+\(Boolean-based blind, Error-based, Time-based blind y UNION query, totalizando
+los 8 hallazgos registrados en dicha ejecución histórica). En la corrida del 5 de
 agosto no fue reportado por SQLMap. No se modificó el código de la
 aplicación objetivo entre ambas fechas; la explicación más plausible es
 que, en esta pasada puntual, el conjunto de URLs con parámetros que el

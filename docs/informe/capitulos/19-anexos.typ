@@ -486,7 +486,7 @@ Con el propósito de garantizar la reproducibilidad científica, la transparenci
 === I.1 Repositorio de Código Fuente y Prototipo Funcional (GitHub)
 <i.1-repositorio-de-código-fuente-y-prototipo-funcional>
 
-El código fuente integral del orquestador, los parsers sintácticos de seguridad, las configuraciones de contenerización con Docker Compose, los scripts de automatización y el panel de control web retro se encuentran alojados y versionados en el repositorio público de GitHub:
+El código fuente integral del orquestador, los parsers sintácticos de seguridad, las configuraciones de contenerización con Docker Compose, los scripts de automatización y el panel de control web retro se encuentran alojados y versionados en el repositorio público de GitHub \(Mastropietro et al., 2026a):
 
 #align(center)[
   #rect(stroke: 0.5pt + luma(150), inset: (x: 15pt, y: 10pt), radius: 4pt)[
