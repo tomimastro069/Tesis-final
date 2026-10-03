@@ -1,15 +1,15 @@
 ---
 name: tarea
 description: >-
-  Trigger: '/tarea', '/plan-capitulo', 'tarea', 'plan-capitulo'. Planifica e implementa tareas individuales del plan de subsanación y defensa en docs/plan/plan-28-09-2026.md, auditando el texto plano, garantizando cero invención de datos bajo normas APA 7.ª y reglas institucionales UTN FRM.
+  Trigger: '/tarea', '/plan-capitulo', 'tarea', 'plan-capitulo'. Planifica e implementa tareas individuales del plan de subsanación y defensa en docs/plan/plan-03-10-2026.md, auditando el texto plano, garantizando cero invención de datos bajo normas APA 7.ª y reglas institucionales UTN FRM.
 ---
 
 # Procedimiento de Planificación e Implementación de Tarea (`/tarea`, `/plan-capitulo`)
 **Universidad Tecnológica Nacional — Facultad Regional Mendoza**  
 *Tecnicatura Universitaria en Programación (TUP)*  
-**Documento Fuente:** `docs/plan/plan-28-09-2026.md`
+**Documento Fuente:** `docs/plan/plan-03-10-2026.md`
 
-Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para tomar una tarea individual del plan de subsanación atómica hacia la calificación sobresaliente (**8,8 a 9,0+ / defensa oral**), auditar el código Typst existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
+Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para tomar una tarea individual del plan de subsanación atómica hacia la calificación sobresaliente (**9,0+ / defensa oral**), auditar el código Typst existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
 
 ---
 
@@ -17,19 +17,20 @@ Este procedimiento operativo guía al asistente en su rol de **Tutor Académico 
 
 1. **Parseo del Comando:**
    * El usuario invoca `/tarea [N]` o `/plan-capitulo [N]` (ejemplos: `/tarea 1`, `/tarea 2`, `/plan-capitulo 1`).
-   * Si el usuario **no especifica número** (solo escribe `/tarea`), el asistente debe inspeccionar la **Sección 5 (Checklist de Tareas)** de `docs/plan/plan-28-09-2026.md` e identificar la primera tarea marcada como `[ ] [EN PROGRESO / PRÓXIMO PASO]` o `[ ] [PENDIENTE]`.
+   * Si el usuario **no especifica número** (solo escribe `/tarea`), el asistente debe inspeccionar la **Sección 5 (Checklist de Tareas)** de `docs/plan/plan-03-10-2026.md` e identificar la primera tarea marcada como `[ ] [EN PROGRESO / PRÓXIMO PASO]` o `[ ] [PENDIENTE]`.
 2. **Localización de los Metadatos en el Plan:**
-   * Abrir y leer `docs/plan/plan-28-09-2026.md` en la sección correspondiente:
-     * **Tarea 1:** Subsanación de V1 (Parte 1: Flags y Comandos SQLMap en Capítulos 12, 13 y 14).
-     * **Tarea 2:** Subsanación de V1 (Parte 2: Payload SQL Continuo en Cap. 13, Comillas en Cap. 15 y Monoespaciada Extendida).
-     * **Tarea 3:** Subsanación de V2 y V3 (Anexo H: Páginas Apaisadas para Figuras 1 y 4, Remisión y Epígrafe).
-     * **Tarea 4:** Subsanación de V4 (Residuos de Acabado en Capítulos 3, 13, 14 y Anexo A.3).
-     * **Tarea 5:** Auditoría Integral de Compilación, Sincronización de Índices y Preparación para la Defensa.
+   * Abrir y leer `docs/plan/plan-03-10-2026.md` en la sección correspondiente:
+     * **Tarea 1:** Subsanación de X1 (Conteo de 34 URLs en Tabla 3 y 11; aporte real de 4 rutas de ffuf y ejemplo `/security.php` en Cap. 14).
+     * **Tarea 2:** Subsanación de X2 y X3 (Benchmark de 6 de agosto en 14.3 y Reconciliación de Anexo D como reconstrucción).
+     * **Tarea 3:** Subsanación de X4 y X5 (Títulos de reporte en Tablas 4, 5 y 7; trazabilidad con `sqlmap_bg.log`; APA 2026a; rótulo PostgreSQL en Figura 4).
+     * **Tarea 4:** Subsanación de X6 y X7 (Parámetro `nivel` y `clean_cache` en API; payload legible a 2 renglones en 13.4; coincidencia de video; remisión Anexo H en Figura 4; README de evidencia).
+     * **Tarea 5:** Adecuación Institucional del Punto 4.3 (Herramienta de autoevaluación académica en `.agents/`).
+     * **Tarea 6:** Creación del Entregable V19, Sincronización Operativa de Skills y Verificación Final.
    * Identificar:
-     * Archivos físicos afectados (`docs/informe/capitulos/{NN}-{nombre}.typ`).
+     * Archivos físicos afectados (`docs/informe/capitulos/{NN}-{nombre}.typ`, `media/`, etc.).
      * Meta de calificación y recuperación técnica.
-     * Diagnóstico del problema identificado por el tribunal evaluador en el Dictamen 9 oficial.
-     * Esquema de solución requerida (bloques de código Typst, backticks, orientación apaisada, etc.).
+     * Diagnóstico del problema identificado por el tribunal evaluador en el Dictamen 11 oficial.
+     * Esquema de solución requerida (bloques de código Typst, fórmulas, tablas, etc.).
 
 ---
 
