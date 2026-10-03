@@ -163,7 +163,7 @@ del frontend.
   #image("../media/media/image3.png", width: 85%)
 ]
 
-#text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia — ciclo de vida de POST /scan.
+#text(size: 10pt)[#emph[Figura 4. Diagrama de secuencia UML — ciclo de vida de POST /scan.
   Elaboración propia \(véase versión ampliada en el Anexo H).]] <fig-4>
 
 === 11.5.1 Detalle de la Secuencia de Interacción

@@ -441,7 +441,7 @@ Este anexo reproduce a mayor tamaño, para su mejor observación, las
 Figuras 1 a 4 ya presentadas y comentadas en las secciones 11.1, 11.2, 11.4 y
 11.5: Figura 1 \(Diagrama de Arquitectura de Servicio), Figura 2
 \(Diagrama Orquestador-Seguridad), Figura 3 \(Diagrama de Pipeline de
-ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
+ejecución) y Figura 4 \(Diagrama de secuencia UML — ciclo de vida de POST
 /scan).
 
 #page(flipped: true, margin: (top: 2cm, bottom: 1.8cm, x: 2.5cm))[
@@ -470,7 +470,7 @@ ejecución) y Figura 4 \(Diagrama de secuencia — ciclo de vida de POST
   #align(center + horizon)[
     #image("../media/media/image3.png", width: 100%, height: 92%, fit: "contain")
     #v(0.6em)
-    #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia — ciclo de vida de POST /scan. Elaboración propia.]] <fig-4-ampliada>
+    #text(size: 10pt)[#emph[Figura 4 (ampliada). Diagrama de secuencia UML — ciclo de vida de POST /scan. Elaboración propia.]] <fig-4-ampliada>
   ]
 ]
 
