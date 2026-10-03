@@ -68,12 +68,16 @@ punto de datos en la sección 14.3.
 )
 
 #text(size: 10pt)[#emph[Nota. Datos extraídos de `reporte_seguridad.md` \(sección
-  Estadísticas Generales). El total de 34 URLs únicas no es la simple suma de spider
-  \(24) y ffuf \(8): las 2 URLs restantes corresponden a la URL semilla
-  del objetivo \(#link("http://dvwa/");) y a una URL derivada del proceso
-  de autenticación automática \(#link("http://dvwa/login.php") con
-  parámetros de sesión), incorporadas al conjunto unificado antes de la
-  deduplicación por el módulo `consolidar_resultados()` del pipeline.]]
+  Estadísticas Generales). El total de 34 URLs únicas resulta de la unión y
+  deduplicación efectuada por `consolidar_resultados()` sobre los conjuntos
+  recolectados: 24 URLs descubiertas por el Spider de ZAP \(que ya integran la semilla
+  #link("http://dvwa/") y el formulario #link("http://dvwa/login.php")), 4 rutas
+  exclusivas aportadas por ffuf no presentes en el rastreo del spider \(`index.php`,
+  `logout.php`, `phpinfo.php` y `security.php`), 5 URLs de directorios incorporadas
+  a partir de las alertas de inspección de ZAP \(Directory Browsing: `/docs/`, `/dvwa/`,
+  `/dvwa/css/`, `/dvwa/images/` y `/dvwa/js/`) y 1 URL con parámetros de inyección SQL
+  confirmada por SQLMap \(`/vulnerabilities/brute/`). Total unificado:
+  $24 + 4 + 5 + 1 = 34$.]]
 
 == 13.2 Vulnerabilidades Detectadas por OWASP ZAP
 <vulnerabilidades-detectadas-por-owasp-zap>

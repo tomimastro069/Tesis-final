@@ -21,7 +21,7 @@ Este directorio se encuentra expresamente excluido de las reglas de omisión de 
 * **Fecha y hora de generación:** 2026-08-05 19:53:35 (hora local del entorno).
 * **Entorno de ejecución:** Red contenerizada Docker (`sec-net`), aplicación objetivo DVWA (*Damn Vulnerable Web Application*, versión 1.3), nivel de seguridad `low`, pipeline automatizado end-to-end (OWASP ZAP 2.17.0, ffuf v2.1.0-dev, SQLMap 1.10.7.253#dev).
 * **Métricas cuantitativas consolidadas (Capítulo 13, Tabla 3):**
-  - Total de URLs únicas analizadas: **34** (24 spider + 8 ffuf + URL semilla + URL de autenticación).
+  - Total de URLs únicas analizadas: **34** (unión consolidada de 24 del Spider de ZAP + 4 rutas exclusivas de ffuf + 5 URLs de directorios de alertas ZAP Directory Browsing + 1 URL vulnerable reportada por SQLMap).
   - URLs descubiertas por el Spider de ZAP: **24**.
   - Alertas de seguridad reportadas por ZAP: **37** (Capítulo 13, Tabla 4).
   - Rutas descubiertas por ffuf: **8** (Capítulo 13, Tabla 5).

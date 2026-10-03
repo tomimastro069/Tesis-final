@@ -95,9 +95,9 @@ las conclusiones del capítulo 15 y como línea de trabajo futuro en 15.2,
 en lugar de darse por resuelta.
 
 Bajo este esquema, ZAP en solitario no descubre por sí mismo las rutas
-administrativas que ffuf sí encuentra \(por ejemplo, `/setup.php` o
-`/security.php`), y SQLMap no puede operar sin que otra herramienta le
-aporte URLs parametrizadas. La orquestación combinada amplía por
+no enlazadas o de configuración que ffuf sí encuentra \(por ejemplo,
+`/phpinfo.php` o `/security.php`), y SQLMap no puede operar sin que otra
+herramienta le aporte URLs parametrizadas. La orquestación combinada amplía por
 construcción la superficie cubierta: no es solo que se sumen los
 hallazgos de cada herramienta, sino que los hallazgos de una habilitan
 el trabajo de la siguiente.
@@ -245,12 +245,11 @@ comportamiento del sistema.
   interpretan según la estructura canónica del bloque «resumen» del esquema de
   orquestación, consistente con las métricas del reporte de seguridad. Al igual
   que en la Tabla 3, el total de URLs únicas de cada corrida \(59 y 57)
-  excede la suma de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
-  en cada caso corresponde a la URL semilla y a las URLs derivadas del
-  proceso de autenticación y de re-testeo automático de los dos endpoints
-  marcados como vulnerables \(`/vulnerabilities/brute/` y
-  `/vulnerabilities/sqli/`), incorporadas al conjunto unificado de la misma
-  forma señalada en la nota de la Tabla 3.]]
+  excede la suma directa de spider y ffuf \(54+0 y 52+0): la diferencia de 5 URLs
+  en cada caso se deriva de la misma lógica de consolidación unificada de
+  `consolidar_resultados()`, incorporando las URLs de directorios identificadas en
+  las alertas de inspección de ZAP y los endpoints parametrizados re-testeados
+  por SQLMap \(`/vulnerabilities/brute/` y `/vulnerabilities/sqli/`).]]
 
 Estos resultados proveen respaldo empírico directo para corroborar la
 hipótesis H4 y el parámetro de reproducibilidad detallado en el apartado
@@ -341,9 +340,9 @@ ofensiva:
   A05).
 
 2. #strong[Ampliación de la superficie de ataque mediante fuzzing
-    \(Alsaedi et al., 2021):] El descubrimiento de ocho rutas no
-  identificadas por el rastreo de ZAP —incluyendo endpoints de
-  administración clave como `/setup.php` y `/security.php`— confirma
+    \(Alsaedi et al., 2021):] El descubrimiento de cuatro rutas nuevas no
+  identificadas por el rastreo del spider de ZAP —incluyendo endpoints
+  sensibles y de diagnóstico interno como `/security.php` y `/phpinfo.php`— confirma
   empíricamente que el fuzzing de directorios resulta indispensable para
   complementar el escaneo activo.
 
