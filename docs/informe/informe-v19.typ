@@ -1,0 +1,284 @@
+#set document(
+  title: "Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web",
+  author: ("Tomás Mastropietro", "Cristian Krahulik", "Juan Segura"),
+  date: auto,
+)
+
+#set text(font: ("Calibri", "Liberation Sans", "Arial"), size: 11pt)
+
+#show heading.where(level: 1): set text(size: 14pt, fill: rgb("#4e80bc"))
+#show heading.where(level: 2): set text(size: 12pt, fill: rgb("#4e80bc"))
+#show heading.where(level: 3): set text(size: 11pt, fill: rgb("#4e80bc"))
+
+#show table.cell.where(x: 0): set text(weight: "bold")
+#show table.cell.where(y: 0): set text(weight: "bold", fill: white)
+#set table(
+  fill: (x, y) => if y == 0 { rgb("#2b579a") } else { rgb("#e8f1f5") },
+  stroke: 0.5pt + rgb("#a0b8d8"),
+  inset: 7pt,
+)
+
+#show raw.where(block: true): it => block(
+  fill: rgb("#f8f9fa"),
+  stroke: 0.5pt + rgb("#d0d7de"),
+  inset: (x: 8pt, y: 7pt),
+  radius: 3pt,
+  width: 100%,
+  text(font: ("Consolas", "DejaVu Sans Mono"), size: 8.5pt, it),
+)
+#show raw.where(block: false): set text(font: ("Consolas", "DejaVu Sans Mono"), size: 9pt)
+
+#set page(header: none)
+
+#text(size: 19pt, weight: "bold", fill: rgb("#4e80bc"))[
+  Orquestador de Seguridad: Fuzzing Automatizado de Aplicaciones Web
+]
+
+#v(2.5em)
+
+#text(size: 13pt, weight: "bold")[
+  UNIVERSIDAD TECNOLÓGICA NACIONAL – FACULTAD REGIONAL MENDOZA
+]
+
+#v(0.3em)
+
+#text(size: 12pt, weight: "bold")[
+  Tecnicatura Universitaria en Programación
+]
+
+#v(2.5em)
+
+#strong[Subtítulo:] Sistema de orquestación para análisis automatizado de vulnerabilidades web mediante fuzzing y escaneo activo
+
+#v(1.8em)
+
+#strong[Autores:] Tomás Mastropietro, Cristian Krahulik, Juan Segura
+
+#v(1.8em)
+
+#strong[Directores:] Alberto Cortez y Ariel Enferrel
+
+#v(1.8em)
+
+#strong[Línea de Investigación:] Seguridad informática · Ciberseguridad ofensiva · Automatización de pruebas · Ingeniería de software
+
+#v(1.8em)
+
+#strong[Fecha:] Octubre de 2026
+
+#v(1.8em)
+
+#strong[Versión del Documento:] Versión 19 (Subsanación Dictamen 11 oficial)
+
+#pagebreak()
+
+#counter(page).update(1)
+#set page(header: align(right)[#context counter(page).display("1")])
+
+= Resumen
+<resumen>
+El presente trabajo describe el diseño, implementación y validación de
+un sistema automatizado de análisis de seguridad para aplicaciones web
+basado en técnicas de fuzzing y escaneo activo. El sistema desarrollado,
+denominado Orquestador de Seguridad, fue implementado íntegramente en
+Python y permite coordinar la ejecución de múltiples herramientas
+especializadas de análisis de vulnerabilidades de manera automatizada y
+secuencial.
+
+El sistema integra las herramientas OWASP ZAP, ffuf y SQLMap, cada una
+ejecutándose en entornos contenerizados mediante Docker. El orquestador
+central se encarga de coordinar la ejecución de cada herramienta,
+recolectar sus resultados, procesarlos mediante parsers especializados y
+consolidarlos en un único informe estructurado en formato JSON. La
+arquitectura implementada se basa en un modelo modular donde cada
+componente posee una responsabilidad específica: ejecución de
+herramientas externas, recolección de datos, procesamiento de resultados
+y consolidación final de hallazgos. Sobre esta base, el sistema se
+extendió hacia una arquitectura de servicio con API REST asíncrona,
+persistencia de historial, caché incremental, integración con n8n y un
+frontend en React.
+
+Las pruebas del sistema fueron realizadas sobre DVWA \(Damn Vulnerable
+Web Application), una aplicación web intencionalmente vulnerable
+utilizada comúnmente para investigación y entrenamiento en seguridad
+informática. Durante las pruebas se logró detectar múltiples
+vulnerabilidades relacionadas con el OWASP Top 10, incluyendo
+inyecciones SQL, configuraciones de seguridad incorrectas y rutas
+administrativas expuestas.
+
+Los resultados obtenidos demuestran que la automatización del proceso de
+fuzzing y escaneo permite reducir el esfuerzo de análisis manual,
+facilitando la identificación temprana de vulnerabilidades en
+aplicaciones web. Estas comparaciones se detallan en el capítulo 14,
+junto con las limitaciones metodológicas correspondientes.
+
+#strong[Palabras clave:] Fuzzing, Seguridad Web, OWASP ZAP, SQLMap,
+Automatización, Docker, Python.
+
+#pagebreak()
+
+= Abstract
+<abstract>
+This work presents the design, implementation and validation of an
+automated security analysis system for web applications based on fuzzing
+techniques and active vulnerability scanning. The developed system,
+called Security Orchestrator, was implemented entirely in Python and
+coordinates the execution of multiple specialized security tools in an
+automated and sequential pipeline.
+
+The system integrates OWASP ZAP, ffuf, and SQLMap, each executed in
+containerized environments using Docker. The Python orchestrator manages
+tool execution, collects raw outputs, processes the results through
+specialized parsers, and consolidates all findings into a single
+structured JSON report.
+
+The system was tested using DVWA \(Damn Vulnerable Web Application) as a
+controlled laboratory target. The tests successfully identified
+vulnerabilities associated with the OWASP Top 10, including SQL
+injection, insecure configurations, and exposed administrative routes.
+
+The results show that automated fuzzing orchestration improves
+vulnerability discovery efficiency and reduces manual testing effort in
+web security assessments, with the corresponding measurement caveats
+detailed in Chapter 14.
+
+#strong[Keywords:] Fuzzing, Web Security, OWASP ZAP, Automation,
+Vulnerability Scanning, Docker, Python.
+
+#pagebreak()
+
+#heading(level: 1, outlined: false)[Índice] <índice>
+#[
+  #set text(size: 10.5pt)
+  #set par(leading: 0.58em)
+  #outline(title: none, indent: auto)
+]
+
+#let pagina(etiqueta) = context {
+  let elems = query(etiqueta)
+  if elems.len() > 0 {
+    let p = counter(page).at(elems.first().location()).first()
+    link(etiqueta)[#p]
+  } else {
+    [—]
+  }
+}
+
+#pagebreak()
+= Índice de Figuras
+<índice-de-figuras>
+
+#grid(
+  columns: (1fr, auto),
+  align: (left, right),
+  row-gutter: 0.85em,
+  [Figura 1. Diagrama de Arquitectura de Servicio], pagina(<fig-1>),
+  [Figura 2. Diagrama Orquestador-Seguridad], pagina(<fig-2>),
+  [Figura 3. Diagrama de Pipeline de ejecución], pagina(<fig-3>),
+  [Figura 4. Diagrama de secuencia UML — ciclo de vida de POST /scan], pagina(<fig-4>),
+  [Figura 1 (ampliada). Diagrama de Arquitectura de Servicio], pagina(<fig-1-ampliada>),
+  [Figura 2 (ampliada). Diagrama Orquestador-Seguridad], pagina(<fig-2-ampliada>),
+  [Figura 3 (ampliada). Diagrama de Pipeline de ejecución], pagina(<fig-3-ampliada>),
+  [Figura 4 (ampliada). Diagrama de secuencia UML — ciclo de vida de POST /scan], pagina(<fig-4-ampliada>),
+)
+
+#v(1.8em)
+
+= Índice de Tablas
+<índice-de-tablas>
+
+#grid(
+  columns: (1fr, auto),
+  align: (left, right),
+  row-gutter: 0.85em,
+  [Tabla 1. Comparación de plataformas de orquestación y gestión de vulnerabilidades], pagina(<tabla-1>),
+  [Tabla 2. Componentes del sistema y su función en el pipeline], pagina(<tabla-2>),
+  [Tabla 3. Resumen de hallazgos — ejecución sobre DVWA del 5 de agosto de 2026], pagina(<tabla-3>),
+  [Tabla 4. Vulnerabilidades detectadas por OWASP ZAP, por tipo], pagina(<tabla-4>),
+  [Tabla 5. Rutas descubiertas por fuzzing de directorios (ffuf)], pagina(<tabla-5>),
+  [Tabla 6. Endpoints confirmados como vulnerables por SQLMap — corrida del 5 de agosto de 2026], pagina(<tabla-6>),
+  [Tabla 7. Datos extraídos a través de SQL Injection – corrida del 5 de agosto de 2026], pagina(<tabla-7>),
+  [Tabla 8. Hallazgos clasificados por categoría OWASP Top 10], pagina(<tabla-8>),
+  [Tabla 9. Cobertura por herramienta en solitario frente al pipeline combinado], pagina(<tabla-9>),
+  [Tabla 10. Tiempo total del pipeline con y sin caché incremental], pagina(<tabla-10>),
+  [Tabla 11. Estabilidad de hallazgos entre la corrida sin caché y con caché], pagina(<tabla-11>),
+  [Tabla 12. Verificación de cumplimiento por objetivo específico], pagina(<tabla-12>),
+  [Tabla 13. Distribución temporal de la sesión de auditoría manual del capítulo 17], pagina(<tabla-13>),
+  [Tabla 14. Estructura narrativa, marcas temporales y desglose visual del video demostrativo], pagina(<tabla-14>),
+)
+
+#pagebreak()
+
+#include "capitulos/01-introduccion.typ"
+
+#pagebreak()
+
+#include "capitulos/02-planteo-problema.typ"
+
+#pagebreak()
+
+#include "capitulos/03-justificacion.typ"
+
+#pagebreak()
+
+#include "capitulos/04-objetivos.typ"
+
+#pagebreak()
+
+#include "capitulos/05-preguntas-investigacion.typ"
+
+#pagebreak()
+
+#include "capitulos/06-hipotesis.typ"
+
+#pagebreak()
+
+#include "capitulos/07-estado-del-arte.typ"
+
+#pagebreak()
+
+#include "capitulos/08-marco-teorico.typ"
+
+#pagebreak()
+
+#include "capitulos/09-alcances-limitaciones.typ"
+
+#pagebreak()
+
+#include "capitulos/10-metodologia.typ"
+
+#pagebreak()
+
+#include "capitulos/11-arquitectura.typ"
+
+#pagebreak()
+
+#include "capitulos/12-implementacion.typ"
+
+#pagebreak()
+
+#include "capitulos/13-resultados.typ"
+
+#pagebreak()
+
+#include "capitulos/14-discusion.typ"
+
+#pagebreak()
+
+#include "capitulos/15-conclusiones.typ"
+
+#pagebreak()
+
+#include "capitulos/16-consideraciones-eticas.typ"
+
+#pagebreak()
+
+#include "capitulos/17-desarrollo-experimental.typ"
+
+#pagebreak()
+
+#include "capitulos/18-referencias.typ"
+
+#pagebreak()
+
+#include "capitulos/19-anexos.typ"

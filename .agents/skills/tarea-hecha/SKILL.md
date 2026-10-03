@@ -51,8 +51,9 @@ El asistente debe aplicar las siguientes 4 modificaciones sincronizadas en `docs
 1. **En la Sección 5 (Checklist de Tareas):**
    * Cambiar la casilla de la tarea a completada:
      `- [x] **Tarea N: ...** [Meta: ...] **[COMPLETADO]**`
-   * Si existe una tarea siguiente inmediata, marcarla como:
-     `- [ ] **Tarea N+1: ...** [Meta: ...] **[EN PROGRESO / PRÓXIMO PASO]**`
+    * Si existe una tarea siguiente inmediata, marcarla como:
+      `- [ ] **Tarea N+1: ...** [Meta: ...] **[EN PROGRESO / PRÓXIMO PASO]**`
+    * Si se ha completado la última tarea de la hoja de ruta (Tarea 6), declarar el plan completado al 100% y no dejar ninguna tarea pendiente.
 2. **En la Sección 4 (Plan de Acción Detallado):**
    * Actualizar el título de la Tarea N agregando `**[COMPLETADO]**`.
    * Registrar: `* **Estado:** **HECHO / COMPLETADO**` junto al resumen de las correcciones aplicadas.
@@ -63,7 +64,7 @@ El asistente debe aplicar las siguientes 4 modificaciones sincronizadas en `docs
 4. **En la Sección 6 (Mini-Walkthrough de Avances y Decisiones de Ingeniería Documental):**
    * Añadir el nuevo hito correlativo:
      `### Hito X: [Nombre de la Tarea / Capítulo]`
-     * Detallar los archivos intervenidos (`docs/informe/capitulos/{NN}-{nombre}.typ`).
+     * Detallar los archivos intervenidos (`docs/informe/capitulos/{NN}-{nombre}.typ`, `informe-v19.typ`, etc.).
      * Describir la transformación técnica y tipográfica lograda.
      * Explicar el impacto en la no-regresión y en la satisfacción de los hallazgos del Dictamen 11 oficial (X1 a X7).
 
@@ -89,6 +90,7 @@ docs(informe): [descripción concisa de la tarea completada]
 
 ---
 
-## 6. Transición a la Siguiente Tarea
+## 6. Transición a la Siguiente Tarea / Cierre del Plan
 
-Concluir informando al usuario cuál es la siguiente tarea disponible en la hoja de ruta y recomendarle el comando exacto para iniciarla (ejemplo: *«Para continuar con la siguiente tarea, escribe `/tarea 2`»*).
+* **Si existen tareas pendientes:** Concluir informando al usuario cuál es la siguiente tarea disponible en la hoja de ruta y recomendarle el comando exacto para iniciarla (ejemplo: *«Para continuar con la siguiente tarea, escribe `/tarea 2»*).
+* **Si se ha completado la Tarea 6 (Cierre del Plan):** Declarar formalmente el cumplimiento del 100% de los hitos del Plan de Acción V18 → V19, felicitar al equipo de autores tesistas por haber alcanzado la madurez técnica proyectada hacia la calificación sobresaliente (9,0+), y orientar sobre la preparación final para la defensa oral ante el tribunal examinador de la UTN FRM.
