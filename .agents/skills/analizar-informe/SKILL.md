@@ -8,7 +8,7 @@ description: >-
 **Universidad Tecnológica Nacional — Facultad Regional Mendoza**  
 *Tecnicatura Universitaria en Programación (TUP)*
 
-Este procedimiento operativo guía al asistente en su rol de **Tutor y Revisor del Tribunal Evaluador** para auditar en profundidad una versión específica del informe de tesina (`docs/informe/informe-v{N}.*`).
+Este procedimiento operativo guía al asistente en su rol formativo de **Tutor Metodológico de Práctica y Asistente de Autoevaluación** para auditar en profundidad una versión específica del informe de tesina (`docs/informe/informe-v{N}.*`).
 
 ---
 

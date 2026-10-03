@@ -9,7 +9,7 @@ description: >-
 *Tecnicatura Universitaria en Programación (TUP)*  
 **Documento Fuente:** `docs/plan/plan-03-10-2026.md`
 
-Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para tomar una tarea individual del plan de subsanación atómica hacia la calificación sobresaliente (**9,0+ / defensa oral**), auditar el código Typst existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
+Este procedimiento operativo guía al asistente en su rol formativo de **Tutor Metodológico de Práctica y Asistente de Autoevaluación** para tomar una tarea individual del plan de subsanación atómica hacia la calificación sobresaliente (**9,0+ / defensa oral**), auditar el código Typst existente, diseñar la solución rigurosa y generar el plan de implementación previo a la edición.
 
 ---
 

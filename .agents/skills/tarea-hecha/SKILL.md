@@ -9,7 +9,7 @@ description: >-
 *Tecnicatura Universitaria en Programación (TUP)*  
 **Documento Fuente:** `docs/plan/plan-03-10-2026.md`
 
-Este procedimiento operativo guía al asistente en su rol de **Tutor Académico y Miembro del Tribunal Evaluador** para cerrar formalmente una tarea completada del plan de subsanación atómica, actualizar la matriz y el checklist de `docs/plan/plan-03-10-2026.md`, documentar el hito en el mini-walkthrough y sugerir el commit reglamentario.
+Este procedimiento operativo guía al asistente en su rol formativo de **Tutor Metodológico de Práctica y Asistente de Autoevaluación** para cerrar formalmente una tarea completada del plan de subsanación atómica, actualizar la matriz y el checklist de `docs/plan/plan-03-10-2026.md`, documentar el hito en el mini-walkthrough y sugerir el commit reglamentario.
 
 ---
 
