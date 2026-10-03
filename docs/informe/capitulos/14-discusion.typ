@@ -199,14 +199,51 @@ comparación pendiente en H1.
 La misma comparación aporta además evidencia relevante para el criterio
 de reproducibilidad de la sección 10.6. Los hallazgos de ambas corridas
 resultaron prácticamente estables: 48 alertas de ZAP en ambos casos, 0
-rutas de ffuf en ambos casos \(la wordlist utilizada en esta prueba
-puntual no coincidió con rutas reales de DVWA) y 8 vulnerabilidades de
-SQLMap en ambos casos; la única variación se dio en el conteo del spider
-de ZAP —que no participa del caché y por lo tanto no debería verse
-afectado por él— con 54 URLs sin caché frente a 52 con caché, una
-diferencia de apenas dos URLs \(96,3% de coincidencia) atribuible a la
-variabilidad propia del rastreo dinámico ya señalada en 10.5, no a un
-efecto del caché.
+rutas de ffuf en ambos casos y 8 vulnerabilidades de SQLMap en ambos casos;
+la única variación se dio en el conteo del spider de ZAP —que no participa
+del caché y por lo tanto no debería verse afectado por él— con 54 URLs sin
+caché frente a 52 con caché, una diferencia de apenas dos URLs \(96,3% de
+coincidencia) atribuible a la variabilidad propia del rastreo dinámico ya
+señalada en 10.5, no a un efecto del caché.
+
+Respecto a las 0 rutas reportadas por ffuf en ambas ejecuciones del benchmark:
+dado que los archivos crudos generados en `output/raw/benchmarks/` no fueron
+preservados en el control de versiones, no es posible determinar con certeza
+retrospectiva la causa física de este resultado. Como se documenta en la nota de
+la Tabla 10, la lista `wordlist-medium.txt` \(207.628 palabras netas probadas)
+contiene los términos de las rutas estándar de DVWA, los cuales produjeron 8
+rutas en la corrida del 5 de agosto. Desde una perspectiva de auditoría
+técnica, existen tres hipótesis plausibles compatibles con la arquitectura del
+orquestador:
+- #emph[Incompleta purga de la caché de palabras:] Si la tabla `ffuf_words` en
+  la base de datos relacional no fue vaciada antes de la corrida basal, ffuf
+  omitió las 207.628 palabras por caché en ambas pasadas, completando su
+  ejecución en milisegundos sin emitir peticiones HTTP al objetivo.
+- #emph[Interrupción o fallo silencioso del subproceso:] Si el binario de ffuf
+  experimentó un error de red o terminación prematura en el contenedor sin
+  generar salida JSON, el orquestador continuó la secuencia sin registrar rutas.
+- #emph[Variación de parámetros o filtros de exclusión:] Si en esa prueba
+  puntual se aplicaron filtros de códigos de estado distintos a `-mc 200,302` o
+  una URL base sin coincidencia directa, ninguna petición superó el umbral.
+
+El impacto de estas alternativas sobre la contrastación de la hipótesis H4
+debe evaluarse con transparencia:
+- Si se produjo la primera hipótesis \(caché no purgado), el tiempo de la
+  condición «sin caché» \(14 min 05 s) no incluyó el cómputo de fuzzing masivo,
+  lo que significa que el ahorro atribuible a ffuf está subestimado en la Tabla
+  10, concentrándose la reducción del 68,9% en la omisión de URLs seguras por
+  SQLMap \(5 omitidas y 3 re-testeadas).
+- Si se produjeron la segunda o tercera hipótesis, ffuf no consumió tiempo
+  sustantivo ni aportó rutas en ninguna pasada, preservando intacta la validez
+  del contraste relativo entre ambas condiciones para ZAP y SQLMap.
+
+En cualquier escenario, la disminución temporal del 68,9% \(de 14 min 05 s a
+4 min 23 s) corrobora cuantitativamente la hipótesis H4 para el flujo de
+orquestación. Esta corroboración se ve ratificada de manera externa por la
+demostración experimental grabada en video el 15 de septiembre de 2026
+\(Anexo I.2 y Tabla 14), la cual, ejecutada con el pipeline completo en vivo y
+con posterioridad al benchmark, registró una reducción del 76,9% \(de 13 a 3
+minutos) preservando idénticos hallazgos basales.
 
 Sobre las 8 vulnerabilidades de SQLMap reportadas en ambas corridas de
 este benchmark, frente a las 4 de la corrida de referencia del capítulo

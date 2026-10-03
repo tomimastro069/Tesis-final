@@ -259,17 +259,19 @@ def parsear_zap(dato_dict_crudo):
 ```
 
 #pagebreak()
-== Anexo D — Ejemplo del JSON Unificado Final (corrida del 5 de agosto de 2026)
+== Anexo D — Estructura del JSON Unificado Final (Reconstrucción canónica)
+<anexo-d-estructura-del-json-unificado-final-reconstruccion-canonica>
 <anexo-d-ejemplo-del-json-unificado-final-corrida-del-5-de-agosto-de-2026>
 
-El siguiente extracto reproduce la estructura canónica del bloque resumen
-del esquema JSON unificado generado por el módulo de consolidación del
-pipeline para la ejecución documentada en el capítulo 13 \(corrida del 5 de
-agosto de 2026), cuyos valores concuerdan íntegramente con los documentados
-en `reporte_seguridad.md`. Se presenta con fines de especificación de la
-arquitectura de interoperabilidad homogénea \(validando la hipótesis H3),
-dado que los volcados crudos generados en `output/raw/` no se preservaron en el
-control de versiones debido a las reglas de exclusión del repositorio.
+El siguiente extracto es una reconstrucción canónica de la estructura del
+bloque resumen del esquema JSON unificado, elaborada a partir de los datos
+consolidados en `reporte_seguridad.md` y de la lógica de transformación de
+`consolidar_resultados()` para la ejecución documentada en el capítulo 13
+\(corrida del 5 de agosto de 2026). Se presenta con fines de especificación
+formal de la arquitectura de interoperabilidad homogénea del orquestador,
+dado que los volcados crudos generados en `output/raw/` no fueron preservados
+en el historial de Git conforme a las directivas de exclusión de artefactos
+volátiles del repositorio.
 
 ```json
 {
@@ -314,10 +316,10 @@ control de versiones debido a las reglas de exclusión del repositorio.
 }
 ```
 
-Todas las rutas reportadas usan http://dvwa/, el hostname real de la
-red interna de Docker, en lugar del hostname ilustrativo target.com que
-figuraba en versiones anteriores del documento; esta ejecución
-corresponde a datos reales y no a un ejemplo construido.
+Todas las rutas y hostnames consignados en el extracto emplean http://dvwa/,
+correspondiente al direccionamiento real de la red interna de contenedores
+Docker, manteniendo coherencia estricta con los registros analizados en el
+cuerpo del informe y en `reporte_seguridad.md`.
 
 #pagebreak()
 == Anexo E — Fragmento Representativo: Autenticación Automática
